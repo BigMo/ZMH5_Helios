@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="_ZMH5__Helios.Program">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAYAAIAAgAAAAAQAAAAAAQAAgAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.Memes">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Memes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Heke">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAgAAAACghAEDgFgCAECAAAAAAABAAAAACAAQAAAAAA=</HashCode>
+      <FileName>CSGO\Heke.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.EntityPrototype">
+    <Position X="2.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAEAAAAAAAAAAAAAgAAAAAAgEAABACCAAiAAAAAAA=</HashCode>
+      <FileName>CSGO\Entities\EntityPrototype.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.BaseEntity">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BIAAAAIQAQAAgAgAAAgAAAAGAgCAADCAYAMgQAAAAEA=</HashCode>
+      <FileName>CSGO\Entities\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.BasePlayer">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAIAAAACAAAAAAAAggAAAAAEDAAAAAgAgEAAAA=</HashCode>
+      <FileName>CSGO\Entities\BasePlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.BaseCombatWeapon">
+    <Position X="5.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAgAAsEgUIgkQEgogMIBKAAQECADBgBKAgAAABYAA=</HashCode>
+      <FileName>CSGO\Entities\BaseCombatWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.CSPlayer">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAgAAAgAAAQAAAAAgDAAAAAgAAAAAYA=</HashCode>
+      <FileName>CSGO\Entities\CSPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.CSLocalPlayer">
+    <Position X="9.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAIAAEAAAAAAAAAAAAAAAEAAADgAAAAkAAAAAAA=</HashCode>
+      <FileName>CSGO\Entities\CSLocalPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Entities.EntityHelpers.Skeleton">
+    <Position X="2.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\Entities\EntityHelpers\Skeleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.ClassIDs.ClientClassParser">
+    <Position X="0.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIAAAAAAAAACBAAAAAQQAAAAAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>CSGO\ClassIDs\ClientClassParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.ClassIDs.ManagedClientClass">
+    <Position X="4" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAAAAAAAAAAAAAAAAAgAAAAAAAAAAACAAAAAABAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\ManagedClientClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.ClassIDs.ManagedRecvTable">
+    <Position X="5.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MEAAAAAAAAAAAACECBAQAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\ManagedRecvTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.ClassIDs.ManagedRecvProp">
+    <Position X="7.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQEAAACAAAAAAAAAAACAQAAAAAAgAA=</HashCode>
+      <FileName>CSGO\ClassIDs\ManagedRecvProp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Misc.RPMLazyArray&lt;T&gt;">
+    <Position X="2.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAgAAAAAAAAAAAAAAAAAAACAAQAAAAAAA=</HashCode>
+      <FileName>CSGO\Misc\RPMLazyArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.BSP.BSPFile">
+    <Position X="0.5" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAShAAACCAQAIAEAAAAAAAAQAAAgASAAMAAEAhCAAQA=</HashCode>
+      <FileName>CSGO\BSP\BSPFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.BSP.BSPFlags">
+    <Position X="2.25" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>REUCEoYQAABAcSQJGoFgKOAaOIIj6KMEBAzSgoSQwhc=</HashCode>
+      <FileName>CSGO\BSP\BSPFlags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.BSP.TraceRay">
+    <Position X="4" Y="41.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAQAI=</HashCode>
+      <FileName>CSGO\BSP\TraceRay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.Aim">
+    <Position X="2.25" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAAAAAAAAAAgAAAAAAAAAAAAAAAAABAAAABAAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\Aim.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.HotkeyModule">
+    <Position X="0.5" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAABAAAAIAAAAAAAACAAAIAAAAAIAEBAAA=</HashCode>
+      <FileName>CSGO\Modules\HotkeyModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.Trigger">
+    <Position X="2.25" Y="51.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgCAAAQAAAAABAAAAAAAAAAAAACAAAAAAAABgAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\Trigger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.AutoPistol">
+    <Position X="4" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\AutoPistol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.BunnyHop">
+    <Position X="5.75" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\BunnyHop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.EchoModule">
+    <Position X="9.25" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAAABAAAAAAA=</HashCode>
+      <FileName>CSGO\Modules\EchoModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.NoRecoil">
+    <Position X="7.5" Y="48.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\NoRecoil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.Snapshot">
+    <Position X="5.75" Y="51.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAgAAAAQAAgAAQAACABgAEAQBA=</HashCode>
+      <FileName>CSGO\Modules\Snapshot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.ViewModule">
+    <Position X="4" Y="51.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAEEEAAA=</HashCode>
+      <FileName>CSGO\Modules\ViewModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.GlowModule">
+    <Position X="7.5" Y="51.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAGAIAAAAABAAAAAAAAAAAAAABAAEAAAA=</HashCode>
+      <FileName>CSGO\Modules\GlowModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_ZMH5__Helios.CSGO.Modules.SnapshotHelpers.EntityCache&lt;T&gt;">
+    <Position X="5.75" Y="55.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAACAACAAAAEAAAAAACAAAAAAAAABAAAA=</HashCode>
+      <FileName>CSGO\Modules\SnapshotHelpers\EntityCache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="_ZMH5__Helios.CSGO.Color">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAEAAQA=</HashCode>
+      <FileName>CSGO\Color.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.Entities.EntityHelpers.Bone">
+    <Position X="2.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAEAAAAAAAAEABAYAE=</HashCode>
+      <FileName>CSGO\Entities\EntityHelpers\Bone.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.ClassIDs.ClientClassManager">
+    <Position X="2.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\ClientClassManager.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.ClassIDs.ClientClass">
+    <Position X="4" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAIAAQAAAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\ClientClass.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.ClassIDs.RecvProp_t">
+    <Position X="7.5" Y="17.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="_ZMH5__Helios.CSGO.ClassIDs.RecvProp_t.ePropType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CSGO\ClassIDs\RecvProp_t.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAACAAAAAAAAQMAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\RecvProp_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.ClassIDs.RecvTable_t">
+    <Position X="5.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\ClassIDs\RecvTable_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.cplane_t">
+    <Position X="4" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAIAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAAEAAAAA=</HashCode>
+      <FileName>CSGO\BSP\cplane_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dbrush_t">
+    <Position X="5.75" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAIAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\dbrush_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dbrushside_t">
+    <Position X="7.5" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAAgKAAA=</HashCode>
+      <FileName>CSGO\BSP\dbrushside_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dedge_t">
+    <Position X="9.25" Y="30.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\dedge_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dface_t">
+    <Position X="4" Y="32.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAiAQAAAAAAAJAAEAAFAAAAIAEIQgAAAAKAAE=</HashCode>
+      <FileName>CSGO\BSP\dface_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dheader_t">
+    <Position X="5.75" Y="32.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAgIAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\dheader_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dleaf_t">
+    <Position X="9.25" Y="31.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAIAAAAAAAAAQAAAAAgEgAAAgAAGIAAAA=</HashCode>
+      <FileName>CSGO\BSP\dleaf_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.area_flags">
+    <Position X="7.5" Y="32.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\dleaf_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dnode_t">
+    <Position X="5.75" Y="34.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAgAIAAAAAAAAAAAAAAAAAKAAAgAAAAIAAA=</HashCode>
+      <FileName>CSGO\BSP\dnode_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.dplane_t">
+    <Position X="7.5" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>CSGO\BSP\dplane_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.lump_t">
+    <Position X="7.5" Y="36.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAIAAAAABAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\lump_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.mvertex_t">
+    <Position X="5.75" Y="37" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\mvertex_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.Polygon">
+    <Position X="4" Y="37" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEABQAAAAAAABAAAAAAAAABAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\Polygon.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.snode_t">
+    <Position X="7.5" Y="38.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAiAICAQAAAAAAAAAAAAAAKAAAgAAAAIAAA=</HashCode>
+      <FileName>CSGO\BSP\snode_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.texinfo_t">
+    <Position X="4" Y="39.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEQAAAAAAAAAAAAAAAAAAAIAAAAABAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\texinfo_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.Vector4">
+    <Position X="5.75" Y="38.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>CSGO\BSP\texinfo_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.trace_t">
+    <Position X="5.75" Y="39.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAACACAAAAABAAAAAAAEgAAAAAAAAA4gA=</HashCode>
+      <FileName>CSGO\BSP\trace_t.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.BSP.VPlane">
+    <Position X="7.5" Y="41.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAABAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\BSP\VPlane.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.Modules.GlowHelpers.GlowManager">
+    <Position X="9.25" Y="51.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAgAAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\Modules\GlowHelpers\GlowManager.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_ZMH5__Helios.CSGO.Modules.GlowHelpers.GlowObjectDefinition">
+    <Position X="9.25" Y="53" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAkAAAACAAAAAAAgAAAAoEQABEABAAAA=</HashCode>
+      <FileName>CSGO\Modules\GlowHelpers\GlowObjectDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="_ZMH5__Helios.CSGO.Enums.Flags">
+    <Position X="0.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAAQMEQQAqBAIEACggQgACEAgAAICABAAQAADgw=</HashCode>
+      <FileName>CSGO\Enums\Flags.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ZMH5__Helios.CSGO.Enums.LifeState">
+    <Position X="2.25" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAACAAAAAA=</HashCode>
+      <FileName>CSGO\Enums\LifeState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ZMH5__Helios.CSGO.Enums.MoveState">
+    <Position X="7.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAEAAAA=</HashCode>
+      <FileName>CSGO\Enums\MoveState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ZMH5__Helios.CSGO.Enums.ObserverMode">
+    <Position X="5.75" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgEAAAgAAAAAAAAAgQAAAAAAAAAAAAAAAAAAABAAAI=</HashCode>
+      <FileName>CSGO\Enums\ObserverMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ZMH5__Helios.CSGO.Enums.PlayerState">
+    <Position X="4" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAEAAAAEIAAAAAAAAACCAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>CSGO\Enums\PlayerState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="_ZMH5__Helios.CSGO.BSP.eLumpIndex">
+    <Position X="9.25" Y="35" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gDhjIBEAIOAQAIRQgADBAgAVCACAAAAABYAhIIhgAQA=</HashCode>
+      <FileName>CSGO\BSP\eLumpIndex.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

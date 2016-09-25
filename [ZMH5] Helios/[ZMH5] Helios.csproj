@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DA5349F1-7DE2-42F2-8061-376576C1D9D5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>_ZMH5__Helios</RootNamespace>
+    <AssemblyName>[ZMH5] Helios</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CSGO\BSP\BSPFile.cs" />
+    <Compile Include="CSGO\BSP\BSPFlags.cs" />
+    <Compile Include="CSGO\BSP\cplane_t.cs" />
+    <Compile Include="CSGO\BSP\dbrushside_t.cs" />
+    <Compile Include="CSGO\BSP\dbrush_t.cs" />
+    <Compile Include="CSGO\BSP\dedge_t.cs" />
+    <Compile Include="CSGO\BSP\dface_t.cs" />
+    <Compile Include="CSGO\BSP\dheader_t.cs" />
+    <Compile Include="CSGO\BSP\dleaf_t.cs" />
+    <Compile Include="CSGO\BSP\dnode_t.cs" />
+    <Compile Include="CSGO\BSP\dplane_t.cs" />
+    <Compile Include="CSGO\BSP\eLumpIndex.cs" />
+    <Compile Include="CSGO\BSP\lump_t.cs" />
+    <Compile Include="CSGO\BSP\mvertex_t.cs" />
+    <Compile Include="CSGO\BSP\Polygon.cs" />
+    <Compile Include="CSGO\BSP\snode_t.cs" />
+    <Compile Include="CSGO\BSP\texinfo_t.cs" />
+    <Compile Include="CSGO\BSP\TraceRay.cs" />
+    <Compile Include="CSGO\BSP\trace_t.cs" />
+    <Compile Include="CSGO\BSP\VPlane.cs" />
+    <Compile Include="CSGO\ClassIDs\ClientClass.cs" />
+    <Compile Include="CSGO\ClassIDs\ClientClassManager.cs" />
+    <Compile Include="CSGO\ClassIDs\ManagedClientClass.cs" />
+    <Compile Include="CSGO\ClassIDs\ClientClassParser.cs" />
+    <Compile Include="CSGO\ClassIDs\ManagedRecvProp.cs" />
+    <Compile Include="CSGO\ClassIDs\ManagedRecvTable.cs" />
+    <Compile Include="CSGO\Color.cs" />
+    <Compile Include="CSGO\Entities\BaseCombatWeapon.cs" />
+    <Compile Include="CSGO\Entities\BaseEntity.cs" />
+    <Compile Include="CSGO\Entities\BasePlayer.cs" />
+    <Compile Include="CSGO\Entities\CSLocalPlayer.cs" />
+    <Compile Include="CSGO\Entities\CSPlayer.cs" />
+    <Compile Include="CSGO\Entities\EntityHelpers\Bone.cs" />
+    <Compile Include="CSGO\Entities\EntityHelpers\Skeleton.cs" />
+    <Compile Include="CSGO\Entities\EntityPrototype.cs" />
+    <Compile Include="CSGO\Enums\Flags.cs" />
+    <Compile Include="CSGO\Enums\LifeState.cs" />
+    <Compile Include="CSGO\Enums\MoveState.cs" />
+    <Compile Include="CSGO\Enums\PlayerState.cs" />
+    <Compile Include="CSGO\Enums\ObserverMode.cs" />
+    <Compile Include="CSGO\Heke.cs" />
+    <Compile Include="CSGO\Misc\RPMLazyArray.cs" />
+    <Compile Include="CSGO\Modules\Aim.cs" />
+    <Compile Include="CSGO\Modules\AutoPistol.cs" />
+    <Compile Include="CSGO\Modules\BunnyHop.cs" />
+    <Compile Include="CSGO\Modules\EchoModule.cs" />
+    <Compile Include="CSGO\Modules\GlowHelpers\GlowManager.cs" />
+    <Compile Include="CSGO\Modules\GlowHelpers\GlowObjectDefinition.cs" />
+    <Compile Include="CSGO\Modules\GlowModule.cs" />
+    <Compile Include="CSGO\Modules\HotkeyModule.cs" />
+    <Compile Include="CSGO\Modules\NoRecoil.cs" />
+    <Compile Include="CSGO\Modules\SnapshotHelpers\EntityCache.cs" />
+    <Compile Include="CSGO\Modules\Trigger.cs" />
+    <Compile Include="CSGO\ClassIDs\RecvProp_t.cs" />
+    <Compile Include="CSGO\ClassIDs\RecvTable_t.cs" />
+    <Compile Include="CSGO\Modules\ViewModule.cs" />
+    <Compile Include="CSGO\Offsets.cs" />
+    <Compile Include="CSGO\Settings.cs" />
+    <Compile Include="CSGO\Modules\Snapshot.cs" />
+    <Compile Include="Memes.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Classes.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZatsHackBase\ZatsHackBase.csproj">
+      <Project>{b0524aed-1972-443a-9eed-6f1c8fdbe37a}</Project>
+      <Name>ExternalUtilsCSharp2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

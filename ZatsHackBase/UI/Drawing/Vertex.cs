@@ -27,7 +27,7 @@ namespace ZatsHackBase.UI
             Color = color;
             UV = uv;
         }
-
+        
         [FieldOffset(0)] public Vector2 Origin;
         [FieldOffset(16)] public RawColor4 Color;
         [FieldOffset(32)] public Vector2 UV;

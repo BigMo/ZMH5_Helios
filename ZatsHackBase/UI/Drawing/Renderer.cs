@@ -28,16 +28,8 @@ namespace ZatsHackBase.UI
         private D3D11.BlendState blendState;
 
         // Shaders
-        private D3D11.VertexShader vertexShader;
-        private D3D11.PixelShader pixelShader;
-        private ShaderSignature inputSignature;
-        private D3D11.InputLayout inputLayout;
-        private D3D11.InputElement[] inputElements = new D3D11.InputElement[]
-        {
-            new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-            new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-            new D3D11.InputElement("TEXCOORD", 0, Format.R32G32_Float, 32, 0),
-        };
+        private ShaderSet fontShader;
+        private ShaderSet primitiveShader;
         #endregion
 
         #region PROPERTIES
@@ -79,8 +71,8 @@ namespace ZatsHackBase.UI
                 renderTargetView = new D3D11.RenderTargetView(d3dDevice, backBuffer);
             }
             blendState = new D3D11.BlendState(d3dDevice, D3D11.BlendStateDescription.Default());
-            InitializeShaders();
             GeometryBuffer = new GeometryBuffer(this);
+            InitializeShaders();
 
             ViewportSize = new Size2F(form.Width, form.Height);
             hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
@@ -89,69 +81,56 @@ namespace ZatsHackBase.UI
         private void InitializeShaders()
         {
 
-            var vertexShaderCode =
+            var shader =
                 @"
-                struct VOut
+                struct Vertex
                 {
-                    float4 position : SV_POSITION;
-                    float4 color    : COLOR;
-                    float2 texCoord : TEXCOORD;
+                    float4 Origin : POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
                 };
-                 
-                VOut main(float4 position : POSITION, float4 color : COLOR, float2 texCoord : TEXCOORD)
-                {
-                    VOut output;
-                 
-                    output.position = position;
-                    output.color = color;
-                    output.texCoord = texCoord;
 
+                struct Pixel
+                {
+                    float4 Origin : SV_POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
+                };
+
+                Pixel vertex_entry ( Vertex vertex )
+                {
+                    vertex.Origin.z = 0.0f;
+                    vertex.Origin.w = 1.0f;
+
+                    Pixel output;
+                    
+                    output.Origin   = vertex.Origin;
+                    output.Color    = vertex.Color;
+                    output.UV       = vertex.UV;
+                    
                     return output;
-                }";
-
-            var pixelShaderCode
-                =
-                @"
-                float4 main ( float4 position : SV_POSITION, float4 color : COLOR, float2 texCoord : TEXCOORD ) : SV_TARGET 
-                {
-                    return color;
                 }
+
+                Texture2D    g_texture : register( t0 );           
+                SamplerState g_linearSampler : register( s0 );
+
+                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
+                {
+                    float4 midvalue = g_texture.Sample(g_linearSampler, pixel.UV ) + pixel.Color;
+                    return midvalue / 2;
+                }
+
                 ";
-            // Compile the vertex shader code) 
-            using (var vertexShaderByteCode = ShaderBytecode.Compile(
-                vertexShaderCode,
-                "main", 
-                "vs_4_0", 
-                ShaderFlags.Debug))
-            {
-                // Read input signature from shader code
-                inputSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
 
-                vertexShader = new D3D11.VertexShader(d3dDevice, vertexShaderByteCode);
-            }
+            primitiveShader = new ShaderSet(this,
+                shader, "vertex_entry", "pixel_entry", new[]
+                {
+                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
+                });
 
-            // Compile the pixel shader code
-            using (var pixelShaderByteCode = ShaderBytecode.Compile(
-                pixelShaderCode,
-                "main", 
-                "ps_4_0", 
-                ShaderFlags.Debug))
-            {
-                pixelShader = new D3D11.PixelShader(d3dDevice, pixelShaderByteCode);
-            }
-
-            // Set as current vertex and pixel shaders
-            d3dDeviceContext.VertexShader.Set(vertexShader);
-            d3dDeviceContext.PixelShader.Set(pixelShader);
-
-            // Create the input layout from the input signature and the input elements
-            inputLayout = new D3D11.InputLayout(d3dDevice, inputSignature, inputElements);
-
-            // Set input layout to use
-            d3dDeviceContext.InputAssembler.InputLayout = inputLayout;
-
-            //var fnt = new Font(this,"Arial",12,false,false);
-
+            primitiveShader.Apply();
         }
         
         public void Clear(Color color)
@@ -169,13 +148,12 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-
-            DrawRectangle(new Color(0f, 1f, 0f, 1f), new Vector2(100f, 100f), new Vector2(50f, 50f));
+            
             FillRectangle(new Color(0f, 0f, 1f, 1f), new Vector2(10f,100f), new Vector2(100f,100f));
-            DrawLine(new Color(1f, 0f, 0f, 1f), new Vector2(20f, 20f), new Vector2(250f, 250f));
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
+
             swapChain.Present(1, PresentFlags.None);
         }
 
@@ -184,10 +162,6 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
 
-            inputLayout.Dispose();
-            inputSignature.Dispose();
-            vertexShader.Dispose();
-            pixelShader.Dispose();
             renderTargetView.Dispose();
             swapChain.Dispose();
             d3dDevice.Dispose();
@@ -213,6 +187,7 @@ namespace ZatsHackBase.UI
             //    1
             //});
 
+            GeometryBuffer.SetShader(primitiveShader);
             GeometryBuffer.DisableUseOfIndices();
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
@@ -224,7 +199,11 @@ namespace ZatsHackBase.UI
                 return;
 
             var col = (RawColor4)color;
+
             points.ToList().ForEach(el => { GeometryBuffer.AppendVertex(new Vertex { Origin = el, Color = col }); });
+
+            GeometryBuffer.SetShader(primitiveShader);
+            GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
 
@@ -234,6 +213,7 @@ namespace ZatsHackBase.UI
                 return;
 
             var col = (RawColor4)color;
+
             GeometryBuffer.AppendVertices(
                 new Vertex(location.X, location.Y, col),
                 new Vertex(location.X + size.X, location.Y, col),
@@ -251,6 +231,7 @@ namespace ZatsHackBase.UI
                 3
             );
 
+            GeometryBuffer.SetShader(primitiveShader);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.TriangleList);
             GeometryBuffer.Trim();
         }
@@ -286,6 +267,7 @@ namespace ZatsHackBase.UI
                 0
             );
 
+            GeometryBuffer.SetShader(primitiveShader);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
@@ -294,6 +276,8 @@ namespace ZatsHackBase.UI
 
         #region FONT
         
+
+
         #endregion
         #endregion
     }

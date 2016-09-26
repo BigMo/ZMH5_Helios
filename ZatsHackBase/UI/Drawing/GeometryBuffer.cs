@@ -9,7 +9,7 @@ using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
-
+using ZatsHackBase.UI.Drawing;
 using D3D11 = SharpDX.Direct3D11;
 using Math = ZatsHackBase.Maths.Math;
 
@@ -156,6 +156,8 @@ namespace ZatsHackBase.UI
 
             }
 
+            _Synchronised = true;
+
         }
 
         public void Trim()
@@ -164,6 +166,8 @@ namespace ZatsHackBase.UI
             _Dummy.IndexCount = _Dummy.VertexCount = 0;
             _Dummy.UseIndices = true;
             _Dummy.UseClipping = false;
+            _Dummy.Texture = null;
+            _Dummy.Sampler = null;
         }
 
         public void Draw()
@@ -182,8 +186,14 @@ namespace ZatsHackBase.UI
             foreach (var batch in _Batches)
             {
 
-                _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
+                //if (batch.TargetShader != null)
+                //    batch.TargetShader.Apply();
 
+                _Renderer.DeviceContext.VertexShader.SetShaderResources(0, 1, batch.Texture);
+                _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
+
+                _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
+               
                 if (batch.UseIndices == true)
                 {
                     _Renderer.DeviceContext.DrawIndexed(batch.IndexCount, index_offset, vertex_offset);
@@ -199,6 +209,12 @@ namespace ZatsHackBase.UI
 
         }
 
+        public void SetupTexture(D3D11.ShaderResourceView texture, D3D11.SamplerState state)
+        {
+            _Dummy.Texture = texture;
+            _Dummy.Sampler = state;
+        }
+
         public void SetPrimitiveType(PrimitiveTopology topology)
         {
             _Dummy.DrawMode = topology;
@@ -207,6 +223,11 @@ namespace ZatsHackBase.UI
         public void DisableUseOfIndices()
         {
             _Dummy.UseIndices = false;
+        }
+
+        public void SetShader(ShaderSet shader)
+        {
+            _Dummy.TargetShader = shader;
         }
 
         #endregion

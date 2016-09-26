@@ -26,9 +26,6 @@ namespace _ZMH5__Helios
         public override void BeforePluginsTick(TickEventArgs args)
         {
             base.BeforePluginsTick(args);
-
-            //this.Overlay.Renderer.DrawRectangle(Color.White, Vector2.Zero, Vector2.Unit * 10);
-            this.Overlay.Renderer.DrawLine(Color.Red, Vector2.Zero, Vector2.Unit * 1000f);
         }
     }
 }

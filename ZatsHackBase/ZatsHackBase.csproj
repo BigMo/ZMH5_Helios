@@ -32,15 +32,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.3.0.2\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>..\SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.D3DCompiler, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.D3DCompiler.3.0.2\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\SharpDX.D3DCompiler.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.3.0.2\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\SharpDX.Direct3D11.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.DirectInput, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -48,7 +48,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.DXGI.3.0.2\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\SharpDX.DXGI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -104,6 +104,7 @@
     <Compile Include="UI\Drawing\GeometryBuffer.cs" />
     <Compile Include="UI\Drawing\Glyph.cs" />
     <Compile Include="UI\Drawing\Renderer.cs" />
+    <Compile Include="UI\Drawing\ShaderSet.cs" />
     <Compile Include="UI\Drawing\Vertex.cs" />
     <Compile Include="UI\GUI\ContainerControl.cs" />
     <Compile Include="UI\GUI\Control.cs" />

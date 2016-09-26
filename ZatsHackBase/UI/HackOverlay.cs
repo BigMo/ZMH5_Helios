@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.UI
 {
@@ -16,12 +16,14 @@ namespace ZatsHackBase.UI
         public Renderer Renderer { get; private set; }
         public EUCProcess Process { get; private set; }
         public Form Form { get; private set; }
+        public Color BackColor { get; set; }
         public Thread FormThread { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
         public HackOverlay(EUCProcess proc)
         {
+            BackColor = Color.Transparent;
             Process = proc;
             Renderer = new Renderer();
             FormThread = new Thread(() =>

@@ -9,6 +9,7 @@ using _ZMH5__Helios.CSGO.Modules.GlowHelpers;
 using _ZMH5__Helios.CSGO.Entities;
 using ZatsHackBase;
 using _ZMH5__Helios.CSGO.Misc;
+using ZatsHackBase.UI.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -26,9 +27,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         public GlowModule() : base(ModulePriority.High)
         {
         }
-
-        static bool once = true;
-
+        
         protected override void OnFirstRun(TickEventArgs args)
         {
             base.OnFirstRun(args);

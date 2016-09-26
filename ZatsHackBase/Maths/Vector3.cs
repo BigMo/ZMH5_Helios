@@ -114,6 +114,19 @@ namespace ZatsHackBase.Maths
                 Z /= len;
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Vector3)
+                return (Vector3)obj == this;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+        }
         #endregion
     }
 }

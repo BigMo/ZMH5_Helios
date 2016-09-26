@@ -73,7 +73,6 @@
     <Compile Include="CSGO\ClassIDs\ClientClassParser.cs" />
     <Compile Include="CSGO\ClassIDs\ManagedRecvProp.cs" />
     <Compile Include="CSGO\ClassIDs\ManagedRecvTable.cs" />
-    <Compile Include="CSGO\Color.cs" />
     <Compile Include="CSGO\Entities\BaseCombatWeapon.cs" />
     <Compile Include="CSGO\Entities\BaseEntity.cs" />
     <Compile Include="CSGO\Entities\BasePlayer.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="CSGO\Offsets.cs" />
     <Compile Include="CSGO\Settings.cs" />
     <Compile Include="CSGO\Modules\Snapshot.cs" />
+    <Compile Include="HekeTest.cs" />
     <Compile Include="Memes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

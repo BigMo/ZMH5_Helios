@@ -83,7 +83,11 @@
     <Compile Include="Core\Timing\Time.cs" />
     <Compile Include="Core\StreamExtension.cs" />
     <Compile Include="IO\Logging.cs" />
+    <Compile Include="Maths\Margins.cs" />
     <Compile Include="Maths\Math.cs" />
+    <Compile Include="Maths\Point.cs" />
+    <Compile Include="Maths\Rectangle.cs" />
+    <Compile Include="Maths\Size.cs" />
     <Compile Include="Maths\Vector2.cs" />
     <Compile Include="Maths\Vector3.cs" />
     <Compile Include="Misc\BiGenericEventArgs.cs" />
@@ -94,8 +98,24 @@
     <Compile Include="UI\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\Drawing\Batch.cs" />
+    <Compile Include="UI\Drawing\Color.cs" />
+    <Compile Include="UI\Drawing\Font.cs" />
+    <Compile Include="UI\Drawing\GeometryBuffer.cs" />
+    <Compile Include="UI\Drawing\Glyph.cs" />
+    <Compile Include="UI\Drawing\Renderer.cs" />
+    <Compile Include="UI\Drawing\Vertex.cs" />
+    <Compile Include="UI\GUI\ContainerControl.cs" />
+    <Compile Include="UI\GUI\Control.cs" />
+    <Compile Include="UI\GUI\ControlState.cs" />
+    <Compile Include="UI\GUI\Controls\Button.cs" />
+    <Compile Include="UI\GUI\Controls\Checkbox.cs" />
+    <Compile Include="UI\GUI\Controls\Frame.cs" />
+    <Compile Include="UI\GUI\IndicationDescriptor.cs" />
+    <Compile Include="UI\GUI\LayoutEngine.cs" />
+    <Compile Include="UI\GUI\LocationChangeEventArgs.cs" />
+    <Compile Include="UI\GUI\RenderEventArgs.cs" />
     <Compile Include="UI\HackOverlay.cs" />
-    <Compile Include="UI\Renderer.cs" />
     <Compile Include="WinAPI.cs" />
   </ItemGroup>
   <ItemGroup>

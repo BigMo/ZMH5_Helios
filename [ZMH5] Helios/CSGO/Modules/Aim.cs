@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase;
+using ZatsHackBase.UI.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -59,7 +60,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             if (currentId != 0)
             {
                 var enemy = Program.Hack.StateMod.Players[currentId];
-                Program.Hack.Glow.EncolorObject(new Color() { A = 1, B = 1 }, enemy.m_iGlowIndex);
+                Program.Hack.Glow.EncolorObject(Color.Blue, enemy.m_iGlowIndex);
 
                 Program.Hack.View.ApplyChange(CalcAngle(src, enemy.m_Skeleton.Value[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value);
             }

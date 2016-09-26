@@ -14,7 +14,6 @@ namespace ZatsHackBase.Core
         #region VARIABLES
         private LoopTicker ticker;
         private List<HackModule> modules;
-        private SharpDX.Mathematics.Interop.RawColor4 transparent = new SharpDX.Mathematics.Interop.RawColor4(0, 0, 0, 0.25f);
         #endregion
 
         #region PROPERTIES
@@ -87,7 +86,8 @@ namespace ZatsHackBase.Core
             if (Overlay != null)
             {
                 Overlay.AdjustForm();
-                Overlay.Renderer.Clear(transparent);
+                Overlay.Renderer.Clear(Overlay.BackColor);
+                Overlay.Renderer.GeometryBuffer.ClipRegion = new Maths.Rectangle();
             }
         }
         public virtual void AfterPluginsTick(TickEventArgs args)

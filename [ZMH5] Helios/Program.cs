@@ -26,6 +26,11 @@ namespace _ZMH5__Helios
 
         static void Main(string[] args)
         {
+
+            HekeTest t = new HekeTest();
+            t.Run();
+
+            return;
             //Setup
             Animation = new ConsoleAnimation();
             Animation.Text = Name = string.Format("[ZMH5] Helios v.{0}", Assembly.GetExecutingAssembly().GetName().Version);

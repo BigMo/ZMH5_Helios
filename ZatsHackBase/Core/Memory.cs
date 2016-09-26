@@ -53,7 +53,6 @@ namespace ZatsHackBase.Core
             bool found = false;
             long start = mmod.ImageBase;// codeOnly ? mmod.BaseOfCode : mmod.ImageBase;
             long size = codeOnly ? mmod.SizeOfCode : mmod.MemorySize;
-            //TODO: Figure out why SizeOfCode can be greater than MemorySize and fix this.
 
             while (true)
             {

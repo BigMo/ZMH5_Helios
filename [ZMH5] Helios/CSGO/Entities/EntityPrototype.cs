@@ -61,7 +61,7 @@ namespace _ZMH5__Helios.CSGO.Entities
 
                 if (ClientClassParser.ClientClasses.Any(x => x.Address == address))
                     return ClientClassParser.ClientClasses.First(x => x.Address == address);
-                return null;
+                return null; 
             });
         }
         protected T ReadAt<T>(long offset) where T : struct

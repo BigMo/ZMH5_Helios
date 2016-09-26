@@ -19,6 +19,7 @@ namespace _ZMH5__Helios.CSGO.BSP
         public int m_Texdata;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     struct Vector4
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]

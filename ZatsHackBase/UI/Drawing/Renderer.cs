@@ -117,7 +117,7 @@ namespace ZatsHackBase.UI
                 float4 pixel_entry ( Pixel pixel ) : SV_TARGET
                 {
                     float4 midvalue = g_texture.Sample(g_linearSampler, pixel.UV ) + pixel.Color;
-                    return midvalue / 2;
+                    return pixel.Color;
                 }
 
                 ";

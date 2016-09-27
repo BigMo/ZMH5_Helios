@@ -56,26 +56,43 @@ namespace _ZMH5__Helios.CSGO.Modules
                     continue;
 
                 float dist = lp.DistanceTo(enemy);
-                Vector2 size = new Vector2((ptUp.Y - ptDown.Y) * 0.5f, ptDown.Y - ptUp.Y); //TODO: Präziser berechnen, am besten über Bones
+                Vector2 size = new Vector2((ptDown.Y - ptUp.Y) * 0.5f, ptDown.Y - ptUp.Y); //TODO: Präziser berechnen, am besten über Bones
                 Vector2 upperLeft = new Vector2((ptUp.X + ptDown.X) / 2f - size.X * 0.5f, ptUp.Y);
                 Program.Hack.Overlay.Renderer.DrawRectangle(
                     Color.Red, 
                     upperLeft,
                     size);
 
-                //Vector2 hpBarTop = new Vector2(upperLeft.X + size.X + 2f, upperLeft.Y);
-                //Vector2 hpBarFillTop = new Vector2(upperLeft.X + size.X + 2f, upperLeft.Y);
+                Vector2 barSize = new Vector2(size.X, size.Y / 20f);
+                Vector2 barHP = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y * 0.5f);
+                Vector2 barArmor = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y + barSize.Y);
 
+                DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green);
+                DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White);
             }
         }
 
-        private void DrawBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill)
+        private void DrawVBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill)
         {
             Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
-            Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
 
-            float percHeight = size.Y * System.Math.Min(1f, System.Math.Max(0f, fillPerc));
-            //Program.Hack.Overlay.Renderer.FillRectangle(fill, )
+            float percHeight = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
+            Program.Hack.Overlay.Renderer.FillRectangle(fill,
+                new Vector2(upperLeft.X, upperLeft.Y + size.Y - size.Y * percHeight),
+                new Vector2(size.X, size.Y * percHeight));
+
+            Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
+        }
+        private void DrawHBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill)
+        {
+            Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
+
+            float percWidth = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
+            Program.Hack.Overlay.Renderer.FillRectangle(fill,
+                new Vector2(upperLeft.X, upperLeft.Y),
+                new Vector2(size.X * percWidth, size.Y));
+
+            Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
         }
         #endregion
     }

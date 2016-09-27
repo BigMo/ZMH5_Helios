@@ -183,11 +183,16 @@ namespace ZatsHackBase.UI
             int vertex_offset = 0;
             int index_offset = 0;
 
+            ShaderSet last_shader = null;
+
             foreach (var batch in _Batches)
             {
 
-                //if (batch.TargetShader != null)
-                //    batch.TargetShader.Apply();
+                if (batch.TargetShader != null && batch.TargetShader != last_shader)
+                {
+                    batch.TargetShader.Apply();
+                    last_shader = batch.TargetShader;
+                }
                 
                 _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
                 _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);

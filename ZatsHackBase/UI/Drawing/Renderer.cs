@@ -30,6 +30,8 @@ namespace ZatsHackBase.UI
         // Shaders
         private ShaderSet fontShader;
         private ShaderSet primitiveShader;
+
+        private List<Font> fonts; 
         #endregion
 
         #region PROPERTIES
@@ -55,7 +57,7 @@ namespace ZatsHackBase.UI
             SwapChainDescription swapChainDesc = new SwapChainDescription()
             {
                 ModeDescription = backBufferDesc,
-                SampleDescription = new SampleDescription(4, 0),
+                SampleDescription = new SampleDescription(8, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 1,
                 OutputHandle = form.Handle,
@@ -71,8 +73,12 @@ namespace ZatsHackBase.UI
                 renderTargetView = new D3D11.RenderTargetView(d3dDevice, backBuffer);
             }
             blendState = new D3D11.BlendState(d3dDevice, D3D11.BlendStateDescription.Default());
+
             GeometryBuffer = new GeometryBuffer(this);
+
             InitializeShaders();
+
+            fonts = new List<Font>();
 
             ViewportSize = new Size2F(form.Width, form.Height);
             hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
@@ -80,8 +86,47 @@ namespace ZatsHackBase.UI
 
         private void InitializeShaders()
         {
+            //http://www.elitepvpers.com/forum/c-c/2936143-kreis-mithilfe-von-vertices-zeichnen.html#post25697120
 
-            var shader =
+            var primitiveShaderCode =
+                @"
+                struct Vertex
+                {
+                    float4 Origin : POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
+                };
+
+                struct Pixel
+                {
+                    float4 Origin : SV_POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
+                };
+
+                Pixel vertex_entry ( Vertex vertex )
+                {
+                    vertex.Origin.z = 0.0f;
+                    vertex.Origin.w = 1.0f;
+
+                    Pixel output;
+                    
+                    output.Origin   = vertex.Origin;
+                    output.Color    = vertex.Color;
+                    output.UV       = vertex.UV;
+                    
+                    return output;
+                }
+
+                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
+                {
+                    return pixel.Color;
+                }
+
+                ";
+
+
+            var fontShaderCode =
                 @"
                 struct Vertex
                 {
@@ -116,21 +161,44 @@ namespace ZatsHackBase.UI
 
                 float4 pixel_entry ( Pixel pixel ) : SV_TARGET
                 {
-                    float4 midvalue = g_texture.Sample(g_linearSampler, pixel.UV ) + pixel.Color;
-                    return pixel.Color;
+                    float4 texColor = g_texture.Sample ( g_linearSampler, pixel.UV );
+                    float4 midvalue = texColor + pixel.Color;
+
+                    midvalue.x = midvalue.x / 2.0f;
+                    midvalue.y = midvalue.y / 2.0f;
+                    midvalue.z = midvalue.z / 2.0f;
+
+                    midvalue.w = texColor.w;
+
+                    if ( texColor.w == 0.0f )
+                    {
+                        midvalue.x = 0.0f;
+                        midvalue.y = 0.0f;
+                        midvalue.z = 0.0f;
+                    }
+
+                    return midvalue;
                 }
 
                 ";
 
             primitiveShader = new ShaderSet(this,
-                shader, "vertex_entry", "pixel_entry", new[]
+                primitiveShaderCode, "vertex_entry", "pixel_entry", new[]
                 {
                     new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
                 });
 
-            primitiveShader.Apply();
+            fontShader = new ShaderSet(this,
+                fontShaderCode, "vertex_entry", "pixel_entry", new[]
+                {
+                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
+                });
+
+            fontShader.Apply();
         }
         
         public void Clear(Color color)
@@ -149,7 +217,12 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
             
-            FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
+            //FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
+            //testFont.DrawString(GeometryBuffer, new Vector2(10f, 10f), new RawColor4(1f, 0f, 1f, 1f), "test mo <3");
+
+            DrawString(new Color(1f, 0f, 1f, 0f), testFont, new Vector2(10f, 10f), "test mo <3");
+            FillRectangle(new Color(1f, 1f,0f,0f), new Vector2(10f,50f), new Vector2(100f,100f) );;
+            DrawRectangle(new Color(1f, 0f, 0f, 1f), new Vector2(10f, 160f), new Vector2(100f, 100f));
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
@@ -170,6 +243,18 @@ namespace ZatsHackBase.UI
         #endregion
 
         #region RENDER FEATURES
+        public Font CreateFont(string family, int height)
+        {
+            foreach (var fnt in fonts)
+            {
+                if (fnt.Family == family && fnt.Height == height)
+                    return fnt;
+            }
+            var font = new Font(this, family, height, false, false);
+            fonts.Add(font);
+            return font;
+        }
+
         public void DrawLine(Color color, Vector2 from, Vector2 to)
         {
             if (!Initialized)
@@ -188,8 +273,10 @@ namespace ZatsHackBase.UI
             //});
 
             GeometryBuffer.SetShader(primitiveShader);
+
             GeometryBuffer.DisableUseOfIndices();
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
+
             GeometryBuffer.Trim();
         }
 
@@ -277,13 +364,12 @@ namespace ZatsHackBase.UI
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
-
-        #endregion
-
-        #region FONT
         
-
-
+        public void DrawString(Color color, Font font, Vector2 location, string text)
+        {
+            GeometryBuffer.SetShader(fontShader);
+            font.DrawString(GeometryBuffer,location,(RawColor4)color,text);   
+        }
         #endregion
         #endregion
     }

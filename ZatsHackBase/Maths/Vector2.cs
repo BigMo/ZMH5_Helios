@@ -141,5 +141,12 @@ namespace ZatsHackBase.Maths
             }
         }
         #endregion
+
+        #region METHODS
+        public override string ToString()
+        {
+            return string.Format("[Vec2 X={0}, Y={1}", X, Y);
+        }
+        #endregion
     }
 }

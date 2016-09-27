@@ -287,7 +287,7 @@ namespace ZatsHackBase.UI
                     (short)(vertex_offset + 1), (short)(vertex_offset + 2), (short)(vertex_offset + 3)
                     );
 
-                vertex_offset += 6;
+                vertex_offset += 4;
 
                 wide_pos += glyph.Size.Width;
             }

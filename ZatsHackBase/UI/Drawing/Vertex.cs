@@ -20,12 +20,12 @@ namespace ZatsHackBase.UI
             Color = color;
             UV = new Vector2(0f,0f);
         }
-        public Vertex(float x, float y, RawColor4 color, Vector2 uv)
+        public Vertex(float x, float y, RawColor4 color, float u, float v)
         {
             Origin.X = x;
             Origin.Y = y;
             Color = color;
-            UV = uv;
+            UV = new Vector2(u,v);
         }
         
         [FieldOffset(0)] public Vector2 Origin;

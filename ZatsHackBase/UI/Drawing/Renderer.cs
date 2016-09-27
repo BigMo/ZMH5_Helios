@@ -31,7 +31,7 @@ namespace ZatsHackBase.UI
         private ShaderSet fontShader;
         private ShaderSet primitiveShader;
 
-        private Font testFont;
+        private List<Font> fonts; 
         #endregion
 
         #region PROPERTIES
@@ -78,7 +78,7 @@ namespace ZatsHackBase.UI
 
             InitializeShaders();
 
-            testFont = new Font(this,"Verdana",12,false,false);
+            fonts = new List<Font>();
 
             ViewportSize = new Size2F(form.Width, form.Height);
             hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
@@ -86,6 +86,7 @@ namespace ZatsHackBase.UI
 
         private void InitializeShaders()
         {
+            //http://www.elitepvpers.com/forum/c-c/2936143-kreis-mithilfe-von-vertices-zeichnen.html#post25697120
 
             var primitiveShaderCode =
                 @"
@@ -242,6 +243,18 @@ namespace ZatsHackBase.UI
         #endregion
 
         #region RENDER FEATURES
+        public Font CreateFont(string family, int height)
+        {
+            foreach (var fnt in fonts)
+            {
+                if (fnt.Family == family && fnt.Height == height)
+                    return fnt;
+            }
+            var font = new Font(this, family, height, false, false);
+            fonts.Add(font);
+            return font;
+        }
+
         public void DrawLine(Color color, Vector2 from, Vector2 to)
         {
             if (!Initialized)
@@ -351,19 +364,12 @@ namespace ZatsHackBase.UI
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
-
+        
         public void DrawString(Color color, Font font, Vector2 location, string text)
         {
             GeometryBuffer.SetShader(fontShader);
             font.DrawString(GeometryBuffer,location,(RawColor4)color,text);   
         }
-
-        #endregion
-
-        #region FONT
-        
-
-
         #endregion
         #endregion
     }

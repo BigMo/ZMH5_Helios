@@ -234,6 +234,9 @@ namespace ZatsHackBase.UI
 
         #region Properties
 
+        public string Family;
+        public int Height;
+
         #endregion
 
         #region Method

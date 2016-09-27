@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
+using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.UI
@@ -18,6 +19,7 @@ namespace ZatsHackBase.UI
         public Form Form { get; private set; }
         public Color BackColor { get; set; }
         public Thread FormThread { get; private set; }
+        public Vector2 Size { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -38,6 +40,7 @@ namespace ZatsHackBase.UI
                 Application.Run(Form);
             });
             FormThread.IsBackground = true;
+            Size = Vector2.Zero;
         }
         #endregion
 
@@ -59,17 +62,27 @@ namespace ZatsHackBase.UI
                 if (WinAPI.GetClientRect(Process.Process.MainWindowHandle, out rect) &&
                     WinAPI.ClientToScreen(Process.Process.MainWindowHandle, out pt))
                 {
-                    if(Form.Location.X != pt.X || 
-                    Form.Location.Y != pt.Y || 
-                    Form.Width != rect.Right - rect.Left || 
-                    Form.Height != rect.Bottom - rect.Top)
-                    WinAPI.SetWindowPos(Form.Handle,
-                        IntPtr.Zero, 
-                        pt.X, 
-                        pt.Y,
-                        rect.Right - rect.Left, 
-                        rect.Bottom - rect.Top,
-                        0);
+                    bool sizeChanged = 
+                        Form.Width != rect.Right - rect.Left ||
+                        Form.Height != rect.Bottom - rect.Top;
+
+                    bool posChanged = 
+                        Form.Location.X != pt.X ||
+                        Form.Location.Y != pt.Y;
+
+                    if (sizeChanged)
+                        Size = new Vector2(rect.Right - rect.Left, rect.Bottom - rect.Top);
+
+                    if (posChanged || sizeChanged)
+                    {
+                        WinAPI.SetWindowPos(Form.Handle,
+                            IntPtr.Zero,
+                            pt.X,
+                            pt.Y,
+                            rect.Right - rect.Left,
+                            rect.Bottom - rect.Top,
+                            0);
+                    }
                 }
             });
         }

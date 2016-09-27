@@ -68,7 +68,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                         EncolorObject(obj, Program.Settings.GlowGrenadeColor, i);
                     else if(Program.Settings.GlowShowWeapons)
                         EncolorObject(obj, Program.Settings.GlowWeaponColor, i);
-                } else if (player != null && player.IsValid)
+                }
+                else if (player != null && player.IsValid)
                 {
                     if (lp == null || !lp.IsValid)
                         continue;

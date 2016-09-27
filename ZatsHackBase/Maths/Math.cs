@@ -30,6 +30,29 @@ namespace ZatsHackBase.Maths
         {
             return (float)(RAD2DEG * rad);
         }
+
+        public static Vector2 WorldToScreen(Matrix viewMatrix, Vector2 screenSize, Vector3 point3D)
+        {
+            Vector2 returnVector = Vector2.Zero;
+            float w = viewMatrix[3, 0] * point3D.X + viewMatrix[3, 1] * point3D.Y + viewMatrix[3, 2] * point3D.Z + viewMatrix[3, 3];
+            if (w >= 0.01f)
+            {
+                float inverseX = 1f / w;
+                returnVector.X =
+                    (screenSize.X / 2f) +
+                    (0.5f * (
+                    (viewMatrix[0, 0] * point3D.X + viewMatrix[0, 1] * point3D.Y + viewMatrix[0, 2] * point3D.Z + viewMatrix[0, 3])
+                    * inverseX)
+                    * screenSize.X + 0.5f);
+                returnVector.Y =
+                    (screenSize.Y / 2f) -
+                    (0.5f * (
+                    (viewMatrix[1, 0] * point3D.X + viewMatrix[1, 1] * point3D.Y + viewMatrix[1, 2] * point3D.Z + viewMatrix[1, 3])
+                    * inverseX)
+                    * screenSize.Y + 0.5f);
+            }
+            return returnVector;
+        }
         #endregion
     }
 }

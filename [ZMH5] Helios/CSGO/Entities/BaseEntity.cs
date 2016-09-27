@@ -167,6 +167,13 @@ namespace _ZMH5__Helios.CSGO.Entities
             }
             return players.ToArray();
         }
+        public float DistanceTo(BaseEntity other)
+        {
+            if (other == null)
+                return 0f;
+
+            return (other.m_vecOrigin.Value = this.m_vecOrigin.Value).Length;
+        }
         #endregion
     }
 }

@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase;
 using System.Threading;
+using _ZMH5__Helios.CSGO.Entities;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
-    public class AutoPistol : HackModule
+    public class AutoPistolModule : HackModule
     {
-        public AutoPistol() : base(ModulePriority.Normal)
+        public AutoPistolModule() : base(ModulePriority.Normal)
         { }
 
         protected override void OnUpdate(TickEventArgs args)
@@ -20,7 +21,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             base.OnUpdate(args);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            if (lp == null || !lp.IsValid || lp.m_lifeState.Value != Enums.LifeState.Alive)
+            if (!CSLocalPlayer.IsProcessable(lp))
                 return;
 
             var wep = lp.m_ActiveWeapon.Value;

@@ -6,17 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
+using _ZMH5__Helios.CSGO.Entities;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
-    public class NoRecoil : HackModule
+    public class NoRecoilModule : HackModule
     {
         #region VARIABLES
         private int lastClip = 0;
         private Vector3 lastPunch = Vector3.Zero;
         #endregion
 
-        public NoRecoil() : base(ModulePriority.Normal)
+        public NoRecoilModule() : base(ModulePriority.Normal)
         {
         }
 
@@ -28,7 +29,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             return;
             //TODO: Fix...
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            if (lp == null || !lp.IsValid)
+            if (!CSLocalPlayer.IsProcessable(lp))
                 return;
 
             var wep = lp.m_ActiveWeapon.Value;

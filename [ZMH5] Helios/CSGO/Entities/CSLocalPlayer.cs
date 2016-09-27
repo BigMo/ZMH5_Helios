@@ -11,7 +11,7 @@ namespace _ZMH5__Helios.CSGO.Entities
     public class CSLocalPlayer : CSPlayer
     {
         #region VARIABLES
-        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable("DT_Local", "DT_LocalPlayerExclusive"), Program.Offsets.m_iCrosshairID));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable("DT_Local", "DT_LocalPlayerExclusive", "DT_CSLocalPlayerExclusive"), Program.Offsets.m_iCrosshairID));
         #endregion
 
         #region PROPERTIES
@@ -20,6 +20,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         public LazyCache<Vector3> m_viewPunchAngle { get; private set; }
         public LazyCache<Vector3> m_vecViewOffset { get; private set; }
         public LazyCache<Vector3> m_vecVelocity { get; private set; }
+        public LazyCache<int> m_iShotsFired { get; private set; }
         public override int MemSize { get { return memSize.Value; } }
         #endregion
 
@@ -31,6 +32,10 @@ namespace _ZMH5__Helios.CSGO.Entities
         #endregion
 
         #region METHODS
+        public static bool IsProcessable(CSLocalPlayer lp)
+        {
+            return !(lp == null || !lp.IsValid || lp.m_lifeState.Value != Enums.LifeState.Alive);
+        }
         protected override void SetupFields()
         {
             base.SetupFields();
@@ -40,6 +45,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             m_viewPunchAngle = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("DT_LocalPlayerExclusive", "m_Local", "DT_Local", "m_viewPunchAngle"));
             m_vecViewOffset = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("DT_LocalPlayerExclusive", "m_vecViewOffset[0]"));
             m_vecVelocity = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("DT_LocalPlayerExclusive", "m_vecVelocity[0]"));
+            m_iShotsFired = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSLocalPlayerExclusive", "m_iShotsFired"));
         }
 
         public bool CanSee(CSPlayer player, int boneIndex = 6)

@@ -12,7 +12,7 @@ using ZatsHackBase.Maths;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
-    public class Snapshot : HackModule
+    public class StateModule : HackModule
     {
         #region VARIABLES
 
@@ -22,15 +22,17 @@ namespace _ZMH5__Helios.CSGO.Modules
         public int EntityList { get; private set; }
         public int ClientStateAddress { get; private set; }
         public int LocalPlayerAddress { get; private set; }
+        public int ViewMatrixAddress { get; private set; }
         public LazyCache<CSLocalPlayer> LocalPlayer { get; private set; }
         public EntityCache<CSPlayer> PlayersOld { get; private set; }
         public EntityCache<CSPlayer> Players { get; private set; }
         public EntityCache<BaseCombatWeapon> Weapons { get; private set; }
         public LazyCache<Vector3> ViewAngles { get; private set; }
+        public LazyCache<Matrix> ViewMatrix { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public Snapshot() : base(ModulePriority.Highest)
+        public StateModule() : base(ModulePriority.Highest)
         {
             LocalPlayer = new LazyCache<CSLocalPlayer>(() =>
             {
@@ -48,6 +50,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 return Program.Hack.Memory.Read<Vector3>(address + Program.Offsets.SetViewAngles);
             });
+            ViewMatrix = new LazyCache<Matrix>(() => Program.Hack.Memory.Read<Matrix>(ViewMatrixAddress));
         }
         #endregion
 
@@ -62,6 +65,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             EntityList = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.EntityList;
             ClientStateAddress = Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.ClientState;
             LocalPlayerAddress = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.LocalPlayer;
+            ViewMatrixAddress = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.m_mViewMatrix;
         }
         protected override void OnUpdate(TickEventArgs args)
         {
@@ -71,6 +75,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             LocalPlayer.Reset();
             ViewAngles.Reset();
             PlayersOld.Clear();
+            ViewMatrix.Reset();
             PlayersOld.CopyFrom(Players);
             Players.Clear();
             Weapons.Clear();
@@ -84,7 +89,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             Program.Hack.Memory.Write<Vector3>(address + Program.Offsets.SetViewAngles, angles);
         }
 
-        public CSPlayer[] ReadAllPlayers()
+        public CSPlayer[] GetAllPlayers()
         {
             for (int i = 1; i <= 32; i++)
             {

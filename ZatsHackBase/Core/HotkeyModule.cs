@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core;
 using ZatsHackBase.Core.Timing;
 
-namespace _ZMH5__Helios.CSGO.Modules
+namespace ZatsHackBase.Core
 {
     public class HotkeyModule : HackModule
     {

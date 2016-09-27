@@ -28,30 +28,32 @@ namespace _ZMH5__Helios.CSGO
         public ProcessModule ClientDll { get; private set; }
         public ProcessModule EngineDll { get; private set; }
         public EchoModule EchoMod { get; private set; }
-        public Snapshot StateMod { get; private set; }
+        public StateModule StateMod { get; private set; }
         public BunnyHop BunnyHop { get; private set; }
-        public Trigger TriggerBot { get; private set; }
+        public TriggerModule TriggerBot { get; private set; }
         public ViewModule View { get; private set; }
-        public NoRecoil RCS { get; private set; }
-        public Aim AimBot { get; private set; }
-        public AutoPistol Pistol { get; private set; }
+        public NoRecoilModule RCS { get; private set; }
+        public AimModule AimBot { get; private set; }
+        public AutoPistolModule Pistol { get; private set; }
         public GlowModule Glow { get; private set; }
         public BSPFile Map { get; private set; }
+        public ESPModule ESP { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public Heke() : base("csgo", 60, false)
+        public Heke() : base("csgo", 60, true)
         {
             first = true;
             EchoMod = new EchoModule();
-            StateMod = new Snapshot();
+            StateMod = new StateModule();
             BunnyHop = new BunnyHop();
-            TriggerBot = new Trigger();
+            TriggerBot = new TriggerModule();
             View = new ViewModule();
-            RCS = new NoRecoil();
-            AimBot = new Aim();
-            Pistol = new AutoPistol();
+            RCS = new NoRecoilModule();
+            AimBot = new AimModule();
+            Pistol = new AutoPistolModule();
             Glow = new GlowModule();
+            ESP = new ESPModule();
 
             AddModule(EchoMod);
             AddModule(StateMod);
@@ -62,6 +64,7 @@ namespace _ZMH5__Helios.CSGO
             AddModule(AimBot);
             AddModule(Pistol);
             AddModule(Glow);
+            AddModule(ESP);
         }
         #endregion
 

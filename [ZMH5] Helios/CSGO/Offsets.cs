@@ -28,6 +28,7 @@ namespace _ZMH5__Helios.CSGO
         public int m_iCrosshairID { get; set; }
         public int m_iGlowIndex { get; set; }
         public int m_pBoneMatrix { get; set; }
+        public int m_mViewMatrix { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -43,6 +44,7 @@ namespace _ZMH5__Helios.CSGO
             m_iID = 0;
             m_iCrosshairID = 0xaa54;
             m_pBoneMatrix = 0x2698;
+            m_mViewMatrix = 0x04A4AAB4;
         }
         public static Offsets FromFile(string file)
         {

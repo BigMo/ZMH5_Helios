@@ -7,16 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ZatsHackBase.Core;
 using ZatsHackBase.UI.Drawing;
 
 namespace _ZMH5__Helios.CSGO
 {
     public class Settings
     {
-        #region ENUMS
-        public enum eMode { Hold, Toggle }
-        #endregion
-
         #region PROPERTIES
         #region INFO
         public string _InfoModes = "Modes are: \"Hold\" and \"Toggle\"";
@@ -28,7 +25,7 @@ namespace _ZMH5__Helios.CSGO
         [JsonConverter(typeof(StringEnumConverter))]
         public Keys AimKey { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public eMode AimMode { get; set; }
+        public eKeyMode AimMode { get; set; }
         public float AimFov { get; set; }
         public bool AimLock { get; set; }
         public int AimBone { get; set; }
@@ -40,7 +37,7 @@ namespace _ZMH5__Helios.CSGO
         [JsonConverter(typeof(StringEnumConverter))]
         public Keys TriggerKey { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public eMode TriggerMode { get; set; }
+        public eKeyMode TriggerMode { get; set; }
         public int TriggerDelay { get; set; }
         public bool TriggerBurst { get; set; }
         public int TriggerBurstCount { get; set; }
@@ -69,14 +66,14 @@ namespace _ZMH5__Helios.CSGO
         {
             AimEnabled = true;
             AimKey = Keys.MButton;
-            AimMode = eMode.Toggle;
+            AimMode = eKeyMode.Toggle;
             AimLock = true;
             AimFov = 1f;
             AimBone = 6;
 
             TriggerEnabled = true;
             TriggerKey = Keys.XButton2;
-            TriggerMode = eMode.Toggle;
+            TriggerMode = eKeyMode.Toggle;
             TriggerDelay = 20;
             TriggerBurst = false;
             TriggerBurstCount = 5;

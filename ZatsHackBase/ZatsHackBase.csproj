@@ -63,7 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\eKeyMode.cs" />
     <Compile Include="Core\Hack.cs" />
+    <Compile Include="Core\HotkeyModule.cs" />
     <Compile Include="Core\LazyArray.cs" />
     <Compile Include="Core\LazyCache.cs" />
     <Compile Include="Core\HackModule.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="IO\Logging.cs" />
     <Compile Include="Maths\Margins.cs" />
     <Compile Include="Maths\Math.cs" />
+    <Compile Include="Maths\Matrix.cs" />
     <Compile Include="Maths\Point.cs" />
     <Compile Include="Maths\Rectangle.cs" />
     <Compile Include="Maths\Size.cs" />

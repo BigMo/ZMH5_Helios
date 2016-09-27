@@ -7,10 +7,11 @@ using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Core;
 using ZatsHackBase;
 using System.Threading;
+using _ZMH5__Helios.CSGO.Entities;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
-    public class Trigger : HotkeyModule
+    public class TriggerModule : HotkeyModule
     {
         #region VARIABLES
         private int shotsLeft = 0;
@@ -21,7 +22,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         #endregion
 
         #region CONSTRUCTORS
-        public Trigger() : base(ModulePriority.Normal)
+        public TriggerModule() : base(ModulePriority.Normal)
         {
             lastEnemyDetection = DateTime.Now;
         }
@@ -41,14 +42,14 @@ namespace _ZMH5__Helios.CSGO.Modules
             base.OnUpdate(args);
 
             //Aquire localplayer
-            var localPlayer = Program.Hack.StateMod.LocalPlayer.Value;
-            if (localPlayer == null || !localPlayer.IsValid || localPlayer.m_lifeState.Value != Enums.LifeState.Alive)
+            var lp = Program.Hack.StateMod.LocalPlayer.Value;
+            if (!CSLocalPlayer.IsProcessable(lp))
             {
                 //Program.Logger.Log("TRG: No LocalPlayer");
                 return;
             }
             //Aquire active weapon
-            var wep = localPlayer.m_ActiveWeapon;
+            var wep = lp.m_ActiveWeapon;
             if (wep.Value == null || !wep.Value.IsValid)
             {
                 //Program.Logger.Log("TRG: No ActiveWeapon");
@@ -60,7 +61,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 if (wep.Value.m_iClip1.Value > 0)
                 {
-                    if ((wep.Value.m_flNextPrimaryAttack - localPlayer.m_flSimulationTime) <= 0f)
+                    if ((wep.Value.m_flNextPrimaryAttack - lp.m_flSimulationTime) <= 0f)
                     {
                         //Program.Logger.Log("TRG: Shooting burst");
                         Shoot();
@@ -70,7 +71,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 {
                     shotsLeft = 0;
                 }
-                lastShots = localPlayer.m_iShotsFired;
+                lastShots = lp.m_iShotsFired;
                 lastEnemyId = 0;
                 return;
             }
@@ -79,7 +80,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 return;
 
             //Empty crosshair? -> Reset id
-            if (localPlayer.m_iCrosshairIdx == 0)
+            if (lp.m_iCrosshairIdx == 0)
             {
                 if (lostOnce)
                 {
@@ -90,10 +91,10 @@ namespace _ZMH5__Helios.CSGO.Modules
                 lostOnce = true;
             }
             //New enemy? Check entity and set variables
-            else if (localPlayer.m_iCrosshairIdx != lastEnemyId)
+            else if (lp.m_iCrosshairIdx != lastEnemyId)
             {
-                var enemy = Program.Hack.StateMod.Players[localPlayer.m_iCrosshairIdx.Value];
-                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == localPlayer.m_iTeamNum.Value)
+                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx.Value];
+                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
                 {
                     //Program.Logger.Log("TRG: No (valid) enemy");
                     lastEnemyId = 0;
@@ -103,7 +104,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 {
                     //Program.Logger.Log("TRG: Enemy set to {0}", localPlayer.m_iCrosshairIdx.Value);
                     lastEnemyDetection = DateTime.Now;
-                    lastEnemyId = localPlayer.m_iCrosshairIdx;
+                    lastEnemyId = lp.m_iCrosshairIdx;
                     lostOnce = false;
                 }
             }
@@ -113,8 +114,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                 if ((DateTime.Now - lastEnemyDetection).TotalMilliseconds < Program.Settings.TriggerDelay)
                     return;
 
-                var enemy = Program.Hack.StateMod.Players[localPlayer.m_iCrosshairIdx.Value];
-                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == localPlayer.m_iTeamNum.Value)
+                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx.Value];
+                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
                     return;
 
                 //Program.Logger.Log("TRG: ALRIGHT");

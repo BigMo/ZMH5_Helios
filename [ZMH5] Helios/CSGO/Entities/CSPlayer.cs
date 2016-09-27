@@ -12,14 +12,14 @@ namespace _ZMH5__Helios.CSGO.Entities
     {
         #region VARIABLES
         public static LazyCache<int> CLASSID = new LazyCache<int>(() => ClassIDs.ClientClassParser.ClientClasses.First(x => x.NetworkName == "CCSPlayer").ClassID);
-        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable("DT_CSPlayer", "DT_CSLocalPlayerExclusive"));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable("DT_CSPlayer"));
         #endregion
 
         #region PROPERTIES
         public LazyCache<MoveState> m_iMoveState { get; private set; }
         public LazyCache<PlayerState> m_iPlayerState { get; private set; }
         public LazyCache<int> m_bIsScoped { get; private set; }
-        public LazyCache<int> m_iShotsFired { get; private set; }
+        public LazyCache<int> m_ArmorValue { get; private set; }
         public override bool IsValid { get { return base.IsValid && CLASSID == this.m_ClientClass.Value.ClassID; } }
         public override int MemSize { get { return memSize.Value; } }
         #endregion
@@ -47,7 +47,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             m_iMoveState = new LazyCache<MoveState>(() => (MoveState)this.ReadNetVar<int>("DT_CSPlayer", "m_iMoveState"));
             m_iPlayerState = new LazyCache<PlayerState>(() => (PlayerState)this.ReadNetVar<int>("DT_CSPlayer", "m_iPlayerState"));
             m_bIsScoped = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSPlayer", "m_bIsScoped"));
-            m_iShotsFired = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSLocalPlayerExclusive", "m_iShotsFired"));
+            m_ArmorValue = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSPlayer", "m_ArmorValue"));
         }
         #endregion
     }

@@ -8,16 +8,17 @@ using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase;
 using ZatsHackBase.UI.Drawing;
+using _ZMH5__Helios.CSGO.Entities;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
-    public class Aim : HotkeyModule
+    public class AimModule : HotkeyModule
     {
         #region VARIABLES
         private int currentId;
         #endregion
 
-        public Aim() : base(ModulePriority.Normal)
+        public AimModule() : base(ModulePriority.Normal)
         { }
 
         protected override void OnFirstRun(TickEventArgs args)
@@ -33,7 +34,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             base.OnUpdate(args);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            if (lp == null || !lp.IsValid || lp.m_lifeState.Value != Enums.LifeState.Alive)
+            if (!CSLocalPlayer.IsProcessable(lp))
                 return;
 
             if (!ActiveByHotkey)
@@ -90,7 +91,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int GetTarget(Vector3 src)
         {
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            var enemies = Program.Hack.StateMod.ReadAllPlayers().
+            var enemies = Program.Hack.StateMod.GetAllPlayers().
                 Where(x => x != null && x.IsValid).
                 Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
                 Where(x => x.m_lifeState.Value == Enums.LifeState.Alive).

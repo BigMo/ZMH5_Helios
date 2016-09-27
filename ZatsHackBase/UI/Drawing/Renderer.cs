@@ -139,7 +139,7 @@ namespace ZatsHackBase.UI
                 return;
 
             d3dDeviceContext.OutputMerger.SetRenderTargets(renderTargetView);
-            d3dDeviceContext.OutputMerger.SetBlendState(blendState, new Color(0f, 0f, 0f, 0f), 0xFFFFFFFF);
+            d3dDeviceContext.OutputMerger.SetBlendState(blendState, new Color(0f, 0f, 0f, 1f), 0xFFFFFFFF);
             d3dDeviceContext.ClearRenderTargetView(renderTargetView, color);
             
         }
@@ -148,6 +148,8 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
+            
+            FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
@@ -200,6 +202,8 @@ namespace ZatsHackBase.UI
 
             points.ToList().ForEach(el => { GeometryBuffer.AppendVertex(new Vertex { Origin = el, Color = col }); });
 
+            
+
             GeometryBuffer.SetShader(primitiveShader);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
@@ -220,17 +224,19 @@ namespace ZatsHackBase.UI
             );
 
             GeometryBuffer.AppendIndices(
-                0,
-                1,
-                2,
 
                 1,
                 2,
-                3
+                3,
+
+                0,
+                1,
+                2
+
             );
 
             GeometryBuffer.SetShader(primitiveShader);
-            GeometryBuffer.SetPrimitiveType(PrimitiveTopology.TriangleList);
+            GeometryBuffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
             GeometryBuffer.Trim();
         }
 
@@ -241,9 +247,11 @@ namespace ZatsHackBase.UI
 
             var col = (RawColor4)color;
             GeometryBuffer.AppendVertices(
-                new Vertex(location.X, location.Y, col),
+                new Vertex(location.X,          location.Y, col),
+
                 new Vertex(location.X + size.X, location.Y, col),
-                new Vertex(location.X, location.Y + size.Y, col),
+                new Vertex(location.X,          location.Y + size.Y, col),
+
                 new Vertex(location.X + size.X, location.Y + size.Y, col)
             );
 

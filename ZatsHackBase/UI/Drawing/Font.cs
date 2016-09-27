@@ -12,7 +12,7 @@ using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.UI
 {
-    class Font
+    public class Font
     {
         
         #region Constructor
@@ -31,13 +31,13 @@ namespace ZatsHackBase.UI
 
             Bitmap bm = null;
 
-            using (var font = new System.Drawing.Font(new FontFamily(family), height, FontStyle.Bold))
+            using (var font = new System.Drawing.Font(new FontFamily(family), height, FontStyle.Regular))
             {
                 _Glyphs = new Dictionary<char, Glyph>();
 
                 // static cfg - char padding
-                int wide_pad = 1;
-                int high_pad = 1;
+                int wide_pad = 4;
+                int high_pad = 4;
 
                 var graphics = Graphics.FromHwnd(IntPtr.Zero);
 
@@ -119,7 +119,7 @@ namespace ZatsHackBase.UI
                         UV = new []
                         {
                             new Vector2(x / texture_width, y / texture_height),
-                            new Vector2((x+size.Width) / texture_width, (y+size.Height) / texture_height),  
+                            new Vector2((x+size.Width+wide_pad) / texture_width, (y+size.Height) / texture_height),  
                         },
                         Code = char_
                     };
@@ -176,10 +176,19 @@ namespace ZatsHackBase.UI
 
                     stream.Seek(offset, SeekOrigin.Begin);
 
+                    if (x >= texture_width)
+                        continue;
+
                     var color = bm.GetPixel(x, row);
 
                     if (color.A == 0 && color.R == 0 && color.G == 0 && color.B == 0)
                         continue;
+
+                    //if (color.R < 254 && color.G < 254 && color.B < 254)
+                    //    color = System.Drawing.Color.FromArgb(0,0,0,0);
+
+                    if(color.R > 150 && color.G > 150 && color.B > 150)
+                        color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
 
                     stream.Write((byte)color.R);
                     stream.Write((byte)color.G);
@@ -257,10 +266,16 @@ namespace ZatsHackBase.UI
 
             short vertex_offset = 0;
 
-            var space = 2f;
+            var space = _Height * 0.35f;
 
             foreach (var c in text)
             {
+
+                if (c == ' ')
+                {
+                    wide_pos += space;
+                    continue;
+                }
 
                 if (c == '\n')
                 {

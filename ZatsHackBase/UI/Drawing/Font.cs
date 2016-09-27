@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
@@ -18,6 +19,8 @@ namespace ZatsHackBase.UI
         public Font(Renderer renderer, string family, int height, bool bold, bool italy)
         {
             _Renderer = renderer;
+
+            _Height = height;
 
             int texture_size = 0;
 
@@ -154,40 +157,57 @@ namespace ZatsHackBase.UI
             
             DataStream stream;
 
-            _Renderer.DeviceContext.MapSubresource(_Resource.Resource, 0, MapMode.WriteDiscard, MapFlags.None, out stream);
+            var databox = _Renderer.DeviceContext.MapSubresource(_Texture, 0, MapMode.WriteDiscard, MapFlags.None, out stream);
 
-            int pitch = texture_width*(sizeof (float)*4);
+            var pitch = databox.RowPitch;
+            var rows = texture_height;
+            var stride = 4;
 
-            int data_ptr = texture_height * pitch;
-            int x_ = 0, y_ = 0;
-            while (data_ptr > 0)
+            for (int row = 0; row < rows; ++row)
             {
 
-                stream.Seek(data_ptr, SeekOrigin.Begin);
-                x_ = 0;
-                for (int i = 0; i < texture_width;++i)
+                for (int i = 0, x = 0; i < pitch; i += stride, ++x)
                 {
 
-                    var color = bm.GetPixel(x_, y_);
+                    int offset = (pitch*row) + i;
 
-                    stream.Write( new RawColor4(
-                        (float)(color.R) / 255f,
-                        (float)(color.G) / 255f,
-                        (float)(color.B) / 255f,
-                        (float)(color.A) / 255f
-                        ));
+                    //if (offset > stream.Length)
+                    //    break;
 
-                    x_++;
+                    stream.Seek(offset, SeekOrigin.Begin);
+
+                    var color = bm.GetPixel(x, row);
+
+                    if (color.A == 0 && color.R == 0 && color.G == 0 && color.B == 0)
+                        continue;
+
+                    stream.Write((byte)color.R);
+                    stream.Write((byte)color.G);
+                    stream.Write((byte)color.B);
+                    stream.Write((byte)color.A);
+
                 }
 
-                data_ptr -= pitch;
-                y_++;
             }
 
             _Renderer.DeviceContext.UnmapSubresource(_Resource.Resource, 0);
 
             bm.Dispose();
-            
+
+            _SamplerState = new SamplerState(_Renderer.Device, new SamplerStateDescription()
+            {
+                Filter = Filter.MinMagMipLinear,
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                AddressW = TextureAddressMode.Clamp,
+                BorderColor = new RawColor4(1f,0f,1f,1f),
+                ComparisonFunction = Comparison.Never,
+                MaximumAnisotropy = 16,
+                MipLodBias = 0,
+                MinimumLod = -float.MaxValue,
+                MaximumLod = float.MaxValue
+            });
+
         }
         #endregion
 
@@ -195,13 +215,94 @@ namespace ZatsHackBase.UI
 
         private Renderer _Renderer;
 
+        private float _Height;
         private Dictionary<char, Glyph> _Glyphs;
         private SharpDX.Direct3D11.Texture2D _Texture;
         private SharpDX.Direct3D11.ShaderResourceView _Resource;
+        private SharpDX.Direct3D11.SamplerState _SamplerState;
 
         #endregion
 
         #region Properties
+
+        #endregion
+
+        #region Method
+
+        public void Debug(GeometryBuffer geometry_buffer)
+        {
+            var color = new RawColor4(1f,0f,0f,1f);
+            geometry_buffer.AppendVertices(
+                new Vertex(0f, 0f, color, 0f, 0f),
+                new Vertex(_Texture.Description.Width, 0f, color, 1f, 0f),
+                new Vertex(0f, _Texture.Description.Height, color, 0f, 1f),
+                new Vertex(_Texture.Description.Width, _Texture.Description.Height, color, 1f, 1f)
+                );
+
+            geometry_buffer.AppendIndices(
+                0,1,2,
+                1,2,3
+                );
+
+            geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
+            geometry_buffer.SetupTexture(_Resource, _SamplerState);
+            geometry_buffer.Trim();
+        }
+
+        public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text)
+        {
+
+            float wide_pos = location.X;
+            float high_pos = location.Y;
+
+            short vertex_offset = 0;
+
+            var space = 2f;
+
+            foreach (var c in text)
+            {
+
+                if (c == '\n')
+                {
+                    wide_pos = location.X;
+                    high_pos += _Height;
+                    continue;
+                }
+                
+                var glyph = _Glyphs[c];
+
+                geometry_buffer.AppendVertices(
+                    new Vertex(wide_pos, high_pos, color, glyph.UV[0].X, glyph.UV[0].Y),
+
+                    new Vertex(wide_pos + glyph.Size.Width, high_pos, color, glyph.UV[1].X, glyph.UV[0].Y),
+
+                    new Vertex(wide_pos, high_pos + glyph.Size.Height, color, glyph.UV[0].X, glyph.UV[1].Y),
+
+                    new Vertex(wide_pos + glyph.Size.Width, high_pos + glyph.Size.Height, color, glyph.UV[1].X,
+                        glyph.UV[1].Y)
+                    );
+
+                geometry_buffer.AppendIndices(
+                    vertex_offset, (short)(vertex_offset + 1), (short)(vertex_offset + 2),
+                    (short)(vertex_offset + 1), (short)(vertex_offset + 2), (short)(vertex_offset + 3)
+                    );
+
+                vertex_offset += 6;
+
+                wide_pos += glyph.Size.Width;
+            }
+
+            geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
+            geometry_buffer.SetupTexture(_Resource, _SamplerState);
+            geometry_buffer.Trim();
+            
+        }
+
+        public void DrawString(GeometryBuffer buffer, Vector2 location, RawColor4 color, string text, bool hcenter,
+            bool vcenter = false)
+        {
+            
+        }
 
         #endregion
 

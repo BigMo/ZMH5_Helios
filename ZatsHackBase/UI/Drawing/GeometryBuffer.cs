@@ -24,11 +24,11 @@ namespace ZatsHackBase.UI
             _Renderer = renderer;
             
             _VertexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(Vertex.Size * 384, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
+                new D3D11.BufferDescription(Vertex.Size * 8192, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(sizeof(short) * 192, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
+                new D3D11.BufferDescription(sizeof(short) * 4096, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
         }
 
@@ -188,10 +188,9 @@ namespace ZatsHackBase.UI
 
                 //if (batch.TargetShader != null)
                 //    batch.TargetShader.Apply();
-
-                _Renderer.DeviceContext.VertexShader.SetShaderResources(0, 1, batch.Texture);
+                
                 _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
-
+                _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
                 _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
                
                 if (batch.UseIndices == true)

@@ -30,6 +30,8 @@ namespace ZatsHackBase.UI
         // Shaders
         private ShaderSet fontShader;
         private ShaderSet primitiveShader;
+
+        private Font testFont;
         #endregion
 
         #region PROPERTIES
@@ -71,8 +73,12 @@ namespace ZatsHackBase.UI
                 renderTargetView = new D3D11.RenderTargetView(d3dDevice, backBuffer);
             }
             blendState = new D3D11.BlendState(d3dDevice, D3D11.BlendStateDescription.Default());
+
             GeometryBuffer = new GeometryBuffer(this);
+
             InitializeShaders();
+
+            testFont = new Font(this,"Arial",12,false,false);
 
             ViewportSize = new Size2F(form.Width, form.Height);
             hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
@@ -116,7 +122,7 @@ namespace ZatsHackBase.UI
 
                 float4 pixel_entry ( Pixel pixel ) : SV_TARGET
                 {
-                    float4 midvalue = g_texture.Sample(g_linearSampler, pixel.UV ) + pixel.Color;
+                    float4 midvalue = g_texture.Sample ( g_linearSampler, pixel.UV ) + pixel.Color;
                     return midvalue / 2;
                 }
 
@@ -149,8 +155,7 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
             
-            FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
-
+            testFont.DrawString(GeometryBuffer, new Vector2(10f,300f), new RawColor4(1f,0f,1f,1f), "MO<3" );
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
 

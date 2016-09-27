@@ -101,6 +101,7 @@
     <Compile Include="UI\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\Drawing\TextAlignment.cs" />
     <Compile Include="UI\Drawing\Batch.cs" />
     <Compile Include="UI\Drawing\Color.cs" />
     <Compile Include="UI\Drawing\Font.cs" />

@@ -76,8 +76,10 @@
     <Compile Include="CSGO\Entities\BaseCombatWeapon.cs" />
     <Compile Include="CSGO\Entities\BaseEntity.cs" />
     <Compile Include="CSGO\Entities\BasePlayer.cs" />
+    <Compile Include="CSGO\Entities\CSGameRulesProxy.cs" />
     <Compile Include="CSGO\Entities\CSLocalPlayer.cs" />
     <Compile Include="CSGO\Entities\CSPlayer.cs" />
+    <Compile Include="CSGO\Entities\CSPlayerResource.cs" />
     <Compile Include="CSGO\Entities\EntityHelpers\Bone.cs" />
     <Compile Include="CSGO\Entities\EntityHelpers\Skeleton.cs" />
     <Compile Include="CSGO\Entities\EntityPrototype.cs" />

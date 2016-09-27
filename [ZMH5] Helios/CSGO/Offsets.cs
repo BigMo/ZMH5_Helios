@@ -29,6 +29,8 @@ namespace _ZMH5__Helios.CSGO
         public int m_iGlowIndex { get; set; }
         public int m_pBoneMatrix { get; set; }
         public int m_mViewMatrix { get; set; }
+        public int GameRulesProxy { get; set; }
+        public int PlayerResources { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -75,6 +77,46 @@ namespace _ZMH5__Helios.CSGO
             SigSetViewAngles();
             SigGlowManager();
             SigGlowIndex();
+            SigGameRulesProxy();
+            SigPlayerResources();
+        }
+        private void SigPlayerResources()
+        {
+            ScanResult scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x8B, 0xF0,
+                0x57,
+                0x89, 0x75, 0xBC,
+                0x8B, 0x01,
+                0xFF, 0x90, 0x00, 0x00, 0x00, 0x00,
+                0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00,
+                0x33, 0xC0
+            },
+            "xxxxxxxxxx????xx????xx", Program.Hack.ClientDll, true);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(16) - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                PlayerResources = val;
+            }
+        }
+        private void SigGameRulesProxy()
+        {
+            ScanResult scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x56,
+                0x8B, 0xCF,
+                0xE8, 0x00, 0x00, 0x00, 0x00,
+                0xFF, 0x75, 0x0C,
+                0x8B, 0xCF,
+                0x89, 0x3D, 0x00, 0x00, 0x00, 0x00,
+                0xFF, 0x75, 0x08
+            },
+            "xxxx????xxxxxxx????xxx", Program.Hack.ClientDll, true);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(15) - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                GameRulesProxy = val;
+            }
         }
         private void SigGlowIndex()
         {

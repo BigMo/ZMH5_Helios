@@ -26,8 +26,8 @@ namespace _ZMH5__Helios
 
         static void Main(string[] args)
         {
-            new UnitTest();
-            return;
+            //new UnitTest();
+            //return;
 
 
             //Setup

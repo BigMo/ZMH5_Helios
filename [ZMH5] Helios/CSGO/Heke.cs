@@ -90,13 +90,13 @@ namespace _ZMH5__Helios.CSGO
         }
         private void FirstRun()
         {
+            first = false;
             ClientDll = WaitForModule("client.dll");
             EngineDll = WaitForModule("engine.dll");
 #if DEBUG
             Program.Logger.Log("Performing SigScans...");
             Program.Offsets.SigScan();
 #endif
-            first = false;
             Program.Logger.Log("Grabbing ClientClasses...");
             do
             {

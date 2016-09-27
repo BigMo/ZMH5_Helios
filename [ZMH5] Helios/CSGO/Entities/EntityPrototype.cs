@@ -54,7 +54,7 @@ namespace _ZMH5__Helios.CSGO.Entities
                     return null;
 
                 uint fn = Program.Hack.Memory.Read<uint>(m_iVMT + 2 * 0x04);
-                if (fn == 0xffffffff || fn == 0 || fn < 0x01000000)
+                if (fn == 0xffffffff || fn == 0 || fn < 0x01000000 || fn % 4 != 0)
                     return null;
 
                 int address = (int)Program.Hack.Memory.Read<uint>(fn + 1);

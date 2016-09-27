@@ -105,7 +105,6 @@
     <Compile Include="CSGO\Offsets.cs" />
     <Compile Include="CSGO\Settings.cs" />
     <Compile Include="CSGO\Modules\Snapshot.cs" />
-    <Compile Include="HekeTest.cs" />
     <Compile Include="Memes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

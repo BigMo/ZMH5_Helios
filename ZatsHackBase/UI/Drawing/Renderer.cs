@@ -148,8 +148,6 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-            
-            FillRectangle(new Color(0f, 0f, 1f, 1f), new Vector2(10f,100f), new Vector2(100f,100f));
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();

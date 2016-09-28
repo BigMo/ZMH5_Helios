@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.Mathematics.Interop;
-using ZatsHackBase.Maths;
+﻿using System.Drawing;
 using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.UI
@@ -18,12 +10,15 @@ namespace ZatsHackBase.UI
 
         public bool UseIndices;
         public bool UseClipping;
+        
+        public SharpDX.Direct3D.PrimitiveTopology DrawMode;
 
-        public Rectangle ClipRegion;
-        public PrimitiveTopology DrawMode;
+        public SharpDX.Direct3D11.ShaderResourceView Texture;
+        public SharpDX.Direct3D11.SamplerState Sampler;
+
+        public RectangleF ClipRectangle;
+
         public ShaderSet TargetShader;
-
-        public ShaderResourceView Texture;
-        public SamplerState Sampler;
+        public Buffer ShaderBuffer;
     }
 }

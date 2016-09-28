@@ -101,6 +101,10 @@
     <Compile Include="UI\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\Drawing\Buffer.cs" />
+    <Compile Include="UI\Drawing\Buffers\ClipBuffer.cs" />
+    <Compile Include="UI\Drawing\Buffers\EllipseBuffer.cs" />
+    <Compile Include="UI\Drawing\Buffers\TransformationBuffer.cs" />
     <Compile Include="UI\Drawing\TextAlignment.cs" />
     <Compile Include="UI\Drawing\Batch.cs" />
     <Compile Include="UI\Drawing\Color.cs" />

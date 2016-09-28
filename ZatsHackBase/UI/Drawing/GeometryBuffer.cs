@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,8 @@ using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
-using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.UI.Drawing.Buffers;
 using D3D11 = SharpDX.Direct3D11;
 using Math = ZatsHackBase.Maths.Math;
 
@@ -30,6 +31,9 @@ namespace ZatsHackBase.UI
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
                 new D3D11.BufferDescription(sizeof(short) * 4096, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
+
+            _ClipBuffer = new ClipBuffer(renderer);
+            _TransformationBuffer = new TransformationBuffer(renderer);
         }
 
         ~GeometryBuffer()
@@ -57,6 +61,9 @@ namespace ZatsHackBase.UI
 
         private Batch        _Dummy = new Batch();
 
+        private ClipBuffer _ClipBuffer;
+        private TransformationBuffer _TransformationBuffer;
+
         #endregion
 
         #region Properties
@@ -66,10 +73,10 @@ namespace ZatsHackBase.UI
         public int VertexDataSize => _Vertices.Count * Vertex.Size;
         public int IndexDataSize => _Indices.Count * sizeof(short);
 
-        public Rectangle ClipRegion
+        public RectangleF ClipRegion
         {
-            get { return _Dummy.ClipRegion; }
-            set { _Dummy.ClipRegion = value; }
+            get { return _Dummy.ClipRectangle; }
+            set { _Dummy.ClipRectangle = value; }
         }
 
         #endregion
@@ -87,7 +94,12 @@ namespace ZatsHackBase.UI
 
         public void Dispose()
         {
-            
+            _Vertices.Clear();
+            _Indices.Clear();
+            _Batches.Clear();
+
+            _VertexBuffer.Dispose();
+            _IndexBuffer.Dispose();
         }
 
         public Vertex FixVertex(Vertex vertex)
@@ -165,7 +177,6 @@ namespace ZatsHackBase.UI
             _Batches.Add(_Dummy);
             _Dummy.IndexCount = _Dummy.VertexCount = 0;
             _Dummy.UseIndices = true;
-            _Dummy.UseClipping = false;
             _Dummy.Texture = null;
             _Dummy.Sampler = null;
         }
@@ -185,6 +196,11 @@ namespace ZatsHackBase.UI
 
             ShaderSet last_shader = null;
 
+            RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
+
+            _TransformationBuffer.Apply();
+            _ClipBuffer.Apply();
+
             foreach (var batch in _Batches)
             {
 
@@ -193,6 +209,14 @@ namespace ZatsHackBase.UI
                     batch.TargetShader.Apply();
                     last_shader = batch.TargetShader;
                 }
+
+                if (batch.UseClipping == true && batch.ClipRectangle != clip)
+                {
+                    _ClipBuffer.ClipRegion = batch.ClipRectangle;
+                    _ClipBuffer.Synchronise();
+                }
+
+                batch.ShaderBuffer?.Apply();
                 
                 _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
                 _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);

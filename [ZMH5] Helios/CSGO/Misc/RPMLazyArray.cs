@@ -24,7 +24,7 @@ namespace _ZMH5__Helios.CSGO.Misc
             Program.Hack.Memory.Read(data, 0, data.Length);
             stream = new MemoryStream(data);
 
-            this.loadFunc = 
+            //this.loadFunc = 
         }
 
         private T ReadObject(int index)

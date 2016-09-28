@@ -16,7 +16,7 @@ namespace ZatsHackBase.UI
     {
         
         #region Constructor
-        public Font(Renderer renderer, string family, int height, bool bold, bool italy)
+        public Font(Renderer renderer, string family, float height, bool bold, bool italy)
         {
             _Renderer = renderer;
 

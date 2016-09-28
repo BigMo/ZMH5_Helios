@@ -91,88 +91,26 @@ namespace ZatsHackBase.UI
         {
             //http://www.elitepvpers.com/forum/c-c/2936143-kreis-mithilfe-von-vertices-zeichnen.html#post25697120
 
-            var ellipseShaderCode =
-                @"
-                cbuffer g_shaderArgs : register(b0)
-                {   
-                    float2 g_ellipseCenter;
-                    float2 g_ellipseSize;
-                    float g_lineWidth;
-                };
+            /*
 
-                struct Vertex
+                float4 fix_origin ( float4 orig_origin )
                 {
-                    float4 Origin : POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
-
-                struct Pixel
+                    return float4 (
+                        (((orig_origin.x / g_screenSize.x) * 2.0f) - 1.0f),
+                        -(((orig_origin.y / g_screenSize.y) * 2.0f) - 1.0f),
+                        0.0f, 1.0f
+                    );
+                }
+                cbuffer ShaderParams : register(b0) 
                 {
-                    float4 Origin : SV_POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
-
-                float get_ellipse_radius(float2 center)
-                {
-                    float phi = atan2(center.y,center.x);
-                    float sinphi = sin(phi);
-                    float cosphi = cos(phi);
-
-                    float a2 = g_ellipseCenter.x * g_ellipseCenter.x;
-                    float b2 = g_ellipseCenter.y * g_ellipseCenter.y;
-                    float ab = g_ellipseCenter.x * g_ellipseCenter.y;
-
-                    return ab / sqrt ( a2 * sinPhi * sinPhi + b2 * cosPhi * cosPhi );
+                    float2 g_screenSize;
                 }
 
-                float4 sinus_interpolate ( float4 source, float4 destination, float pct )
-                {
-                    float sinval = sin ( pct * 3.1415926 / 2.0f );
-                    return sinval * destination + ( 1 - sinval ) * source;
-                }
-
-                Pixel vertex_entry ( Vertex vertex )
-                {
-                    vertex.Origin.z = 0.0f;
-                    vertex.Origin.w = 1.0f;
-
-                    Pixel output;
-                    
-                    output.Origin   = vertex.Origin;
-                    output.Color    = vertex.Color;
-                    output.UV       = vertex.UV;
-                    
-                    return output;
-                }
-
-                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
-                {
-                    float2 position = ( -g_ellipseCenter.zw / 2.0f ) + g_ellipseCenter.zw * input.texCoord;
-
-	                float radius = get_ellipse_radius ( position.x, position.y );
-
-	                float radiusCoord = sqrt ( position.x * position.x + position.y * position.y );
-
-	                float diff = radiusCoord - radius;
-	                if (radiusCoord <= radius) {
-	                	if ((radius - radiusCoord) <= g_lineWidth.x)
-	                		return input.color;
-
-	                	diff = (radius - radiusCoord) - g_lineWidth;
-	                }
-
-	                if (diff > 2)
-	                	return float4(pixel.Color.rgb, 0);
-
-	                return sinusInterpolate(pixel.Color, float4(pixel.Color.rgb, 0), diff / 2.0f);
-                }
-
-                ";
+             * */
 
             var primitiveShaderCode =
                 @"
+
                 struct Vertex
                 {
                     float4 Origin : POSITION;
@@ -189,12 +127,9 @@ namespace ZatsHackBase.UI
 
                 Pixel vertex_entry ( Vertex vertex )
                 {
-                    vertex.Origin.z = 0.0f;
-                    vertex.Origin.w = 1.0f;
-
                     Pixel output;
                     
-                    output.Origin   = vertex.Origin;
+                    output.Origin   = vertex.Origin;;
                     output.Color    = vertex.Color;
                     output.UV       = vertex.UV;
                     
@@ -211,6 +146,7 @@ namespace ZatsHackBase.UI
 
             var fontShaderCode =
                 @"
+
                 struct Vertex
                 {
                     float4 Origin : POSITION;
@@ -227,9 +163,6 @@ namespace ZatsHackBase.UI
 
                 Pixel vertex_entry ( Vertex vertex )
                 {
-                    vertex.Origin.z = 0.0f;
-                    vertex.Origin.w = 1.0f;
-
                     Pixel output;
                     
                     output.Origin   = vertex.Origin;

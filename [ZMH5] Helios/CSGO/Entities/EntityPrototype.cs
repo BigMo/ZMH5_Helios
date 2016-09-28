@@ -71,6 +71,40 @@ namespace _ZMH5__Helios.CSGO.Entities
 
             return stream.Read<T>(offset);
         }
+        protected static int LargestDataTable(params string[] tables)
+        {
+            var filtered = ClientClassParser.DataTables.Values.Where(x => tables.Contains(x.NetTableName));
+            return filtered.Max(x => x.HighestOffset.Value);
+        }
+        public void WriteNetVar<T>(string className, string fieldName, T value) where T : struct
+        {
+            if (!Initialized)
+                throw new InvalidOperationException();
+
+            Program.Hack.Memory.Write<T>(Address + ClientClassParser.DataTables[className][fieldName].Offset, value);
+        }
+        public void WriteAt<T>(int offset, T value) where T : struct
+        {
+            if (!Initialized)
+                throw new InvalidOperationException();
+
+            Program.Hack.Memory.Write<T>(Address + offset, value);
+        }
+        protected T ReadNetVar<T>(string fieldName) where T : struct
+        {
+            return ReadNetVar<T>("DT_BaseEntity", fieldName);
+        }
+        protected T ReadNetVar<T>(string className, string fieldName) where T : struct
+        {
+            int offset = ClientClassParser.DataTables[className][fieldName].Offset;
+            return ReadAt<T>(offset);
+        }
+        protected T ReadNetVar<T>(string className, string fieldName, string className2, string fieldName2) where T : struct
+        {
+            int offset1 = ClientClassParser.DataTables[className][fieldName].Offset;
+            int offset2 = ClientClassParser.DataTables[className2][fieldName2].Offset;
+            return ReadAt<T>(offset1 + offset2);
+        }
         #endregion
     }
 }

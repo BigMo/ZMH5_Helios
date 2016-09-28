@@ -9,7 +9,7 @@ using ZatsHackBase.Maths;
 
 namespace _ZMH5__Helios.CSGO.Entities
 {
-    class CSPlayerResource : EntityPrototype
+    public class CSPlayerResource : EntityPrototype
     {
         #region VARIABLES
         public static LazyCache<int> CLASSID = new LazyCache<int>(() => ClassIDs.ClientClassParser.ClientClasses.First(x => x.NetworkName == "CCSPlayerResource").ClassID);

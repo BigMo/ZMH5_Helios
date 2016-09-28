@@ -96,18 +96,10 @@ namespace _ZMH5__Helios.CSGO
         {
             base.AfterPluginsTick(args);
 
-            //if (once)
-            //    return;
+            if (once)
+                return;
 
-            //once = true;
-
-            //TODO: 
-            for (int i = 0; i < 4096; i++)
-            {
-                var ent = GetEntityByID<EntityPrototype>(i);
-                if (ent != null && ent.IsValid && ent.m_ClientClass.Value.ClassID == 36)
-                    Console.WriteLine("{0} @0x{1}: {2}", i.ToString().PadLeft(4, '0'), ent.Address.ToString("X8"), ent.m_ClientClass.Value.NetworkName.Value);
-            }
+            once = true;
         }
         private void FirstRun()
         {

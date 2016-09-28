@@ -101,6 +101,7 @@
     <Compile Include="CSGO\Modules\HotkeyModule.cs" />
     <Compile Include="CSGO\Modules\NoRecoilModule.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\EntityCache.cs" />
+    <Compile Include="CSGO\Modules\SnapshotHelpers\RadarEntry.cs" />
     <Compile Include="CSGO\Modules\TriggerModule.cs" />
     <Compile Include="CSGO\ClassIDs\RecvProp_t.cs" />
     <Compile Include="CSGO\ClassIDs\RecvTable_t.cs" />

@@ -220,7 +220,7 @@ namespace ZatsHackBase.UI
             //FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
             //testFont.DrawString(GeometryBuffer, new Vector2(10f, 10f), new RawColor4(1f, 0f, 1f, 1f), "test mo <3");
 
-            DrawString(new Color(1f, 0f, 1f, 0f), testFont, new Vector2(10f, 10f), "test mo <3");
+            //DrawString(new Color(1f, 0f, 1f, 0f), testFont, new Vector2(10f, 10f), "test mo <3");
             FillRectangle(new Color(1f, 1f,0f,0f), new Vector2(10f,50f), new Vector2(100f,100f) );;
             DrawRectangle(new Color(1f, 0f, 0f, 1f), new Vector2(10f, 160f), new Vector2(100f, 100f));
 

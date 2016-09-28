@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZatsHackBase.UI.Drawing
 {
-    enum TextAlignment
+    public enum TextAlignment
     {
         
         Near,

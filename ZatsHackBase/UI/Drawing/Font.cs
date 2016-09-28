@@ -187,8 +187,8 @@ namespace ZatsHackBase.UI
                     //if (color.R < 254 && color.G < 254 && color.B < 254)
                     //    color = System.Drawing.Color.FromArgb(0,0,0,0);
 
-                    if(color.R > 150 && color.G > 150 && color.B > 150)
-                        color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
+                    //if(color.R > 150 && color.G > 150 && color.B > 150)
+                    //    color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
 
                     stream.Write((byte)color.R);
                     stream.Write((byte)color.G);
@@ -266,6 +266,7 @@ namespace ZatsHackBase.UI
 
             float wide_pos = location.X;
             float high_pos = location.Y;
+            float highest_char = 0f;
 
             short vertex_offset = 0;
 
@@ -283,11 +284,15 @@ namespace ZatsHackBase.UI
                 if (c == '\n')
                 {
                     wide_pos = location.X;
-                    high_pos += _Height;
+                    high_pos += highest_char == 0f ? _Height : highest_char;
+                    highest_char = 0f;
                     continue;
                 }
                 
                 var glyph = _Glyphs[c];
+
+                if (glyph.Size.Height > highest_char)
+                    highest_char = glyph.Size.Height;
 
                 geometry_buffer.AppendVertices(
                     new Vertex(wide_pos, high_pos, color, glyph.UV[0].X, glyph.UV[0].Y),
@@ -316,13 +321,142 @@ namespace ZatsHackBase.UI
             
         }
 
-        public void DrawString(GeometryBuffer buffer, Vector2 location, RawColor4 color, string text, bool hcenter,
-            bool vcenter = false)
+        public void MeasureString(string text, out List<float> line_widths , out float height)
         {
+            line_widths = new List<float>();
+            height = 0f;
+
+            var space = _Height * 0.35f;
+
+            float width = 0f;
+            float highest_char = 0f;
+
+            foreach (var c in text)
+            {
+                if (c == ' ')
+                {
+                    width += space;
+                    continue;
+                }
+
+                if (c == '\n')
+                {
+                    line_widths.Add(width);
+                    height += highest_char == 0f ? _Height : highest_char;
+                    width = 0f;
+                }
+
+                var glyph = _Glyphs[c];
+
+                width += glyph.Size.Width;
+
+                if (glyph.Size.Height > highest_char)
+                    highest_char = glyph.Size.Height;
+            }
             
+            if ( line_widths.Count == 0 && text.Length != 0)
+                line_widths.Add(width);
+
+        }
+
+        public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text, 
+            TextAlignment halign = TextAlignment.Near, TextAlignment valign = TextAlignment.Near)
+        {
+            List<float> line_widths;
+            float height;
+
+            MeasureString(text, out line_widths, out height);
+
+            if (line_widths.Count == 0 && text.Length == 0)
+                return;
+
+            float wide = 0f;
+            float space = _Height*0.35f;
+            float highest_char = 0f;
+
+            short vertex_offset = 0;
+
+            switch (halign)
+            {
+                case TextAlignment.Center:
+                    wide = location.X - line_widths[0] / 2;
+                    break;
+                case TextAlignment.Far:
+                    wide = location.X - line_widths[0];
+                    break;
+                default:
+                    wide = location.X;
+                    break;
+            }
+
+            switch (valign)
+            {
+                case TextAlignment.Center:
+                    break;
+                    location.Y -= height / 2;
+                case TextAlignment.Far:
+                    location.Y -= height;
+                    break;
+            }
+
+            foreach ( var c in text)
+            {
+                if (c == ' ')
+                {
+                    wide += space;
+                    continue;
+                }
+
+                if (c == '\n')
+                {
+                    height += highest_char == 0f ? _Height : highest_char;
+
+                    switch (halign)
+                    {
+                        case TextAlignment.Center:
+                            wide = location.X - line_widths[0] / 2;
+                            break;
+                        case TextAlignment.Far:
+                            wide = location.X - line_widths[0];
+                            break;
+                        default:
+                            wide = location.X;
+                            break;
+                    }
+                }
+
+                var glyph = _Glyphs[c];
+                
+                geometry_buffer.AppendVertices(
+                    new Vertex(wide, location.Y, color, glyph.UV[0].X, glyph.UV[0].Y),
+
+                    new Vertex(wide + glyph.Size.Width, location.Y, color, glyph.UV[1].X, glyph.UV[0].Y),
+
+                    new Vertex(wide, location.Y + glyph.Size.Height, color, glyph.UV[0].X, glyph.UV[1].Y),
+
+                    new Vertex(wide + glyph.Size.Width, location.Y + glyph.Size.Height, color, glyph.UV[1].X,
+                        glyph.UV[1].Y)
+                    );
+
+                geometry_buffer.AppendIndices(
+                    vertex_offset, (short)(vertex_offset + 1), (short)(vertex_offset + 2),
+                    (short)(vertex_offset + 1), (short)(vertex_offset + 2), (short)(vertex_offset + 3)
+                    );
+
+                vertex_offset += 4;
+
+                wide += glyph.Size.Width;
+
+                if (glyph.Size.Height > highest_char)
+                    highest_char = glyph.Size.Height;
+
+            }
+
+            geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
+            geometry_buffer.SetupTexture(_Resource, _SamplerState);
+            geometry_buffer.Trim();
         }
 
         #endregion
-
     }
 }

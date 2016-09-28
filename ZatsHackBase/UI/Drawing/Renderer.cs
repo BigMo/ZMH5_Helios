@@ -30,6 +30,8 @@ namespace ZatsHackBase.UI
         // Shaders
         private ShaderSet fontShader;
         private ShaderSet primitiveShader;
+        private ShaderSet ellipseShader;
+        private ShaderSet bezierShader;
 
         private List<Font> fonts; 
         #endregion
@@ -57,7 +59,7 @@ namespace ZatsHackBase.UI
             SwapChainDescription swapChainDesc = new SwapChainDescription()
             {
                 ModeDescription = backBufferDesc,
-                SampleDescription = new SampleDescription(8, 0),
+                SampleDescription = new SampleDescription(4, 4),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 1,
                 OutputHandle = form.Handle,
@@ -79,6 +81,7 @@ namespace ZatsHackBase.UI
             InitializeShaders();
 
             fonts = new List<Font>();
+            CreateFont("Verdana", 12);
 
             ViewportSize = new Size2F(form.Width, form.Height);
             hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
@@ -87,6 +90,86 @@ namespace ZatsHackBase.UI
         private void InitializeShaders()
         {
             //http://www.elitepvpers.com/forum/c-c/2936143-kreis-mithilfe-von-vertices-zeichnen.html#post25697120
+
+            var ellipseShaderCode =
+                @"
+                cbuffer g_shaderArgs : register(b0)
+                {   
+                    float2 g_ellipseCenter;
+                    float2 g_ellipseSize;
+                    float g_lineWidth;
+                };
+
+                struct Vertex
+                {
+                    float4 Origin : POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
+                };
+
+                struct Pixel
+                {
+                    float4 Origin : SV_POSITION;
+                    float4 Color  : COLOR;
+                    float2 UV     : TEXCOORDS;
+                };
+
+                float get_ellipse_radius(float2 center)
+                {
+                    float phi = atan2(center.y,center.x);
+                    float sinphi = sin(phi);
+                    float cosphi = cos(phi);
+
+                    float a2 = g_ellipseCenter.x * g_ellipseCenter.x;
+                    float b2 = g_ellipseCenter.y * g_ellipseCenter.y;
+                    float ab = g_ellipseCenter.x * g_ellipseCenter.y;
+
+                    return ab / sqrt ( a2 * sinPhi * sinPhi + b2 * cosPhi * cosPhi );
+                }
+
+                float4 sinus_interpolate ( float4 source, float4 destination, float pct )
+                {
+                    float sinval = sin ( pct * 3.1415926 / 2.0f );
+                    return sinval * destination + ( 1 - sinval ) * source;
+                }
+
+                Pixel vertex_entry ( Vertex vertex )
+                {
+                    vertex.Origin.z = 0.0f;
+                    vertex.Origin.w = 1.0f;
+
+                    Pixel output;
+                    
+                    output.Origin   = vertex.Origin;
+                    output.Color    = vertex.Color;
+                    output.UV       = vertex.UV;
+                    
+                    return output;
+                }
+
+                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
+                {
+                    float2 position = ( -g_ellipseCenter.zw / 2.0f ) + g_ellipseCenter.zw * input.texCoord;
+
+	                float radius = get_ellipse_radius ( position.x, position.y );
+
+	                float radiusCoord = sqrt ( position.x * position.x + position.y * position.y );
+
+	                float diff = radiusCoord - radius;
+	                if (radiusCoord <= radius) {
+	                	if ((radius - radiusCoord) <= g_lineWidth.x)
+	                		return input.color;
+
+	                	diff = (radius - radiusCoord) - g_lineWidth;
+	                }
+
+	                if (diff > 2)
+	                	return float4(pixel.Color.rgb, 0);
+
+	                return sinusInterpolate(pixel.Color, float4(pixel.Color.rgb, 0), diff / 2.0f);
+                }
+
+                ";
 
             var primitiveShaderCode =
                 @"
@@ -182,6 +265,13 @@ namespace ZatsHackBase.UI
 
                 ";
 
+            /*ellipseShader = new ShaderSet(this, ellipseShaderCode, "vertex_entry", "pixel_entry", new[]
+                {
+                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
+                });*/
+
             primitiveShader = new ShaderSet(this,
                 primitiveShaderCode, "vertex_entry", "pixel_entry", new[]
                 {
@@ -220,9 +310,12 @@ namespace ZatsHackBase.UI
             //FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
             //testFont.DrawString(GeometryBuffer, new Vector2(10f, 10f), new RawColor4(1f, 0f, 1f, 1f), "test mo <3");
 
-            DrawString(new Color(1f, 0f, 1f, 0f), testFont, new Vector2(10f, 10f), "test mo <3");
-            FillRectangle(new Color(1f, 1f,0f,0f), new Vector2(10f,50f), new Vector2(100f,100f) );;
+            DrawString(new Color(1f, 0f, 1f, 0f), fonts[0], new Vector2(10f, 10f), "test mo <3\ndeadspy <3");
+            FillRectangle(new Color(1f, 1f,0f,0f), new Vector2(10f,50f), new Vector2(100f,100f) );
             DrawRectangle(new Color(1f, 0f, 0f, 1f), new Vector2(10f, 160f), new Vector2(100f, 100f));
+
+            GeometryBuffer.SetShader(fontShader);
+            fonts[0].DrawString(GeometryBuffer, new Vector2(110f, 60f), new RawColor4(1f, 1f, 0f, 1f), "far aligned", TextAlignment.Center );
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
@@ -370,6 +463,8 @@ namespace ZatsHackBase.UI
             GeometryBuffer.SetShader(fontShader);
             font.DrawString(GeometryBuffer,location,(RawColor4)color,text);   
         }
+
+
         #endregion
         #endregion
     }

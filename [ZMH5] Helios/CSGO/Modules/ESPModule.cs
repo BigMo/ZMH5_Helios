@@ -65,50 +65,73 @@ namespace _ZMH5__Helios.CSGO.Modules
                 float dist = lp.DistanceTo(enemy);
                 Vector2 size = new Vector2((ptDown.Y - ptUp.Y) * 0.5f, ptDown.Y - ptUp.Y); //TODO: Präziser berechnen, am besten über Bones
                 Vector2 upperLeft = new Vector2((ptUp.X + ptDown.X) / 2f - size.X * 0.5f, ptUp.Y);
-                Program.Hack.Overlay.Renderer.DrawRectangle(
-                    Color.Red, 
-                    upperLeft,
-                    size);
+                
+                DrawOutlinedRect(upperLeft, size, Color.Red, Color.Black);
 
                 Vector2 barSize = new Vector2(size.X, size.Y / 20f);
                 Vector2 barHP = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y * 0.5f);
                 Vector2 barArmor = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y + barSize.Y);
 
-                DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green);
-                DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White);
+                DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green, Color.Black);
+                DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White, Color.Black);
 
                 if (espFont != null)
                 {
-                    if (vEnts.Any(x=>x.Id == enemy.m_iID.Value))
+                    if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.Y, ent.Name);
+                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.Y, ent.Name);
                     }
                 }
             }
         }
 
-        private void DrawVBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill)
+        private void DrawOutlinedRect(Vector2 upperLeft, Vector2 size, Color border, Color outline)
+        {
+            Program.Hack.Overlay.Renderer.DrawRectangle(
+                    outline,
+                    upperLeft - Vector2.Unit,
+                    size + Vector2.Unit * 2f);
+            Program.Hack.Overlay.Renderer.DrawRectangle(
+                outline,
+                upperLeft + Vector2.Unit,
+                size - Vector2.Unit * 2f);
+            Program.Hack.Overlay.Renderer.DrawRectangle(
+                border,
+                upperLeft,
+                size);
+        }
+        private void DrawVBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill, Color outline)
         {
             Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
 
             float percHeight = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
+            DrawOutlinedRect(
+                new Vector2(upperLeft.X, upperLeft.Y + size.Y - size.Y * percHeight),
+                new Vector2(size.X, size.Y * percHeight),
+                fill, outline);
             Program.Hack.Overlay.Renderer.FillRectangle(fill,
                 new Vector2(upperLeft.X, upperLeft.Y + size.Y - size.Y * percHeight),
                 new Vector2(size.X, size.Y * percHeight));
 
             Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
+            //DrawOutlinedRect(upperLeft, size, border, outline);
         }
-        private void DrawHBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill)
+        private void DrawHBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill, Color outline)
         {
             Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
 
             float percWidth = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
+            DrawOutlinedRect(
+                new Vector2(upperLeft.X, upperLeft.Y),
+                new Vector2(size.X * percWidth, size.Y),
+                fill, outline);
             Program.Hack.Overlay.Renderer.FillRectangle(fill,
                 new Vector2(upperLeft.X, upperLeft.Y),
                 new Vector2(size.X * percWidth, size.Y));
 
             Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
+            //DrawOutlinedRect(upperLeft, size, border, outline);
         }
         #endregion
     }

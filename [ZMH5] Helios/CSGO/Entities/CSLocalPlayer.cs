@@ -34,7 +34,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         #region METHODS
         public static bool IsProcessable(CSLocalPlayer lp)
         {
-            return !(lp == null || !lp.IsValid || lp.m_lifeState.Value != Enums.LifeState.Alive);
+            return !(lp == null || !lp.IsValid);
         }
         protected override void SetupFields()
         {

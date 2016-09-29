@@ -20,6 +20,7 @@ namespace ZatsHackBase.UI.Drawing
         public static Color Red => new Color(1f, 0f, 0f);
         public static Color Green => new Color(0f, 1f, 0f);
         public static Color Blue => new Color(0f, 0f, 1f);
+        public static Color Orange => new Color(1f, 0.5f, 0.12f);
         #endregion
 
         #region CONSTRUCTORS

@@ -38,18 +38,18 @@ namespace _ZMH5__Helios.CSGO
         #region CONSTRUCTORS
         public Offsets()
         {
-            EntityList = 0x04A58F14;
+            EntityList = 0x4A58F94;
             GlowManager = 0;
             LocalPlayer = 0x00A3B43C;
             ClientState = 0x5BB2D4;
             State = 0x100;
-            ForceAttack = 0x02E98F7C;
-            ForceJump = 0x04EEE3C4;
+            ForceAttack = 0x02E98FFC;
+            ForceJump = 0x04EEE444;
             m_iID = 0;
             m_iCrosshairID = 0xaa54;
             m_pBoneMatrix = 0x2698;
-            m_mViewMatrix = 0x04A4AAB4;
-            RadarBase = 0x004E8DC3C; //TODO: Sigscan!
+            m_mViewMatrix = 0x04A4AB34;
+            RadarBase = 0x004E8DCBC; //TODO: Sigscan!
             RadarOffset = 0x50; //TODO: Sigscan!
         }
         public static Offsets FromFile(string file)

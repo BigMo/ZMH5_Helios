@@ -168,6 +168,7 @@ namespace ZatsHackBase.UI
             _Dummy.UseClipping = false;
             _Dummy.Texture = null;
             _Dummy.Sampler = null;
+            _Dummy.SetupTexture = false;
         }
 
         public void Draw()
@@ -193,11 +194,15 @@ namespace ZatsHackBase.UI
                     batch.TargetShader.Apply();
                     last_shader = batch.TargetShader;
                 }
-                
-                _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
-                _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
+
+                if (batch.SetupTexture == true)
+                {
+                    _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
+                    _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
+                }
+
                 _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
-               
+
                 if (batch.UseIndices == true)
                 {
                     _Renderer.DeviceContext.DrawIndexed(batch.IndexCount, index_offset, vertex_offset);
@@ -217,6 +222,7 @@ namespace ZatsHackBase.UI
         {
             _Dummy.Texture = texture;
             _Dummy.Sampler = state;
+            _Dummy.SetupTexture = true;
         }
 
         public void SetPrimitiveType(PrimitiveTopology topology)

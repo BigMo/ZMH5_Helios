@@ -264,7 +264,7 @@ namespace ZatsHackBase.UI
                 }
 
                 ";
-
+            
             /*ellipseShader = new ShaderSet(this, ellipseShaderCode, "vertex_entry", "pixel_entry", new[]
                 {
                     new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
@@ -288,7 +288,7 @@ namespace ZatsHackBase.UI
                     new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
                 });
 
-            fontShader.Apply();
+            primitiveShader.Apply();
         }
         
         public void Clear(Color color)
@@ -306,13 +306,25 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-            
+           
             GeometryBuffer.SetShader(fontShader);
             
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
+            try
+            {
+                swapChain.Present(1, PresentFlags.None);
+            }
+            catch {
+            var v =   Device.DeviceRemovedReason;
+            }
 
-            swapChain.Present(1, PresentFlags.None);
+            /*
+            DXGI_ERROR_DEVICE_HUNG
+            0x887A0006
+            The application's device failed due to badly formed commands sent by the application. 
+            This is an design-time issue that should be investigated and fixed.
+             * */
         }
 
         public void Dispose()
@@ -455,7 +467,7 @@ namespace ZatsHackBase.UI
         
         public void DrawString(Color color, Font font, Vector2 location, string text)
         {
-            GeometryBuffer.SetShader(fontShader);
+            //GeometryBuffer.SetShader(fontShader);
             font.DrawString(GeometryBuffer,location,(RawColor4)color,text);   
         }
 

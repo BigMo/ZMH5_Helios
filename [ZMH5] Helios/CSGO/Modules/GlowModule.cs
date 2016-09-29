@@ -52,6 +52,9 @@ namespace _ZMH5__Helios.CSGO.Modules
                 var obj = Array[i];
                 var proto = Program.Hack.GetEntityByAddress<EntityPrototype>(obj.pEntity);
 
+                if (proto == null || !proto.IsValid)
+                    continue;
+                
                 BaseCombatWeapon wep = null;
                 CSPlayer player = null;
 
@@ -66,7 +69,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                         EncolorObject(obj, Program.Settings.GlowC4Color, i);
                     else if (Program.Settings.GlowShowGrenades && wep.IsGrenadeProjectile)
                         EncolorObject(obj, Program.Settings.GlowGrenadeColor, i);
-                    else if(Program.Settings.GlowShowWeapons)
+                    else if (Program.Settings.GlowShowWeapons)
                         EncolorObject(obj, Program.Settings.GlowWeaponColor, i);
                 }
                 else if (player != null && player.IsValid)
@@ -79,6 +82,9 @@ namespace _ZMH5__Helios.CSGO.Modules
                         EncolorObject(obj, Program.Settings.GlowAlliesColor, i);
                     if (Program.Settings.GlowShowEnemies && !friend)
                         EncolorObject(obj, Program.Settings.GlowEnemiesColor, i);
+                } else if (proto.m_ClientClass.Value.NetworkName.Value == "CChicken")
+                {
+                    EncolorObject(obj, Color.Orange, i);
                 }
             }
         }

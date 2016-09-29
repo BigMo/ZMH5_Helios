@@ -19,6 +19,8 @@ namespace ZatsHackBase.UI
         public bool UseIndices;
         public bool UseClipping;
 
+        public bool SetupTexture;
+
         public Rectangle ClipRegion;
         public PrimitiveTopology DrawMode;
         public ShaderSet TargetShader;

@@ -61,6 +61,11 @@ namespace _ZMH5__Helios.CSGO.Modules
             if (currentId != 0)
             {
                 var enemy = Program.Hack.StateMod.Players[currentId];
+                if(enemy == null || !enemy.IsValid)
+                {
+                    currentId = 0;
+                    return;
+                }
                 Program.Hack.Glow.EncolorObject(Color.Blue, enemy.m_iGlowIndex);
 
                 Program.Hack.View.ApplyChange(CalcAngle(src, enemy.m_Skeleton.Value[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value);

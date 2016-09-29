@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
+using ZatsHackBase.UI;
 using ZatsHackBase.UI.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
@@ -15,6 +16,7 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
+        private Font espFont = null;
         #endregion
 
         #region CONSTRUCTORS
@@ -32,7 +34,8 @@ namespace _ZMH5__Helios.CSGO.Modules
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
-
+            if (espFont == null)
+                espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 9);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -45,6 +48,10 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value);
             var allies = alivePlayers.Where(x => x.m_iTeamNum.Value == lp.m_iTeamNum.Value);
+            
+            var vEnts = Program.Hack.StateMod.RadarEntries.Value == null ?
+                new SnapshotHelpers.RadarEntry[0] : 
+                Program.Hack.StateMod.RadarEntries.Value.Where(x => !string.IsNullOrEmpty(x.Name)).ToArray();
 
             foreach (var enemy in enemies)
             {
@@ -69,6 +76,15 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green);
                 DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White);
+
+                if (espFont != null)
+                {
+                    if (vEnts.Any(x=>x.Id == enemy.m_iID.Value))
+                    {
+                        var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
+                        Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.Y, ent.Name);
+                    }
+                }
             }
         }
 

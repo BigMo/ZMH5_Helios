@@ -240,16 +240,8 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
             
-            //FillRectangle(new Color(1f, 1f, 0f, 0f), new Vector2(10f,100f), new Vector2(100f,100f));
-            //testFont.DrawString(GeometryBuffer, new Vector2(10f, 10f), new RawColor4(1f, 0f, 1f, 1f), "test mo <3");
-
-            DrawString(new Color(1f, 0f, 1f, 0f), fonts[0], new Vector2(10f, 10f), "test mo <3\ndeadspy <3");
-            FillRectangle(new Color(1f, 1f,0f,0f), new Vector2(10f,50f), new Vector2(100f,100f) );
-            DrawRectangle(new Color(1f, 0f, 0f, 1f), new Vector2(10f, 160f), new Vector2(100f, 100f));
-
             GeometryBuffer.SetShader(fontShader);
-            fonts[0].DrawString(GeometryBuffer, new Vector2(110f, 60f), new RawColor4(1f, 1f, 0f, 1f), "far aligned", TextAlignment.Center );
-
+            
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
 
@@ -271,6 +263,9 @@ namespace ZatsHackBase.UI
         #region RENDER FEATURES
         public Font CreateFont(string family, int height)
         {
+            if (!Initialized)
+                return null;
+
             foreach (var fnt in fonts)
             {
                 if (fnt.Family == family && fnt.Height == height)

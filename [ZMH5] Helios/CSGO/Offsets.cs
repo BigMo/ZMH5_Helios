@@ -31,6 +31,8 @@ namespace _ZMH5__Helios.CSGO
         public int m_mViewMatrix { get; set; }
         public int GameRulesProxy { get; set; }
         public int PlayerResources { get; set; }
+        public int RadarBase { get; set; }
+        public int RadarOffset { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -47,6 +49,8 @@ namespace _ZMH5__Helios.CSGO
             m_iCrosshairID = 0xaa54;
             m_pBoneMatrix = 0x2698;
             m_mViewMatrix = 0x04A4AAB4;
+            RadarBase = 0x004E8DC3C; //TODO: Sigscan!
+            RadarOffset = 0x50; //TODO: Sigscan!
         }
         public static Offsets FromFile(string file)
         {

@@ -19,11 +19,13 @@ namespace ZatsHackBase.UI.Drawing.Buffers
 
             _Buffer = new SharpDX.Direct3D11.Buffer(_Renderer.Device,
                 new SharpDX.Direct3D11.BufferDescription(sizeof(float) * 4, SharpDX.Direct3D11.ResourceUsage.Dynamic, SharpDX.Direct3D11.BindFlags.ConstantBuffer,
-                    SharpDX.Direct3D11.CpuAccessFlags.Write, SharpDX.Direct3D11.ResourceOptionFlags.None, 0));
+                    SharpDX.Direct3D11.CpuAccessFlags.Write, SharpDX.Direct3D11.ResourceOptionFlags.None, sizeof(float)));
             
             DataStream stream;
             _Renderer.DeviceContext.MapSubresource(_Buffer, SharpDX.Direct3D11.MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out stream);
 
+            stream.Write(_Renderer.hViewportSize.Width);
+            stream.Write(_Renderer.hViewportSize.Height);
             stream.Write(_Renderer.ViewportSize.Width);
             stream.Write(_Renderer.ViewportSize.Height);
 

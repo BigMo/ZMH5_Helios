@@ -68,7 +68,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             if(currentId != lastId)
             {
                 var enemy = Program.Hack.StateMod.Players[currentId];
-                Program.Logger.Log("[Aim] Aiming at {0}: {1}", enemy.m_iID.Value, enemy != null ? enemy.m_ClientClass.Value.NetworkName : "null");
+                Program.Logger.Log("[Aim] Aiming at {0}: {1}", enemy != null ? enemy.m_iID.Value : -1, enemy != null ? enemy.m_ClientClass.Value.NetworkName : "null");
                 lastId = currentId;
             }
         }

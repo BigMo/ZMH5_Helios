@@ -24,12 +24,12 @@ namespace ZatsHackBase.UI
         {
             _Renderer = renderer;
             
-            _VertexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(Vertex.Size * 8192, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
+            _VertexBuffer = new D3D11.Buffer(_Renderer.Device, 
+                new D3D11.BufferDescription(Vertex.Size * 65536, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(sizeof(short) * 4096, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
+                new D3D11.BufferDescription(sizeof(short) * 32768, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
             _ClipBuffer = new ClipBuffer(renderer);
@@ -112,7 +112,7 @@ namespace ZatsHackBase.UI
 
         public void AppendVertex(Vertex vertex)
         {
-            _Vertices.Add(FixVertex(vertex));
+            _Vertices.Add(vertex);
             _Dummy.VertexCount++;
             _Synchronised = false;
         }
@@ -122,7 +122,7 @@ namespace ZatsHackBase.UI
             if (vertices.Length == 0)
                 return;
 
-            _Vertices.AddRange(vertices.Select(x => FixVertex(x)));
+            _Vertices.AddRange(vertices.Select(x => x));
             _Dummy.VertexCount += vertices.Length;
             _Synchronised = false;
         }
@@ -199,7 +199,7 @@ namespace ZatsHackBase.UI
             RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
 
             _TransformationBuffer.Apply();
-            _ClipBuffer.Apply();
+            //_ClipBuffer.Apply();
 
             foreach (var batch in _Batches)
             {
@@ -212,8 +212,8 @@ namespace ZatsHackBase.UI
 
                 if (batch.UseClipping == true && batch.ClipRectangle != clip)
                 {
-                    _ClipBuffer.ClipRegion = batch.ClipRectangle;
-                    _ClipBuffer.Synchronise();
+                    //_ClipBuffer.ClipRegion = batch.ClipRectangle;
+                    //_ClipBuffer.Synchronise();
                 }
 
                 batch.ShaderBuffer?.Apply();

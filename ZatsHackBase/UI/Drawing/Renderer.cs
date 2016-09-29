@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using SharpDX.Direct3D;
 using SharpDX.Mathematics.Interop;
 using SharpDX.D3DCompiler;
@@ -55,6 +56,9 @@ namespace ZatsHackBase.UI
         #region RENDERER
         public void Init(Form form)
         {
+            ViewportSize = new Size2F(form.Width, form.Height);
+            hViewportSize = new Size2F(form.Width / 2f, form.Height / 2f);
+
             ModeDescription backBufferDesc = new ModeDescription(form.Width, form.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm);
             SwapChainDescription swapChainDesc = new SwapChainDescription()
             {
@@ -63,7 +67,7 @@ namespace ZatsHackBase.UI
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 1,
                 OutputHandle = form.Handle,
-                IsWindowed = true
+                IsWindowed = true,
             };
 
             D3D11.Device.CreateWithSwapChain(DriverType.Hardware, D3D11.DeviceCreationFlags.None, swapChainDesc, out d3dDevice, out swapChain);
@@ -81,35 +85,17 @@ namespace ZatsHackBase.UI
             InitializeShaders();
 
             fonts = new List<Font>();
-            CreateFont("Verdana", 12);
-
-            ViewportSize = new Size2F(form.Width, form.Height);
-            hViewportSize = new Size2F(form.Width/2f, form.Height/2f);
+            
         }
 
         private void InitializeShaders()
         {
-            //http://www.elitepvpers.com/forum/c-c/2936143-kreis-mithilfe-von-vertices-zeichnen.html#post25697120
-
-            /*
-
-                float4 fix_origin ( float4 orig_origin )
-                {
-                    return float4 (
-                        (((orig_origin.x / g_screenSize.x) * 2.0f) - 1.0f),
-                        -(((orig_origin.y / g_screenSize.y) * 2.0f) - 1.0f),
-                        0.0f, 1.0f
-                    );
-                }
+            var primitiveShaderCode =
+                @"
                 cbuffer ShaderParams : register(b0) 
                 {
                     float2 g_screenSize;
                 }
-
-             * */
-
-            var primitiveShaderCode =
-                @"
 
                 struct Vertex
                 {
@@ -125,11 +111,20 @@ namespace ZatsHackBase.UI
                     float2 UV     : TEXCOORDS;
                 };
 
+                float4 fix_origin ( float4 orig_origin )
+                {
+                    return float4 (
+                        -1.0f + ( orig_origin.x / g_screenSize.x ),
+                        1.0f - ( orig_origin.y / g_screenSize.y ),
+                        0.0f, 1.0f
+                    );
+                }
+
                 Pixel vertex_entry ( Vertex vertex )
                 {
                     Pixel output;
                     
-                    output.Origin   = vertex.Origin;;
+                    output.Origin   = fix_origin(vertex.Origin);
                     output.Color    = vertex.Color;
                     output.UV       = vertex.UV;
                     
@@ -146,6 +141,10 @@ namespace ZatsHackBase.UI
 
             var fontShaderCode =
                 @"
+                cbuffer ShaderParams : register(b0) 
+                {
+                    float2 g_screenSize;
+                }
 
                 struct Vertex
                 {
@@ -161,11 +160,20 @@ namespace ZatsHackBase.UI
                     float2 UV     : TEXCOORDS;
                 };
 
+                float4 fix_origin ( float4 orig_origin )
+                {
+                    return float4 (
+                        -1.0f + ( orig_origin.x / g_screenSize.x ),
+                        1.0f - ( orig_origin.y / g_screenSize.y ),
+                        0.0f, 1.0f
+                    );
+                }
+
                 Pixel vertex_entry ( Vertex vertex )
                 {
                     Pixel output;
                     
-                    output.Origin   = vertex.Origin;
+                    output.Origin   = fix_origin(vertex.Origin);
                     output.Color    = vertex.Color;
                     output.UV       = vertex.UV;
                     
@@ -220,8 +228,7 @@ namespace ZatsHackBase.UI
                     new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
                 });
-
-            fontShader.Apply();
+            
         }
         
         public void Clear(Color color)
@@ -239,9 +246,9 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-            
-            GeometryBuffer.SetShader(fontShader);
-            
+            if(fonts.Count != 0)
+                DrawString(new Color(1f,1f,1f,0f), fonts[0], new Vector2(10f,10f), "test"  );
+
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
 

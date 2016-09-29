@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZatsHackBase.Core;
+using ZatsHackBase.Core.Timing;
+using ZatsHackBase.UI;
 
 namespace _ZMH5__Helios
 {

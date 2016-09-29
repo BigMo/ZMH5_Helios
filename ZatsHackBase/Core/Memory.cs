@@ -118,18 +118,16 @@ namespace ZatsHackBase.Core
         public override int Read(byte[] buffer, int offset, int count)
         {
             IntPtr numBytes = IntPtr.Zero;
-            //try
-            //{
-                RPMCalls++;
-                bool succ = WinAPI.ReadProcessMemory(Process.Handle, (IntPtr)Position, buffer, count, out numBytes) && numBytes.ToInt32() == count;
-                BytesIn += numBytes.ToInt32();
-                if (!succ)
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-            //}
-            //catch(Exception ex)
-            //{
-            //    throw new Win32Exception(Marshal.GetLastWin32Error());
-            //}
+            try
+            {
+              RPMCalls++;
+              bool succ = WinAPI.ReadProcessMemory(Process.Handle, (IntPtr)Position, buffer, count, out numBytes) && numBytes.ToInt32() == count;
+              BytesIn += numBytes.ToInt32();
+            }
+            catch(Exception ex)
+            {
+                //throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
             return count;
         }
 

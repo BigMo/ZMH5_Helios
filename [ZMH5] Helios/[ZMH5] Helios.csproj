@@ -134,7 +134,6 @@
     <Compile Include="CSGO\Modules\GlowHelpers\GlowManager.cs" />
     <Compile Include="CSGO\Modules\GlowHelpers\GlowObjectDefinition.cs" />
     <Compile Include="CSGO\Modules\GlowModule.cs" />
-    <Compile Include="CSGO\Modules\HotkeyModule.cs" />
     <Compile Include="CSGO\Modules\NoRecoilModule.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\EntityCache.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\RadarEntry.cs" />

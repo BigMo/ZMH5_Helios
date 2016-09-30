@@ -30,7 +30,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         public LazyCache<int> m_iGlowIndex { get; private set; }
         public LazyCache<float> m_flSimulationTime { get; private set; }
         public LazyCache<int> m_pBoneMatrix { get; private set; }
-        public LazyCache<RPMLazyArray<Bone>> m_Skeleton { get; private set; }
+        public LazyCache<Skeleton> m_Skeleton { get; private set; }
         public LazyCache<byte> m_bDormant { get; private set; }
 
         public override int MemSize { get { return memSize.Value; } }
@@ -83,14 +83,11 @@ namespace _ZMH5__Helios.CSGO.Entities
             m_bSpottedBy = new LazyCache<long>(() => ReadNetVar<long>("m_bSpottedBy"));
             m_bSpottedByMask = new LazyCache<long>(() => ReadNetVar<long>("m_bSpottedByMask"));
             m_pBoneMatrix = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_pBoneMatrix));
-            m_Skeleton = new LazyCache<RPMLazyArray<Bone>>(() => {
-                if (m_pBoneMatrix.Value < 0x1000000 || (uint)m_pBoneMatrix.Value > 0x80000000)
-                    return null;
-
+            m_Skeleton = new LazyCache<Skeleton>(() => {
                 try
                 {
-                    return new RPMLazyArray<Bone>(m_pBoneMatrix.Value, 80);
-                }catch { return null; }
+                    return Program.Hack.Memory.Read<Skeleton>(m_pBoneMatrix.Value);
+                } catch { return new Skeleton(); }
                 }
             );
         }

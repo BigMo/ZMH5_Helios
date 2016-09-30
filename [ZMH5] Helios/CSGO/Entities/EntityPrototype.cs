@@ -50,18 +50,21 @@ namespace _ZMH5__Helios.CSGO.Entities
 
             m_ClientClass = new LazyCache<ManagedClientClass>(() =>
             {
-                if (m_iVMT.Value == 0 || m_iVMT.Value < 0x01000000 || m_iVMT.Value % 4 != 0)
+                try
+                {
+                    if (m_iVMT.Value == 0 || m_iVMT.Value % 4 != 0)
+                        return null;
+
+                    uint fn = Program.Hack.Memory.Read<uint>(m_iVMT + 2 * 0x04);
+                    if (fn == 0xffffffff || fn == 0 || fn % 4 != 0)
+                        return null;
+
+                    int address = (int)Program.Hack.Memory.Read<uint>(fn + 1);
+
+                    if (ClientClassParser.ClientClasses.Any(x => x.Address == address))
+                        return ClientClassParser.ClientClasses.First(x => x.Address == address);
                     return null;
-
-                uint fn = Program.Hack.Memory.Read<uint>(m_iVMT + 2 * 0x04);
-                if (fn == 0xffffffff || fn == 0 || fn < 0x01000000 || fn % 4 != 0)
-                    return null;
-
-                int address = (int)Program.Hack.Memory.Read<uint>(fn + 1);
-
-                if (ClientClassParser.ClientClasses.Any(x => x.Address == address))
-                    return ClientClassParser.ClientClasses.First(x => x.Address == address);
-                return null; 
+                } catch { return null; }
             });
         }
         protected T ReadAt<T>(long offset) where T : struct

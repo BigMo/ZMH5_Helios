@@ -46,6 +46,10 @@ namespace ZatsHackBase.Maths
         {
             return (X * other.X) + (Y * other.Y) + (Z * other.Z);
         }
+        public override string ToString()
+        {
+            return string.Format("[Vec3 X={0}, Y={1}, Z={2}", X, Y, Z);
+        }
         #endregion
 
         #region OPERATORS

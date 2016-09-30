@@ -87,7 +87,6 @@ namespace ZatsHackBase.Core
             {
                 Overlay.AdjustForm();
                 Overlay.Renderer.Clear(Overlay.BackColor);
-                //Overlay.Renderer.GeometryBuffer.ClipRegion = new Maths.Rectangle();
             }
         }
         public virtual void AfterPluginsTick(TickEventArgs args)

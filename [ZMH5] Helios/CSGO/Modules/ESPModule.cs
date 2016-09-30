@@ -43,8 +43,8 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             var alivePlayers = Program.Hack.StateMod.GetAllPlayers().
                 Where(x => x != null && x.IsValid).
-                Where(x => x.m_lifeState.Value == Enums.LifeState.Alive).
-                Where(x => x.m_Skeleton.Value != null);
+                Where(x => x.m_lifeState.Value == Enums.LifeState.Alive);//.
+                //Where(x => x.m_Skeleton.Value != null);
 
             var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value);
             var allies = alivePlayers.Where(x => x.m_iTeamNum.Value == lp.m_iTeamNum.Value);
@@ -56,7 +56,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             foreach (var enemy in enemies)
             {
                 var ptDown3d = enemy.m_vecOrigin.Value - MARGINS_Z;
-                var ptUp3d = enemy.m_Skeleton.Value[6].ToVector() + MARGINS_Z;
+                var ptUp3d = enemy.m_Skeleton.Value.m_Bones[6].ToVector() + MARGINS_Z;
                 Vector2 ptDown = Vector2.Zero, ptUp = Vector2.Zero;
 
                 if (!w2s(ref ptDown, ptDown3d) || !w2s(ref ptUp, ptUp3d))
@@ -80,7 +80,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                     if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.Y, ent.Name);
+                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.X, ent.Name);
                     }
                 }
             }

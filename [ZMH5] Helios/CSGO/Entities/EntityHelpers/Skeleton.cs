@@ -2,18 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace _ZMH5__Helios.CSGO.Entities.EntityHelpers
 {
-    public class Skeleton : RPMLazyArray<Bone>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Skeleton
     {
-        #region CONSTANTS
-        public const int MAX_BONES = 80;
-        #endregion
+        private const int MAX_BONES = 32;
 
-        public Skeleton(int address) : base(address, MAX_BONES)
-        { }
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_BONES)]
+        public Bone[] m_Bones;
     }
 }

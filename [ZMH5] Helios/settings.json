@@ -1,0 +1,56 @@
+{
+  "_InfoModes": "Modes are: \"Hold\" and \"Toggle\"",
+  "_InfoKeys": "For keys, use one of the key-names listed on this site: https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx",
+  "AimEnabled": true,
+  "AimKey": "MButton",
+  "AimMode": "Toggle",
+  "AimFov": 1.0,
+  "AimLock": true,
+  "AimBone": 6,
+  "AimSmooth": 0.0,
+  "TriggerEnabled": true,
+  "TriggerKey": "XButton2",
+  "TriggerMode": "Toggle",
+  "TriggerDelay": 20,
+  "TriggerBurst": false,
+  "TriggerBurstCount": 5,
+  "TriggerBurstDelay": 200,
+  "GlowEnabled": true,
+  "GlowShowAllies": true,
+  "GlowShowEnemies": true,
+  "GlowShowWeapons": true,
+  "GlowShowC4": true,
+  "GlowShowGrenades": true,
+  "GlowAlliesColor": {
+    "A": 1.0,
+    "R": 0.0,
+    "G": 0.0,
+    "B": 0.7
+  },
+  "GlowEnemiesColor": {
+    "A": 1.0,
+    "R": 0.9,
+    "G": 0.1,
+    "B": 0.0
+  },
+  "GlowWeaponColor": {
+    "A": 0.5,
+    "R": 0.0,
+    "G": 7.0,
+    "B": 0.0
+  },
+  "GlowC4Color": {
+    "A": 0.9,
+    "R": 1.0,
+    "G": 0.0,
+    "B": 0.0
+  },
+  "GlowGrenadeColor": {
+    "A": 0.9,
+    "R": 1.0,
+    "G": 0.0,
+    "B": 0.0
+  },
+  "GlowFade": false,
+  "GlowFadeDistance": 500.0
+}

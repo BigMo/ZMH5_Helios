@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ZatsHackBase.UI;
 using System.Threading;
+using ZatsHackBase.Maths;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.Core
 {

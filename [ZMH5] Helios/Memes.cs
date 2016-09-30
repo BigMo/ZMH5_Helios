@@ -73,7 +73,8 @@ namespace _ZMH5__Helios
             "Puddin tells lies!",
             "That's what she said",
             "Oh my god, they killed Kenny!",
-            "D'oh!"
+            "D'oh!",
+            "so tell me what you want what you really really really want"
         };
         #endregion
     }

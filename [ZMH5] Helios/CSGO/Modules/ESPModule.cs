@@ -36,6 +36,8 @@ namespace _ZMH5__Helios.CSGO.Modules
             base.OnUpdate(args);
             if (espFont == null)
                 espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 9);
+            else
+                espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))

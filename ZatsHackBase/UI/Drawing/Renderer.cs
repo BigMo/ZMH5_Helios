@@ -33,8 +33,6 @@ namespace ZatsHackBase.UI
         private ShaderSet primitiveShader;
         private ShaderSet ellipseShader;
         private ShaderSet bezierShader;
-
-        private List<Font> fonts; 
         #endregion
 
         #region PROPERTIES
@@ -44,6 +42,7 @@ namespace ZatsHackBase.UI
         public GeometryBuffer GeometryBuffer { get; set; }
         public Size2F ViewportSize { get; set; }
         public Size2F hViewportSize { get; set; }
+        public FontCache Fonts { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -84,7 +83,7 @@ namespace ZatsHackBase.UI
 
             InitializeShaders();
 
-            fonts = new List<Font>();
+            Fonts = new FontCache(this);
         }
 
         private void InitializeShaders()
@@ -258,28 +257,27 @@ namespace ZatsHackBase.UI
 
             fontShader.Dispose();
             primitiveShader.Dispose();
-            fonts.ForEach(x => x.Dispose());
             renderTargetView.Dispose();
             swapChain.Dispose();
             d3dDevice.Dispose();
             d3dDeviceContext.Dispose();
+            Fonts.Dispose();
         }
         #endregion
 
         #region RENDER FEATURES
-        public Font CreateFont(string family, int height)
+        public Font CreateFont(string family, float height)
         {
-            if (!Initialized)
-                return null;
+            if (!Initialized) //Return dummy-font
+                return new Font(null, family, height, false, false);
 
-            foreach (var fnt in fonts)
-            {
-                if (fnt.Family == family && fnt.Height == height)
-                    return fnt;
-            }
-            var font = new Font(this, family, height, false, false);
-            fonts.Add(font);
-            return font;
+            //Return cached font
+            var fnt = Fonts.GetFont(family, height);
+            if (fnt != null)
+                return fnt;
+
+            //... or else create a new one
+            return new Font(this, family, height, false, false);
         }
 
         public void DrawLine(Color color, Vector2 from, Vector2 to)

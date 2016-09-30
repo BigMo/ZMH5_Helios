@@ -68,7 +68,50 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
                 Program.Hack.Glow.EncolorObject(Color.Blue, enemy.m_iGlowIndex);
 
-                Program.Hack.View.ApplyChange(CalcAngle(src, enemy.m_Skeleton.Value[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value);
+                var dest = enemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector();
+                //if Aimbot.Predict
+                var oldEnemy = Program.Hack.StateMod.PlayersOld[currentId];
+                if (oldEnemy != null && oldEnemy.IsValid)
+                {
+                    var oldDest = oldEnemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector();
+                    dest = dest + (dest - oldDest);
+                }
+
+                var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ViewAngles.Value;
+                if (Program.Settings.AimSmoothEnabled)
+                {
+                    switch (Program.Settings.AimSmoothMode)
+                    {
+                        case Settings.SmoothMode.Scalar:
+                            Console.WriteLine("{0} * {1} = {2}", angle, Program.Settings.AimSmoothScalar, angle * Program.Settings.AimSmoothScalar);
+                            angle *= Program.Settings.AimSmoothScalar;
+                            break;
+                        case Settings.SmoothMode.MaxDist:
+                            if (angle.Length > Program.Settings.AimSmoothMaxDist.Length)
+                            {
+                                angle.Normalize();
+                                angle *= Program.Settings.AimSmoothMaxDist.Length;
+                            }
+                            break;
+                        case Settings.SmoothMode.MaxDistPerAxis:
+                            var vx = new Vector2(Program.Settings.AimSmoothMaxDist.X, 0f);
+                            var vy = new Vector2(0f, Program.Settings.AimSmoothMaxDist.X);
+                            if (vx.Length > Program.Settings.AimSmoothMaxDist.Length)
+                            {
+                                vx.Normalize();
+                                vx *= Program.Settings.AimSmoothMaxDist.Length;
+                            }
+                            if (vy.Length > Program.Settings.AimSmoothMaxDist.Length)
+                            {
+                                vy.Normalize();
+                                vy *= Program.Settings.AimSmoothMaxDist.Length;
+                            }
+                            angle = new Vector3(vx.X, vy.Y, 0f);
+                            break;
+                    }
+                }
+
+                Program.Hack.View.ApplyChange(angle);
             }
             if(currentId != lastId)
             {
@@ -100,15 +143,13 @@ namespace _ZMH5__Helios.CSGO.Modules
                 Where(x => x != null && x.IsValid).
                 Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
                 Where(x => x.m_lifeState.Value == Enums.LifeState.Alive).
-                OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();
-
-            
+                OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();           
 
             Vector3 closest = Vector3.Zero;
             float closestFov = float.MaxValue;
             foreach (var enemy in enemies)
             {
-                var newAngles = CalcAngle(src, enemy.m_Skeleton.Value[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value;
+                var newAngles = CalcAngle(src, enemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value;
                 newAngles = ViewModule.ClampAngle(newAngles);
                 float fov = newAngles.Length;
                 if (fov < closestFov && fov < Program.Settings.AimFov)

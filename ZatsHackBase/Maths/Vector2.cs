@@ -17,7 +17,7 @@ namespace ZatsHackBase.Maths
         public static Vector2 UnitX { get; private set; } = new Vector2(1f, 0f);
         public static Vector2 UnitY { get; private set; } = new Vector2(0f, 1f);
         public static Vector2 Zero { get; private set; } = new Vector2(0f, 0f);
-
+        
         public float Length
         {
             get { return (float)System.Math.Sqrt(X * X + Y * Y); }

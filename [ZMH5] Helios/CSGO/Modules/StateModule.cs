@@ -97,6 +97,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             Players = new EntityCache<CSPlayer>();
             PlayersOld = new EntityCache<CSPlayer>();
+            PlayersOld.RequestMissingEntities = false;
             Weapons = new EntityCache<BaseCombatWeapon>();
             pEntityList = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.EntityList;
             pClientState = Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.ClientState;

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ZatsHackBase.Core
 {
-    public enum eKeyMode { Hold, Toggle }
+    public enum KeyMode { Hold, Toggle }
 }

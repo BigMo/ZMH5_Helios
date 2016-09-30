@@ -15,12 +15,14 @@ namespace _ZMH5__Helios.CSGO.Modules.SnapshotHelpers
 
         #region PROPERTIES
         public T[] Entites { get { return entDict.Values.ToArray(); } }
+        public bool RequestMissingEntities { get; set; }
         #endregion
 
         #region CONSTRUCTORS
         public EntityCache()
         {
             entDict = new Dictionary<int, T>();
+            RequestMissingEntities = true;
         }
         #endregion
 
@@ -31,11 +33,14 @@ namespace _ZMH5__Helios.CSGO.Modules.SnapshotHelpers
             {
                 if (entDict.ContainsKey(id))
                     return entDict[id];
-
-                var player = Program.Hack.GetEntityByID<T>(id, false);
-                if (player != null) 
-                    entDict[id] = player;
-                return player;
+                if (RequestMissingEntities)
+                {
+                    var player = Program.Hack.GetEntityByID<T>(id, false);
+                    if (player != null)
+                        entDict[id] = player;
+                    return player;
+                }
+                return null;
             }
             set
             {

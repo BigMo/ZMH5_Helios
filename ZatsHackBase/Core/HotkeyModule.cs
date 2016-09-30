@@ -13,11 +13,12 @@ namespace ZatsHackBase.Core
         #region VARIABLES
         private bool isDown, wasDown;
         private bool active;
+        private bool waitForUp;
         #endregion
 
         #region PROPERTIES
         public System.Windows.Forms.Keys Hotkey { get; set; }
-        public eKeyMode Mode { get; set; }
+        public KeyMode Mode { get; set; }
         public bool ActiveByHotkey
         {
             get { return active; }
@@ -37,7 +38,7 @@ namespace ZatsHackBase.Core
         public HotkeyModule(ModulePriority prio) : base(prio)
         {
             Hotkey = System.Windows.Forms.Keys.None;
-            Mode = eKeyMode.Hold;
+            Mode = KeyMode.Hold;
             ActiveByHotkey = false;
         }
         #endregion
@@ -45,6 +46,7 @@ namespace ZatsHackBase.Core
         #region METHODS
         public void Reset()
         {
+            waitForUp = isDown;
             isDown = wasDown = false;
             ActiveByHotkey = false;
         }
@@ -53,16 +55,20 @@ namespace ZatsHackBase.Core
             base.OnUpdate(args);
 
             isDown = ZatsHackBase.WinAPI.GetAsyncKeyState(Hotkey) != 0;
-
+            if (waitForUp)
+            {
+                waitForUp = isDown;
+                return;
+            }
             bool wentUp = wasDown && !isDown;
             bool wentDown = !wasDown && isDown;
 
-            if (Mode == eKeyMode.Hold)
+            if (Mode == KeyMode.Hold)
                 if (wentUp)
                     ActiveByHotkey = false;
                 else if (wentDown)
                     ActiveByHotkey = true;
-            if (Mode == eKeyMode.Toggle)
+            if (Mode == KeyMode.Toggle)
                 if (wentUp)
                     ActiveByHotkey = !ActiveByHotkey;
 

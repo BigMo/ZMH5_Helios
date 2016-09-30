@@ -147,7 +147,7 @@ namespace ZatsHackBase.UI
                 BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource,
                 Usage = SharpDX.Direct3D11.ResourceUsage.Dynamic,
                 CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.Write,
-                Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
+                Format = SharpDX.DXGI.Format.R32G32B32A32_Float,
                 MipLevels = 1,
                 OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None,
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
@@ -190,10 +190,10 @@ namespace ZatsHackBase.UI
                     //if(color.R > 150 && color.G > 150 && color.B > 150)
                     //    color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
 
-                    stream.Write((byte)color.R);
-                    stream.Write((byte)color.G);
-                    stream.Write((byte)color.B);
-                    stream.Write((byte)color.A);
+                    stream.Write(1f / color.R);
+                    stream.Write(1f / color.G);
+                    stream.Write(1f / color.B);
+                    stream.Write(1f / color.A);
 
                 }
 
@@ -205,15 +205,13 @@ namespace ZatsHackBase.UI
 
             _SamplerState = new SamplerState(_Renderer.Device, new SamplerStateDescription()
             {
-                Filter = Filter.MinMagMipLinear,
-                AddressU = TextureAddressMode.Clamp,
-                AddressV = TextureAddressMode.Clamp,
-                AddressW = TextureAddressMode.Clamp,
-                BorderColor = new RawColor4(1f,0f,1f,1f),
-                ComparisonFunction = Comparison.Never,
+                Filter = Filter.MinMagMipPoint,//D3D11_FILTER_MIN_MAG_MIP_POINT
+                AddressU = TextureAddressMode.Wrap,
+                AddressV = TextureAddressMode.Wrap,
+                AddressW = TextureAddressMode.Wrap,
                 MaximumAnisotropy = 16,
-                MipLodBias = 0,
-                MinimumLod = -float.MaxValue,
+                MipLodBias = 0f,
+                MinimumLod = float.MinValue,
                 MaximumLod = float.MaxValue
             });
 
@@ -353,10 +351,12 @@ namespace ZatsHackBase.UI
                 if (glyph.Size.Height > highest_char)
                     highest_char = glyph.Size.Height;
             }
-            
-            if ( line_widths.Count == 0 && text.Length != 0)
-                line_widths.Add(width);
 
+            if (line_widths.Count == 0 && text.Length != 0)
+            {
+                line_widths.Add(width);
+                height += highest_char;
+            }
         }
 
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text, 

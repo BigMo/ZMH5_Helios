@@ -13,6 +13,9 @@ using _ZMH5__Helios.CSGO.Enums;
 using ZatsHackBase;
 using ZatsHackBase.Misc;
 using System.IO;
+using ZatsHackBase.Maths;
+using ZatsHackBase.UI;
+using ZatsHackBase.UI.Drawing;
 using _ZMH5__Helios.CSGO.Modules;
 using _ZMH5__Helios.CSGO.BSP;
 
@@ -84,16 +87,24 @@ namespace _ZMH5__Helios.CSGO
             return mod;
         }
 
+        private Font font = null;
         public override void BeforePluginsTick(TickEventArgs args)
         {
             base.BeforePluginsTick(args);
 
             if (first)
                 FirstRun();
+
+            if (font == null)
+                font = Overlay.Renderer.CreateFont("Arial", 72);
+
+            Overlay.Renderer.DrawString(new Color(1f, 0f, 0f), font, new Vector2(10f, 10f), "TEST");
         }
         static bool once = false;
         public override void AfterPluginsTick(TickEventArgs args)
         {
+            Overlay.Renderer.DrawString(new Color(1f, 0f, 0f), font, new Vector2(10f, 900f), "TEST");
+
             base.AfterPluginsTick(args);
 
             if (once)

@@ -35,7 +35,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
             if (espFont == null)
-                espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 9);
+                espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 12);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -80,7 +80,12 @@ namespace _ZMH5__Helios.CSGO.Modules
                     if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.Y, ent.Name);
+
+                        List<float> linewidths;
+                        float height;
+                        espFont.MeasureString("newb", out linewidths, out height);
+                        Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, ptDown, "newb");
+                        Program.Hack.Overlay.Renderer.DrawRectangle(Color.Red, ptDown, new Vector2(linewidths[0],height ));
                     }
                 }
             }

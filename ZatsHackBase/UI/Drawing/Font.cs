@@ -12,7 +12,7 @@ using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.UI
 {
-    public class Font
+    public class Font : IDisposable
     {
         
         #region Constructor
@@ -24,7 +24,7 @@ namespace ZatsHackBase.UI
 
             int texture_size = 0;
 
-            int max_texture_width = 512;
+            int max_texture_width = 1024;
 
             int texture_width = 0;
             int texture_height = 0;
@@ -152,16 +152,16 @@ namespace ZatsHackBase.UI
                 OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None,
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
             }, (SharpDX.DataBox[])null);
-
-            _Resource = new ShaderResourceView(_Renderer.Device, _Texture);
             
             DataStream stream;
+
+            _Resource = new ShaderResourceView(_Renderer.Device, _Texture);
 
             var databox = _Renderer.DeviceContext.MapSubresource(_Texture, 0, MapMode.WriteDiscard, MapFlags.None, out stream);
 
             var pitch = databox.RowPitch;
             var rows = texture_height;
-            var stride = 4;
+            var stride = sizeof(float)*4;
 
             for (int row = 0; row < rows; ++row)
             {
@@ -190,31 +190,36 @@ namespace ZatsHackBase.UI
                     //if(color.R > 150 && color.G > 150 && color.B > 150)
                     //    color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
 
-                    stream.Write(1f / color.R);
-                    stream.Write(1f / color.G);
-                    stream.Write(1f / color.B);
-                    stream.Write(1f / color.A);
-
+                    //stream.Write(1f / (float)color.R);
+                    //stream.Write(1f / (float)color.G);
+                    //stream.Write(1f / (float)color.B);
+                    //stream.Write(1f / (float)color.A);
+                    stream.Write(1f);
+                    stream.Write(1f);
+                    stream.Write(1f);
+                    stream.Write(1f);
                 }
 
             }
 
-            _Renderer.DeviceContext.UnmapSubresource(_Resource.Resource, 0);
+            _Renderer.DeviceContext.UnmapSubresource(_Texture, 0);
 
             bm.Dispose();
 
             _SamplerState = new SamplerState(_Renderer.Device, new SamplerStateDescription()
             {
-                Filter = Filter.MinMagMipPoint,//D3D11_FILTER_MIN_MAG_MIP_POINT
-                AddressU = TextureAddressMode.Wrap,
-                AddressV = TextureAddressMode.Wrap,
-                AddressW = TextureAddressMode.Wrap,
+                Filter = Filter.MinMagMipLinear,
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                AddressW = TextureAddressMode.Clamp,
+                BorderColor = new RawColor4(1f,0f,1f,1f),
+                ComparisonFunction = Comparison.Never,
                 MaximumAnisotropy = 16,
-                MipLodBias = 0f,
-                MinimumLod = float.MinValue,
-                MaximumLod = float.MaxValue
+                MipLodBias = 0,
+                MinimumLod = 0,
+                MaximumLod = 16
             });
-
+            _Disposed = false;
         }
         #endregion
 
@@ -227,6 +232,7 @@ namespace ZatsHackBase.UI
         private SharpDX.Direct3D11.Texture2D _Texture;
         private SharpDX.Direct3D11.ShaderResourceView _Resource;
         private SharpDX.Direct3D11.SamplerState _SamplerState;
+        public bool _Disposed;
 
         #endregion
 
@@ -241,6 +247,7 @@ namespace ZatsHackBase.UI
 
         public void Debug(GeometryBuffer geometry_buffer)
         {
+            if (_Disposed) return;
             var color = new RawColor4(1f,0f,0f,1f);
             geometry_buffer.AppendVertices(
                 new Vertex(0f, 0f, color, 0f, 0f),
@@ -261,6 +268,7 @@ namespace ZatsHackBase.UI
 
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text)
         {
+            if (_Disposed) return;
 
             float wide_pos = location.X;
             float high_pos = location.Y;
@@ -328,6 +336,7 @@ namespace ZatsHackBase.UI
 
             float width = 0f;
             float highest_char = 0f;
+            if (_Disposed) return;
 
             foreach (var c in text)
             {
@@ -362,6 +371,7 @@ namespace ZatsHackBase.UI
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text, 
             TextAlignment halign = TextAlignment.Near, TextAlignment valign = TextAlignment.Near)
         {
+            if (_Disposed) return;
             List<float> line_widths;
             float height;
 
@@ -458,5 +468,13 @@ namespace ZatsHackBase.UI
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _Disposed = true;
+            _Resource.Dispose();
+            _Texture.Dispose();
+            _Glyphs.Clear();
+        }
     }
 }

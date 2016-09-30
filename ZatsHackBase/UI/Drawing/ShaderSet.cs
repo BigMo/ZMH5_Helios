@@ -8,7 +8,7 @@ using SharpDX.Direct3D11;
 
 namespace ZatsHackBase.UI.Drawing
 {
-    public class ShaderSet
+    public class ShaderSet : IDisposable
     {
         #region Constructors
 
@@ -51,5 +51,12 @@ namespace ZatsHackBase.UI.Drawing
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _VertexShader.Dispose();
+            _PixelShader.Dispose();
+            _InputLayout.Dispose();
+        }
     }
 }

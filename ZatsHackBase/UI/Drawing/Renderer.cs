@@ -179,15 +179,30 @@ namespace ZatsHackBase.UI
                     return output;
                 }
 
-                Texture2D    g_texture : register ( t0 );     
+                Texture2D    g_texture : register( t0 );           
                 SamplerState g_linearSampler : register ( s0 );
 
                 float4 pixel_entry ( Pixel pixel ) : SV_TARGET
                 {
-                    float4 color = g_texture.Load(g_linearSampler, pixel.UV);
-                    return color * pixel.Color;
-                }
+                    float4 texColor = g_texture.Sample ( g_linearSampler, pixel.UV );
 
+                    float4 midvalue = texColor + pixel.Color;
+
+                    midvalue.x = midvalue.x / 2.0f;
+                    midvalue.y = midvalue.y / 2.0f;
+                    midvalue.z = midvalue.z / 2.0f;
+
+                    midvalue.w = texColor.w;
+
+                    if ( texColor.w == 0.0f )
+                    {
+                        midvalue.x = 0.0f;
+                        midvalue.y = 0.0f;
+                        midvalue.z = 0.0f;
+                    }
+
+                    return midvalue;
+                }
                 ";
 
             /*ellipseShader = new ShaderSet(this, ellipseShaderCode, "vertex_entry", "pixel_entry", new[]
@@ -229,8 +244,6 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-            if(fonts.Count != 0)            
-            fonts[0].DrawString(GeometryBuffer, new Vector2(100f,100f), new RawColor4(1f,0f,0f,1f), "test"  );
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
@@ -243,6 +256,9 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
 
+            fontShader.Dispose();
+            primitiveShader.Dispose();
+            fonts.ForEach(x => x.Dispose());
             renderTargetView.Dispose();
             swapChain.Dispose();
             d3dDevice.Dispose();
@@ -378,7 +394,7 @@ namespace ZatsHackBase.UI
         
         public void DrawString(Color color, Font font, Vector2 location, string text)
         {
-            if (!Initialized)
+            if (!Initialized || font == null)
                 return;
 
             GeometryBuffer.SetShader(fontShader);

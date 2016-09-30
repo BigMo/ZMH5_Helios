@@ -94,6 +94,8 @@ namespace ZatsHackBase.UI
 
         public void Dispose()
         {
+            _TransformationBuffer.Dispose();
+
             _Vertices.Clear();
             _Indices.Clear();
             _Batches.Clear();
@@ -179,6 +181,7 @@ namespace ZatsHackBase.UI
             _Dummy.UseIndices = true;
             _Dummy.Texture = null;
             _Dummy.Sampler = null;
+
         }
 
         public void Draw()
@@ -204,10 +207,10 @@ namespace ZatsHackBase.UI
             foreach (var batch in _Batches)
             {
 
-                if (batch.TargetShader != null && batch.TargetShader != last_shader)
+               // if (batch.TargetShader != null && batch.TargetShader != last_shader)
                 {
-                    batch.TargetShader.Apply();
-                    last_shader = batch.TargetShader;
+                    batch.TargetShader?.Apply();
+                    //last_shader = batch.TargetShader;
                 }
 
                 if (batch.UseClipping == true && batch.ClipRectangle != clip)

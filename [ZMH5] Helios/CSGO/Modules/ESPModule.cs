@@ -34,7 +34,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
-            if (espFont == null)
+            if (espFont == null || espFont._Disposed == true)
                 espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 12);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
@@ -84,8 +84,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                         List<float> linewidths;
                         float height;
                         espFont.MeasureString("newb", out linewidths, out height);
-                        Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, ptDown, "newb");
-                        Program.Hack.Overlay.Renderer.DrawRectangle(Color.Red, ptDown, new Vector2(linewidths[0],height ));
+                        Program.Hack.Overlay.Renderer.DrawString(Color.Red,espFont,upperLeft - Vector2.UnitY * 15f, ent.Name );
                     }
                 }
             }

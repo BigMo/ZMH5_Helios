@@ -129,6 +129,7 @@
     <Compile Include="CSGO\Modules\AimModule.cs" />
     <Compile Include="CSGO\Modules\AutoPistolModule.cs" />
     <Compile Include="CSGO\Modules\BunnyHop.cs" />
+    <Compile Include="CSGO\Modules\ReloadSettingsModule.cs" />
     <Compile Include="CSGO\Modules\EchoModule.cs" />
     <Compile Include="CSGO\Modules\ESPModule.cs" />
     <Compile Include="CSGO\Modules\GlowHelpers\GlowManager.cs" />

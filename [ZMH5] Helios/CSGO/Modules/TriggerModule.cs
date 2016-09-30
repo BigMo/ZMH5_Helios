@@ -33,13 +33,14 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnFirstRun(args);
 
-            Hotkey = Program.Settings.TriggerKey;
-            Mode = Program.Settings.TriggerMode;
             ActiveChanged += (o, e) => Program.Logger.Log("[Trigger] State changed: {0}", ActiveByHotkey ? "active" : "inactive");
         }
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
+
+            Hotkey = Program.Settings.TriggerKey;
+            Mode = Program.Settings.TriggerMode;
 
             //Aquire localplayer
             var lp = Program.Hack.StateMod.LocalPlayer.Value;

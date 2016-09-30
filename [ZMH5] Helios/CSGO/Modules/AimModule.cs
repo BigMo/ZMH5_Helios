@@ -25,13 +25,14 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnFirstRun(args);
 
-            Hotkey = Program.Settings.AimKey;
-            Mode = Program.Settings.AimMode;
             ActiveChanged += (o, e) => Program.Logger.Log("[Aim] State changed: {0}", ActiveByHotkey ? "active" : "inactive");
         }
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
+
+            Hotkey = Program.Settings.AimKey;
+            Mode = Program.Settings.AimMode;
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -78,35 +79,34 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
 
                 var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ViewAngles.Value;
+                angle = ViewModule.ClampAngle(angle);
                 if (Program.Settings.AimSmoothEnabled)
                 {
                     switch (Program.Settings.AimSmoothMode)
                     {
                         case Settings.SmoothMode.Scalar:
-                            Console.WriteLine("{0} * {1} = {2}", angle, Program.Settings.AimSmoothScalar, angle * Program.Settings.AimSmoothScalar);
                             angle *= Program.Settings.AimSmoothScalar;
                             break;
                         case Settings.SmoothMode.MaxDist:
-                            if (angle.Length > Program.Settings.AimSmoothMaxDist.Length)
+                            if (angle.Length > Program.Settings.AimSmoothPerAxis.Length)
                             {
                                 angle.Normalize();
-                                angle *= Program.Settings.AimSmoothMaxDist.Length;
+                                angle = angle * Program.Settings.AimSmoothPerAxis.Length;
                             }
                             break;
                         case Settings.SmoothMode.MaxDistPerAxis:
-                            var vx = new Vector2(Program.Settings.AimSmoothMaxDist.X, 0f);
-                            var vy = new Vector2(0f, Program.Settings.AimSmoothMaxDist.X);
-                            if (vx.Length > Program.Settings.AimSmoothMaxDist.Length)
-                            {
-                                vx.Normalize();
-                                vx *= Program.Settings.AimSmoothMaxDist.Length;
-                            }
-                            if (vy.Length > Program.Settings.AimSmoothMaxDist.Length)
-                            {
-                                vy.Normalize();
-                                vy *= Program.Settings.AimSmoothMaxDist.Length;
-                            }
-                            angle = new Vector3(vx.X, vy.Y, 0f);
+                            if (angle.X < 0f)
+                                angle.X = System.Math.Max(angle.X, -Program.Settings.AimSmoothPerAxis.X);
+                            else if (angle.X > 0f)
+                                angle.X = System.Math.Min(angle.X, Program.Settings.AimSmoothPerAxis.X);
+
+                            if (angle.Y < 0f)
+                                angle.Y = System.Math.Max(angle.Y, -Program.Settings.AimSmoothPerAxis.Y);
+                            else if (angle.Y > 0f)
+                                angle.Y = System.Math.Min(angle.Y, Program.Settings.AimSmoothPerAxis.Y);
+                            break;
+                        case Settings.SmoothMode.ScalarPerAxis:
+                            angle = new Vector3(angle.X * Program.Settings.AimSmoothPerAxis.X, angle.Y * Program.Settings.AimSmoothPerAxis.Y, 0f);
                             break;
                     }
                 }

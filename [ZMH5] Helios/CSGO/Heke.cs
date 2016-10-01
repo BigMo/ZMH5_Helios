@@ -41,6 +41,7 @@ namespace _ZMH5__Helios.CSGO
         public GlowModule Glow { get; private set; }
         public BSPFile Map { get; private set; }
         public ESPModule ESP { get; private set; }
+        public ReloadSettingsModule ReloadSettings { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -57,6 +58,7 @@ namespace _ZMH5__Helios.CSGO
             Pistol = new AutoPistolModule();
             Glow = new GlowModule();
             ESP = new ESPModule();
+            ReloadSettings = new ReloadSettingsModule();
 
             AddModule(EchoMod);
             AddModule(StateMod);
@@ -68,6 +70,7 @@ namespace _ZMH5__Helios.CSGO
             AddModule(Pistol);
             AddModule(Glow);
             AddModule(ESP);
+            AddModule(ReloadSettings);
         }
         #endregion
 

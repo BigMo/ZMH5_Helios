@@ -16,13 +16,14 @@ namespace _ZMH5__Helios.CSGO
     public class Settings
     {
         #region ENUMS
-        public enum SmoothMode { Scalar, MaxDist, MaxDistPerAxis };
+        public enum SmoothMode { Scalar, ScalarPerAxis, MaxDist, MaxDistPerAxis };
         #endregion
 
         #region PROPERTIES
         #region INFO
-        public string _InfoModes = "Modes are: \"Hold\" and \"Toggle\"";
+        public string _InfoKeyModes = "Modes are: " + string.Join(", ", Enum.GetNames(typeof(KeyMode)).Select(x => "" + x + ""));
         public string _InfoKeys = "For keys, use one of the key-names listed on this site: https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx";
+        public string _InfoModes = "SmoothModes are: " + string.Join(", ", Enum.GetNames(typeof(SmoothMode)).Select(x => "" + x + ""));
         #endregion
 
         #region AIM
@@ -38,7 +39,7 @@ namespace _ZMH5__Helios.CSGO
         public SmoothMode AimSmoothMode;
         public bool AimSmoothEnabled;
         public float AimSmoothScalar;
-        public Vector2 AimSmoothMaxDist;
+        public Vector2 AimSmoothPerAxis;
         public bool AimPredict;
         #endregion
 
@@ -100,7 +101,7 @@ namespace _ZMH5__Helios.CSGO
             AimSmoothEnabled = false;
             AimSmoothMode = SmoothMode.MaxDist;
             AimSmoothScalar = 0.2f;
-            AimSmoothMaxDist = new Vector2(0.01f, 0.01f);
+            AimSmoothPerAxis = new Vector2(0.01f, 0.01f);
 
             TriggerEnabled = true;
             TriggerKey = Keys.XButton2;

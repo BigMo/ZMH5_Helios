@@ -61,7 +61,7 @@ namespace _ZMH5__Helios
             Console.ReadLine();
         }
 
-        private static void LoadSettings()
+        public static void LoadSettings()
         {
             try
             {
@@ -75,7 +75,7 @@ namespace _ZMH5__Helios
                 Logger.PrintException(ex, true, false);
             }
         }
-        private static void LoadOffsets()
+        public static void LoadOffsets()
         {
             try
             {

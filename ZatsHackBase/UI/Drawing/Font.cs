@@ -20,25 +20,58 @@ namespace ZatsHackBase.UI
         private const float rgb2f = 1f / 255f;
 
         #region Constructor
-        public Font(Renderer renderer, string family, float height, bool bold, bool italy)
+        internal Font(Renderer renderer, string family, float height, bool bold, bool italy)
         {
+            ID = ++idCounter;
             _Renderer = renderer;
+            Height = height;
+            Family = family;
+            IsDisposed = true;
 
-            _Height = height;
+            //Make this a dummy font in case renderer isn't ready yet
+            if (!renderer.Initialized)
+                return;
 
+            //Renderer is ready; Init
+            Init();
+            IsDisposed = false;
+        }
+        #endregion
+
+        #region Variables
+
+        private Renderer _Renderer;
+        
+        private Dictionary<char, Glyph> _Glyphs;
+        private SharpDX.Direct3D11.Texture2D _Texture;
+        private SharpDX.Direct3D11.ShaderResourceView _Resource;
+        private SharpDX.Direct3D11.SamplerState _SamplerState;
+        private static int idCounter;
+        #endregion
+
+        #region Properties
+
+        public string Family { get; private set; }
+        public float Height { get; private set; }
+        public int ID { get; private set; }
+        public bool IsDisposed { get; private set; }
+        #endregion
+
+        #region Method
+        private void Init()
+        {
             int texture_size = 0;
-
             int max_texture_width = 1024;
-
             int texture_width = 0;
             int texture_height = 0;
 
             Bitmap bm = null;
 
-            using (var font = new System.Drawing.Font(new FontFamily(family), height, FontStyle.Regular))
+            using (var font = new System.Drawing.Font(new FontFamily(Family), Height, FontStyle.Regular))
             {
                 _Glyphs = new Dictionary<char, Glyph>();
 
+                IsDisposed = false;
                 // static cfg - char padding
                 int wide_pad = 4;
                 int high_pad = 4;
@@ -230,56 +263,12 @@ namespace ZatsHackBase.UI
                 MinimumLod = 0,
                 MaximumLod = 16
             });
-            _Disposed = false;
-        }
-        #endregion
-
-        #region Variables
-
-        private Renderer _Renderer;
-
-        private float _Height;
-        private Dictionary<char, Glyph> _Glyphs;
-        private SharpDX.Direct3D11.Texture2D _Texture;
-        private SharpDX.Direct3D11.ShaderResourceView _Resource;
-        private SharpDX.Direct3D11.SamplerState _SamplerState;
-        public bool _Disposed;
-
-        #endregion
-
-        #region Properties
-
-        public string Family;
-        public int Height;
-
-        #endregion
-
-        #region Method
-
-        public void Debug(GeometryBuffer geometry_buffer)
-        {
-            if (_Disposed) return;
-            var color = new RawColor4(1f, 0f, 0f, 1f);
-            geometry_buffer.AppendVertices(
-                new Vertex(0f, 0f, color, 0f, 0f),
-                new Vertex(_Texture.Description.Width, 0f, color, 1f, 0f),
-                new Vertex(0f, _Texture.Description.Height, color, 0f, 1f),
-                new Vertex(_Texture.Description.Width, _Texture.Description.Height, color, 1f, 1f)
-                );
-
-            geometry_buffer.AppendIndices(
-                0, 1, 2,
-                1, 2, 3
-                );
-
-            geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
-            geometry_buffer.SetupTexture(_Resource, _SamplerState);
-            geometry_buffer.Trim();
         }
 
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text)
         {
-            if (_Disposed) return;
+            if (IsDisposed)
+                return;
 
             float wide_pos = location.X;
             float high_pos = location.Y;
@@ -287,7 +276,7 @@ namespace ZatsHackBase.UI
 
             short vertex_offset = 0;
 
-            var space = _Height * 0.35f;
+            var space = Height * 0.35f;
 
             foreach (var c in text)
             {
@@ -301,7 +290,7 @@ namespace ZatsHackBase.UI
                 if (c == '\n')
                 {
                     wide_pos = location.X;
-                    high_pos += highest_char == 0f ? _Height : highest_char;
+                    high_pos += highest_char == 0f ? Height : highest_char;
                     highest_char = 0f;
                     continue;
                 }
@@ -343,11 +332,12 @@ namespace ZatsHackBase.UI
             line_widths = new List<float>();
             height = 0f;
 
-            var space = _Height * 0.35f;
+            var space = Height * 0.35f;
 
             float width = 0f;
             float highest_char = 0f;
-            if (_Disposed) return;
+            if (IsDisposed)
+                return;
 
             foreach (var c in text)
             {
@@ -360,7 +350,7 @@ namespace ZatsHackBase.UI
                 if (c == '\n')
                 {
                     line_widths.Add(width);
-                    height += highest_char == 0f ? _Height : highest_char;
+                    height += highest_char == 0f ? Height : highest_char;
                     width = 0f;
                 }
 
@@ -382,7 +372,9 @@ namespace ZatsHackBase.UI
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text,
             TextAlignment halign = TextAlignment.Near, TextAlignment valign = TextAlignment.Near)
         {
-            if (_Disposed) return;
+            if (IsDisposed)
+                return;
+
             List<float> line_widths;
             float height;
 
@@ -392,7 +384,7 @@ namespace ZatsHackBase.UI
                 return;
 
             float wide = 0f;
-            float space = _Height * 0.35f;
+            float space = Height*0.35f;
             float highest_char = 0f;
 
             short vertex_offset = 0;
@@ -430,7 +422,7 @@ namespace ZatsHackBase.UI
 
                 if (c == '\n')
                 {
-                    height += highest_char == 0f ? _Height : highest_char;
+                    height += highest_char == 0f ? Height : highest_char;
 
                     switch (halign)
                     {
@@ -482,10 +474,10 @@ namespace ZatsHackBase.UI
 
         public void Dispose()
         {
-            _Disposed = true;
-            _Resource.Dispose();
-            _Texture.Dispose();
-            _Glyphs.Clear();
+            IsDisposed = true;
+            _Resource?.Dispose();
+            _Texture?.Dispose();
+            _Glyphs?.Clear();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using SharpDX;
 using SharpDX.Direct3D;
@@ -29,7 +30,7 @@ namespace ZatsHackBase.UI
             IsDisposed = true;
 
             //Make this a dummy font in case renderer isn't ready yet
-            if (!renderer.Initialized)
+            if (renderer == null || !renderer.Initialized)
                 return;
 
             //Renderer is ready; Init
@@ -130,6 +131,7 @@ namespace ZatsHackBase.UI
 
                 bm_g.Clear(System.Drawing.Color.Transparent);
                 bm_g.SmoothingMode = SmoothingMode.HighQuality;
+                bm_g.TextRenderingHint = TextRenderingHint.;
 
                 var brush = new SolidBrush(System.Drawing.Color.White);
 
@@ -327,7 +329,47 @@ namespace ZatsHackBase.UI
 
         }
 
-        // TODO: Normale Measure String methode implementieren
+        public Vector2 MeasureString(string text)
+        {
+            float height = 0f;
+            int lines = 0;
+            var space = Height * 0.35f;
+
+
+            float width = 0f;
+            float cur_width = 0f;
+            float highest_char = 0f;
+
+            foreach (var c in text)
+            {
+                if (c == ' ')
+                {
+                    cur_width += space;
+                    continue;
+                }
+                if (c == '\n')
+                {
+                    height += highest_char == 0f ? Height : highest_char;
+                    if (cur_width > width)
+                        width = cur_width;
+                    cur_width = 0f;
+                    highest_char = 0f;
+                    continue;
+                }
+
+                var glyph = _Glyphs[c];
+
+                width += glyph.Size.Width;
+
+                if (glyph.Size.Height > highest_char)
+                    highest_char = glyph.Size.Height;
+            }
+
+            if (lines == 0)
+                height = Height;
+
+            return new Vector2(width,height);
+        }
 
         public void MeasureString(string text, out List<float> line_widths, out float height)
         {

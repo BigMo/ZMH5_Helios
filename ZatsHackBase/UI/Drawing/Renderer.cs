@@ -63,7 +63,7 @@ namespace ZatsHackBase.UI
             SwapChainDescription swapChainDesc = new SwapChainDescription()
             {
                 ModeDescription = backBufferDesc,
-                SampleDescription = new SampleDescription(4, 4),
+                SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 1,
                 OutputHandle = form.Handle,
@@ -137,7 +137,7 @@ namespace ZatsHackBase.UI
 
                 ";
 
-
+            //http://nielson.io/2016/04/2d-sprite-outlines-in-unity/
             var fontShaderCode =
                 @"
                 cbuffer ShaderParams : register(b0) 
@@ -184,24 +184,17 @@ namespace ZatsHackBase.UI
 
                 float4 pixel_entry ( Pixel pixel ) : SV_TARGET
                 {
-                    float4 texColor = g_texture.Sample ( g_linearSampler, pixel.UV );
+                    float4 input_color = pixel.Color;
+                    float4 texture_color = g_texture.Sample ( g_linearSampler, pixel.UV );
 
-                    float4 midvalue = texColor + pixel.Color;
-
-                    midvalue.x = midvalue.x / 2.0f;
-                    midvalue.y = midvalue.y / 2.0f;
-                    midvalue.z = midvalue.z / 2.0f;
-
-                    midvalue.w = texColor.w;
-
-                    if ( texColor.w == 0.0f )
+                    if ( texture_color.w == 0.0f )
                     {
-                        midvalue.x = 0.0f;
-                        midvalue.y = 0.0f;
-                        midvalue.z = 0.0f;
+                        discard;
                     }
 
-                    return midvalue;
+                    float4 combined = input_color;
+                    combined.w = texture_color.w;
+                    return combined;
                 }
                 ";
 
@@ -235,7 +228,6 @@ namespace ZatsHackBase.UI
                 return;
 
             d3dDeviceContext.OutputMerger.SetRenderTargets(renderTargetView);
-            d3dDeviceContext.OutputMerger.SetBlendState(blendState, new Color(0f, 0f, 0f, 1f), 0xFFFFFFFF);
             d3dDeviceContext.ClearRenderTargetView(renderTargetView, color);
             
         }

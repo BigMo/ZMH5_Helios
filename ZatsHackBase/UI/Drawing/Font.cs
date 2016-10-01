@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using SharpDX;
@@ -9,12 +10,15 @@ using SharpDX.Direct3D11;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
+using InterpolationMode = System.Drawing.Drawing2D.InterpolationMode;
 
 namespace ZatsHackBase.UI
 {
     public class Font : IDisposable
     {
-        
+
+        private const float rgb2f = 1f / 255f;
+
         #region Constructor
         public Font(Renderer renderer, string family, float height, bool bold, bool italy)
         {
@@ -82,7 +86,7 @@ namespace ZatsHackBase.UI
                 if (texture_width == 0) texture_width = cur_width;
                 if (texture_height == 0) texture_height = cur_height;
 
-                bm = new Bitmap(texture_width,texture_height);
+                bm = new Bitmap(texture_width, texture_height);
 
                 var bm_g = Graphics.FromImage(bm);
 
@@ -92,6 +96,8 @@ namespace ZatsHackBase.UI
                 float y = 0;
 
                 bm_g.Clear(System.Drawing.Color.Transparent);
+                bm_g.SmoothingMode = SmoothingMode.HighQuality;
+
                 var brush = new SolidBrush(System.Drawing.Color.White);
 
                 for (int i = 32; i < 1000; ++i)
@@ -115,11 +121,11 @@ namespace ZatsHackBase.UI
 
                     glyph = new Glyph
                     {
-                        Size = new SizeF(size) {Width = size.Width,Height = size.Height},
-                        UV = new []
+                        Size = new SizeF(size) { Width = size.Width, Height = size.Height },
+                        UV = new[]
                         {
                             new Vector2(x / texture_width, y / texture_height),
-                            new Vector2((x+size.Width+wide_pad) / texture_width, (y+size.Height) / texture_height),  
+                            new Vector2((x+size.Width+wide_pad) / texture_width, (y+size.Height) / texture_height),
                         },
                         Code = char_
                     };
@@ -131,7 +137,7 @@ namespace ZatsHackBase.UI
 
                     if (size.Height > cur_height)
                         cur_height = (int)size.Height;
-                    
+
                     _Glyphs.Add(char_, glyph);
                 }
 
@@ -152,7 +158,7 @@ namespace ZatsHackBase.UI
                 OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None,
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
             }, (SharpDX.DataBox[])null);
-            
+
             DataStream stream;
 
             _Resource = new ShaderResourceView(_Renderer.Device, _Texture);
@@ -161,45 +167,50 @@ namespace ZatsHackBase.UI
 
             var pitch = databox.RowPitch;
             var rows = texture_height;
-            var stride = sizeof(float)*4;
+            var stride = sizeof(float) * 4;
 
-            for (int row = 0; row < rows; ++row)
+            using (var bm2 = new Bitmap(texture_width,texture_height))
             {
 
-                for (int i = 0, x = 0; i < pitch; i += stride, ++x)
-                {
+                    for (int row = 0; row < rows; ++row)
+                    {
 
-                    int offset = (pitch*row) + i;
+                        for (int i = 0, x = 0; i < pitch; i += stride, ++x)
+                        {
 
-                    //if (offset > stream.Length)
-                    //    break;
+                            int offset = (pitch * row) + i;
 
-                    stream.Seek(offset, SeekOrigin.Begin);
+                            stream.Seek(offset, SeekOrigin.Begin);
 
-                    if (x >= texture_width)
-                        continue;
+                            if (x >= texture_width)
+                                continue;
 
-                    var color = bm.GetPixel(x, row);
+                            var color = bm.GetPixel(x, row);
 
-                    if (color.A == 0 && color.R == 0 && color.G == 0 && color.B == 0)
-                        continue;
+                            if (color.A == 0 || (color.R == 1 && color.B == 1 && color.G == 1))
+                            {
 
-                    //if (color.R < 254 && color.G < 254 && color.B < 254)
-                    //    color = System.Drawing.Color.FromArgb(0,0,0,0);
+                                stream.Write(rgb2f * color.R);
+                                stream.Write(rgb2f * color.G);
+                                stream.Write(rgb2f * color.B);
+                                stream.Write(rgb2f * color.A);
 
-                    //if(color.R > 150 && color.G > 150 && color.B > 150)
-                    //    color = System.Drawing.Color.FromArgb(255, 149, 149, 149);
+                                //bm2.SetPixel(x,row, color);
+                            }
+                            else
+                            {
+                                var alpha = (color.R + color.G + color.B) / 3f * rgb2f;
+                                stream.Write(1f);
+                                stream.Write(1f);
+                                stream.Write(1f);
+                                stream.Write(alpha);
+                            //bm2.SetPixel(x, row, System.Drawing.Color.FromArgb((int)(255f * alpha), System.Drawing.Color.White));
+                        }
+                        }
 
-                    //stream.Write(1f / (float)color.R);
-                    //stream.Write(1f / (float)color.G);
-                    //stream.Write(1f / (float)color.B);
-                    //stream.Write(1f / (float)color.A);
-                    stream.Write(1f);
-                    stream.Write(1f);
-                    stream.Write(1f);
-                    stream.Write(1f);
+                    
                 }
-
+                    //bm2.Save("test2.png", ImageFormat.Png);
             }
 
             _Renderer.DeviceContext.UnmapSubresource(_Texture, 0);
@@ -212,7 +223,7 @@ namespace ZatsHackBase.UI
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp,
                 AddressW = TextureAddressMode.Clamp,
-                BorderColor = new RawColor4(1f,0f,1f,1f),
+                BorderColor = new RawColor4(1f, 0f, 1f, 1f),
                 ComparisonFunction = Comparison.Never,
                 MaximumAnisotropy = 16,
                 MipLodBias = 0,
@@ -248,7 +259,7 @@ namespace ZatsHackBase.UI
         public void Debug(GeometryBuffer geometry_buffer)
         {
             if (_Disposed) return;
-            var color = new RawColor4(1f,0f,0f,1f);
+            var color = new RawColor4(1f, 0f, 0f, 1f);
             geometry_buffer.AppendVertices(
                 new Vertex(0f, 0f, color, 0f, 0f),
                 new Vertex(_Texture.Description.Width, 0f, color, 1f, 0f),
@@ -257,8 +268,8 @@ namespace ZatsHackBase.UI
                 );
 
             geometry_buffer.AppendIndices(
-                0,1,2,
-                1,2,3
+                0, 1, 2,
+                1, 2, 3
                 );
 
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
@@ -294,7 +305,7 @@ namespace ZatsHackBase.UI
                     highest_char = 0f;
                     continue;
                 }
-                
+
                 var glyph = _Glyphs[c];
 
                 if (glyph.Size.Height > highest_char)
@@ -324,10 +335,10 @@ namespace ZatsHackBase.UI
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
             geometry_buffer.SetupTexture(_Resource, _SamplerState);
             geometry_buffer.Trim();
-            
+
         }
 
-        public void MeasureString(string text, out List<float> line_widths , out float height)
+        public void MeasureString(string text, out List<float> line_widths, out float height)
         {
             line_widths = new List<float>();
             height = 0f;
@@ -368,7 +379,7 @@ namespace ZatsHackBase.UI
             }
         }
 
-        public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text, 
+        public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text,
             TextAlignment halign = TextAlignment.Near, TextAlignment valign = TextAlignment.Near)
         {
             if (_Disposed) return;
@@ -381,7 +392,7 @@ namespace ZatsHackBase.UI
                 return;
 
             float wide = 0f;
-            float space = _Height*0.35f;
+            float space = _Height * 0.35f;
             float highest_char = 0f;
 
             short vertex_offset = 0;
@@ -409,7 +420,7 @@ namespace ZatsHackBase.UI
                     break;
             }
 
-            foreach ( var c in text)
+            foreach (var c in text)
             {
                 if (c == ' ')
                 {
@@ -436,7 +447,7 @@ namespace ZatsHackBase.UI
                 }
 
                 var glyph = _Glyphs[c];
-                
+
                 geometry_buffer.AppendVertices(
                     new Vertex(wide, location.Y, color, glyph.UV[0].X, glyph.UV[0].Y),
 

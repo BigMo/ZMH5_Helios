@@ -34,8 +34,8 @@ namespace _ZMH5__Helios.CSGO.Modules
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
-            if (espFont == null)
-                espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 9);
+            if (espFont == null || espFont._Disposed == true)
+                espFont = Program.Hack.Overlay.Renderer.CreateFont("Courier New", 16);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -80,7 +80,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                     if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.X, ent.Name);
+                        Program.Hack.Overlay.Renderer.DrawString(Color.Orange, espFont, upperLeft, ent.Name);
                     }
                 }
             }

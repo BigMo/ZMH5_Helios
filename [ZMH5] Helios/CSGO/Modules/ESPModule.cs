@@ -16,7 +16,7 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
-        private Font espFont = null;
+        private Font espFont = Font.CreateDummy("Arial", 20);
         #endregion
 
         #region CONSTRUCTORS
@@ -34,10 +34,6 @@ namespace _ZMH5__Helios.CSGO.Modules
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
-            if (espFont == null)
-                espFont = Program.Hack.Overlay.Renderer.CreateFont("Arial", 9);
-            else
-                espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -48,8 +44,10 @@ namespace _ZMH5__Helios.CSGO.Modules
                 Where(x => x.m_lifeState.Value == Enums.LifeState.Alive);//.
                 //Where(x => x.m_Skeleton.Value != null);
 
-            var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value);
-            var allies = alivePlayers.Where(x => x.m_iTeamNum.Value == lp.m_iTeamNum.Value);
+            var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
+                OrderBy(x => x.DistanceTo(lp));
+            var allies = alivePlayers.Where(x => x.m_iTeamNum.Value == lp.m_iTeamNum.Value).
+                OrderBy(x => x.DistanceTo(lp));
             
             var vEnts = Program.Hack.StateMod.RadarEntries.Value == null ?
                 new SnapshotHelpers.RadarEntry[0] : 
@@ -76,14 +74,16 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green, Color.Black);
                 DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White, Color.Black);
-
-                if (espFont != null)
-                {
+                
                     if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.X, ent.Name);
-                    }
+
+                    espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
+                    var textPos = upperLeft + Vector2.UnitX * size.X;
+                    var sz = espFont.MeasureString(ent.Name);
+                    Program.Hack.Overlay.Renderer.FillRectangle(Color.Black, textPos, sz);
+                    Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, textPos, ent.Name);
                 }
             }
         }

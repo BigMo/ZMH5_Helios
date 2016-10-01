@@ -327,6 +327,8 @@ namespace ZatsHackBase.UI
 
         }
 
+        // TODO: Normale Measure String methode implementieren
+
         public void MeasureString(string text, out List<float> line_widths, out float height)
         {
             line_widths = new List<float>();

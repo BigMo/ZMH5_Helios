@@ -82,7 +82,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                     if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
                     {
                         var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
-                        //Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.X, ent.Name);
+                        Program.Hack.Overlay.Renderer.DrawString(Color.Black, espFont, upperLeft + Vector2.UnitX * size.X, ent.Name);
                     }
                 }
             }

@@ -79,8 +79,8 @@ namespace ZatsHackBase.UI
 
                 IsDisposed = false;
                 // static cfg - char padding
-                int wide_pad = 4;
-                int high_pad = 4;
+                int wide_pad = 3;
+                int high_pad = 3;
 
                 var graphics = Graphics.FromHwnd(IntPtr.Zero);
 
@@ -139,6 +139,7 @@ namespace ZatsHackBase.UI
                 bm_g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
                 var brush = new SolidBrush(System.Drawing.Color.White);
+                var outlinebrush = new SolidBrush(System.Drawing.Color.Black);
 
                 for (int i = 32; i < 1000; ++i)
                 {
@@ -157,6 +158,10 @@ namespace ZatsHackBase.UI
                         cur_height = 0;
                     }
 
+                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x-1, y);
+                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x+1, y);
+                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x, y-1);
+                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x, y+1);
                     bm_g.DrawString(char_.ToString(), font, brush, x, y);
 
                     glyph = new Glyph
@@ -180,6 +185,9 @@ namespace ZatsHackBase.UI
 
                     _Glyphs.Add(char_, glyph);
                 }
+
+                outlinebrush.Dispose();
+                brush.Dispose();
 
                 bm.Save("test.png", ImageFormat.Png);
 
@@ -227,26 +235,31 @@ namespace ZatsHackBase.UI
 
                             var color = bm.GetPixel(x, row);
 
-                            if (color.A == 0 || (color.R == 1 && color.B == 1 && color.G == 1))
-                            {
+                            stream.Write(rgb2f * color.R);
+                            stream.Write(rgb2f * color.G);
+                            stream.Write(rgb2f * color.B);
+                            stream.Write(rgb2f * color.A);
 
-                                stream.Write(rgb2f * color.R);
-                                stream.Write(rgb2f * color.G);
-                                stream.Write(rgb2f * color.B);
-                                stream.Write(rgb2f * color.A);
+                        /*if (color.A == 0 || (color.R == 1 && color.B == 1 && color.G == 1))
+                        {
 
-                                //bm2.SetPixel(x,row, color);
-                            }
-                            else
-                            {
-                                var alpha = (color.R + color.G + color.B) / 3f * rgb2f;
-                                stream.Write(1f);
-                                stream.Write(1f);
-                                stream.Write(1f);
-                                stream.Write(alpha);
-                            //bm2.SetPixel(x, row, System.Drawing.Color.FromArgb((int)(255f * alpha), System.Drawing.Color.White));
+                            stream.Write(rgb2f * color.R);
+                            stream.Write(rgb2f * color.G);
+                            stream.Write(rgb2f * color.B);
+                            stream.Write(rgb2f * color.A);
+
+                            //bm2.SetPixel(x,row, color);
                         }
-                        }
+                        else
+                        {
+                            var alpha = (color.R + color.G + color.B) / 3f * rgb2f;
+                            stream.Write(1f);
+                            stream.Write(1f);
+                            stream.Write(1f);
+                            stream.Write(alpha);
+                        //bm2.SetPixel(x, row, System.Drawing.Color.FromArgb((int)(255f * alpha), System.Drawing.Color.White));
+                        }*/
+                    }
 
                     
                 }

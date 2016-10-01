@@ -191,6 +191,9 @@ namespace ZatsHackBase.UI
                         discard;
                     }
 
+                    if ( texture_color.x < 0.1f )
+                        return float4(0.0f,0.0f,0.0f,1.0f);
+
                     float4 combined = input_color * pixel.Color;
                     combined.w = texture_color.w;
                     return combined;

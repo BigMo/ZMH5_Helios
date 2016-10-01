@@ -151,9 +151,10 @@ namespace _ZMH5__Helios.CSGO
         {
             dbg = Overlay.Renderer.Fonts[dbg];
 
-            Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f, Input.MousePos.ToString());
-            Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f + Vector2.UnitY * 40f, Input.MouseMoveDist.ToString());
-            Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f + Vector2.UnitY * 80f, string.Join(", ", Input.KeysDown.Select(x=>x.ToString())));
+            Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f, 
+                Input.MousePos.ToString() + "\n" +
+                Input.MouseMoveDist.ToString() + "\n" + 
+                string.Join(", ", Input.KeysDown.Select(x=>x.ToString())));
 
             base.AfterPluginsTick(args);
         }

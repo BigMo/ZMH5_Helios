@@ -315,6 +315,8 @@ namespace ZatsHackBase.UI
                     continue;
                 }
 
+                if (!_Glyphs.ContainsKey(c))
+                    continue;
                 var glyph = _Glyphs[c];
 
                 if (glyph.Size.Height > highest_char)

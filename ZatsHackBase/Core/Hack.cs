@@ -90,6 +90,9 @@ namespace ZatsHackBase.Core
             if (first)
                 OnFirstTick(args);
 
+            if (WinAPI.GetForegroundWindow() != Process.Process.MainWindowHandle)
+                return;
+
             Input.Update();
 
             BeforePluginsTick(args);

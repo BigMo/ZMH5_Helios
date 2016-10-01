@@ -134,7 +134,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
         public CSPlayer[] GetAllPlayers()
         {
-            for (int i = 1; i <= 32; i++)
+            for (int i = 1; i <= 64; i++)
             {
                 var pl = Players[i];
             }

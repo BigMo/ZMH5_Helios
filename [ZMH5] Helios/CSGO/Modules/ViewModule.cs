@@ -15,7 +15,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private Vector3 delta;
         #endregion
 
-        public ViewModule() : base(ModulePriority.Lowest)
+        public ViewModule() : base(Program.Hack, ModulePriority.Lowest)
         { }
 
         #region METHODS

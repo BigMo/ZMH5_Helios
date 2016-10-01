@@ -87,6 +87,8 @@
     <Compile Include="Core\eKeyMode.cs" />
     <Compile Include="Core\Hack.cs" />
     <Compile Include="Core\HotkeyModule.cs" />
+    <Compile Include="Input\Button.cs" />
+    <Compile Include="Input\HackInput.cs" />
     <Compile Include="Core\LazyArray.cs" />
     <Compile Include="Core\LazyCache.cs" />
     <Compile Include="Core\HackModule.cs" />
@@ -153,6 +155,7 @@
     <None Include="Classes.cd" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

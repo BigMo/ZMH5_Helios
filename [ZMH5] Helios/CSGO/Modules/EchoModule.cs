@@ -16,7 +16,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         #endregion
 
         #region CONSTRUCTORS
-        public EchoModule() : base(ZatsHackBase.Core.ModulePriority.Low)
+        public EchoModule() : base(Program.Hack, ZatsHackBase.Core.ModulePriority.Low)
         {
             TimerEnabled = true;
             TimerInterval = 1000;

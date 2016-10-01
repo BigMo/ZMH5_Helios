@@ -99,6 +99,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             "CWeaponBizon",
             "CWeaponMAC10",
             "CWeaponMP5Navy",
+            "CWeaponP90",
             "CWeaponMP7",
             "CWeaponMP9",
             "CWeaponTMP",

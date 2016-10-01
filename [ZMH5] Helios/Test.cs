@@ -19,7 +19,7 @@ namespace _ZMH5__Helios
         }
 
         private Font font;
-        public override void BeforePluginsTick(TickEventArgs args)
+        protected override void BeforePluginsTick(TickEventArgs args)
         {
             base.BeforePluginsTick(args);
             if (font == null)
@@ -27,7 +27,7 @@ namespace _ZMH5__Helios
             Overlay.Renderer.DrawString(new Color(1f, 0f, 0f), font, new Vector2(10f, 10f),DateTime.Now.ToLongTimeString());
         }
         static bool once = false;
-        public override void AfterPluginsTick(TickEventArgs args)
+        protected override void AfterPluginsTick(TickEventArgs args)
         {
             base.AfterPluginsTick(args);
 
@@ -35,6 +35,11 @@ namespace _ZMH5__Helios
                 return;
 
             once = true;
+        }
+
+        protected override void SetupModules()
+        {
+
         }
     }
 }

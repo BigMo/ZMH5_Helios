@@ -39,7 +39,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         #endregion
 
         #region CONSTRUCTORS
-        public StateModule() : base(ModulePriority.Highest)
+        public StateModule() : base(Program.Hack, ModulePriority.Highest)
         {
             LocalPlayer = new LazyCache<CSLocalPlayer>(() =>
             {

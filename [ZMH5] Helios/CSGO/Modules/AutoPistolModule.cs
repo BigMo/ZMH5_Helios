@@ -13,7 +13,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 {
     public class AutoPistolModule : HackModule
     {
-        public AutoPistolModule() : base(ModulePriority.Normal)
+        public AutoPistolModule() : base(Program.Hack, ModulePriority.Normal)
         { }
 
         protected override void OnUpdate(TickEventArgs args)

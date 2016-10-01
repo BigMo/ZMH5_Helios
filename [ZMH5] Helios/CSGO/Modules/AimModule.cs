@@ -18,7 +18,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int currentId;
         #endregion
 
-        public AimModule() : base(ModulePriority.Normal)
+        public AimModule() : base(Program.Hack, ModulePriority.Normal)
         { }
 
         protected override void OnFirstRun(TickEventArgs args)

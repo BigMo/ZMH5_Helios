@@ -22,7 +22,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         #endregion
 
         #region CONSTRUCTORS
-        public TriggerModule() : base(ModulePriority.Normal)
+        public TriggerModule() : base(Program.Hack, ModulePriority.Normal)
         {
             lastEnemyDetection = DateTime.Now;
         }

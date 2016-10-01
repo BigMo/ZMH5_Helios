@@ -24,7 +24,7 @@ namespace _ZMH5__Helios
             base.BeforePluginsTick(args);
             if (font == null)
                 font = Overlay.Renderer.CreateFont("Verdana", 12);
-            Overlay.Renderer.DrawString(new Color(1f, 0f, 0f), font, new Vector2(10f, 10f),DateTime.Now.ToLongTimeString());
+            Overlay.Renderer.DrawString(new Color(1f, 0f, 1f), font, new Vector2(10f, 10f),DateTime.Now.ToLongTimeString());
         }
         static bool once = false;
         public override void AfterPluginsTick(TickEventArgs args)

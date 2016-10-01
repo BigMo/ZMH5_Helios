@@ -136,7 +136,7 @@ namespace ZatsHackBase.UI
 
                 bm_g.Clear(System.Drawing.Color.Transparent);
                 bm_g.SmoothingMode = SmoothingMode.HighQuality;
-                bm_g.TextRenderingHint = TextRenderingHint.;
+                bm_g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
                 var brush = new SolidBrush(System.Drawing.Color.White);
 
@@ -334,7 +334,7 @@ namespace ZatsHackBase.UI
 
         }
 
-        public Vector2 MeasureString(string text)
+        /*public Vector2 MeasureString(string text)
         {
             float height = 0f;
             int lines = 0;
@@ -374,7 +374,7 @@ namespace ZatsHackBase.UI
                 height = Height;
 
             return new Vector2(width,height);
-        }
+        }*/
 
         public Vector2 MeasureString(string text)
         {

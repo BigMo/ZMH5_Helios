@@ -191,7 +191,7 @@ namespace ZatsHackBase.UI
                         discard;
                     }
 
-                    float4 combined = input_color;
+                    float4 combined = input_color * pixel.Color;
                     combined.w = texture_color.w;
                     return combined;
                 }

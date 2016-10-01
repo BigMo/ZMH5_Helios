@@ -12,6 +12,7 @@ using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
 using InterpolationMode = System.Drawing.Drawing2D.InterpolationMode;
+using System.Linq;
 
 namespace ZatsHackBase.UI
 {
@@ -21,6 +22,10 @@ namespace ZatsHackBase.UI
         private const float rgb2f = 1f / 255f;
 
         #region Constructor
+        public static Font CreateDummy(string family, float height, bool bold = false, bool italic = false)
+        {
+            return new Font(null, family, height, bold, italic);
+        }
         internal Font(Renderer renderer, string family, float height, bool bold, bool italy)
         {
             ID = ++idCounter;
@@ -369,6 +374,19 @@ namespace ZatsHackBase.UI
                 height = Height;
 
             return new Vector2(width,height);
+        }
+
+        public Vector2 MeasureString(string text)
+        {
+            if (IsDisposed || string.IsNullOrEmpty(text))
+                return Vector2.Zero;
+
+            List<float> line_widths = new List<float>();
+            float height = 0f;
+
+            MeasureString(text, out line_widths, out height);
+            
+            return new Vector2(line_widths.Max(x => x), height);
         }
 
         public void MeasureString(string text, out List<float> line_widths, out float height)

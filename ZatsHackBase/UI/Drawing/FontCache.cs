@@ -31,7 +31,7 @@ namespace ZatsHackBase.UI.Drawing
             {
                 //We haven't cached null, neither can we init fonts with an invalid renderer
                 if (font == null || !renderer.Initialized)
-                    return null;
+                    return font;
 
                 //Check cached fonts
                 if (fonts.ContainsKey(font.ID))

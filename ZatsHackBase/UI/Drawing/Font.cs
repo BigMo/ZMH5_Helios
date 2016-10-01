@@ -136,7 +136,7 @@ namespace ZatsHackBase.UI
 
                 bm_g.Clear(System.Drawing.Color.Transparent);
                 bm_g.SmoothingMode = SmoothingMode.HighQuality;
-                bm_g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
+                bm_g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
                 var brush = new SolidBrush(System.Drawing.Color.White);
 

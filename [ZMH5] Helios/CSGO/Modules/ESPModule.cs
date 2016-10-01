@@ -16,7 +16,7 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
-        private Font espFont = Font.CreateDummy("Segoe UI", 12);
+        private Font espFont = Font.CreateDummy("Verdana", 9);
         #endregion
 
         #region CONSTRUCTORS
@@ -84,7 +84,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                     var wep = enemy.m_ActiveWeapon.Value;
                     string text = ent.Name;
                     if (wep != null && wep.IsValid)
-                        text += "\n" + wep.m_ClientClass.Value.NetworkName.Value;
+                        text += "\n" + wep.m_ClientClass.Value.NetworkName.Value.Replace("CWeapon", "");
                     Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, textPos, text);
                 }
             }

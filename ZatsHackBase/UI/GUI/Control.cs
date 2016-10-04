@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.GUI
 {
@@ -18,51 +19,52 @@ namespace ZatsHackBase.GUI
         public Control(ContainerControl parent)
         {
             Parent = parent;
+            
         }
 
-        public event RenderEventHandler OnRender;
+        public EventHandler<RenderEventArgs> OnRender;
         public virtual void Render(RenderEventArgs e)
         {
             OnRender.Invoke(this, e);
         }
 
-        public event MouseEventHandler OnMouseDown;
+        public EventHandler<MouseEventArgs> OnMouseDown;
         public virtual void MouseDown(MouseEventArgs e)
         {
             OnMouseDown.Invoke(this, e);
         }
 
-        public event MouseEventHandler OnMouseUp;
+        public EventHandler<MouseEventArgs> OnMouseUp;
         public virtual void MouseUp(MouseEventArgs e)
         {
             OnMouseUp.Invoke(this, e);
         }
 
-        public event MouseEventHandler OnMouseMove;
+        public EventHandler<MouseEventArgs> OnMouseMove;
         public virtual void MouseMove(MouseEventArgs e)
         {
             OnMouseMove.Invoke(this, e);
         }
 
-        public event MouseEventHandler OnMouseScroll;
+        public EventHandler<MouseEventArgs> OnMouseScroll;
         public virtual void MouseScroll(MouseEventArgs e)
         {
             OnMouseScroll.Invoke(this, e);
         }
 
-        public event KeyEventHandler OnKeyDown;
+        public EventHandler<KeyEventArgs> OnKeyDown;
         public virtual void KeyDown(KeyEventArgs e)
         {
             OnKeyDown.Invoke(this, e);
         }
 
-        public event KeyEventHandler OnKeyUp;
+        public EventHandler<KeyEventArgs> OnKeyUp;
         public virtual void KeyUp(KeyEventArgs e)
         {
             OnKeyUp.Invoke(this, e);
         }
 
-        public event LocationChangeEventHandler OnParentAbsoluteLocationChanged;
+        public EventHandler<LocationChangeEventArgs> OnParentAbsoluteLocationChanged;
         public virtual void ParentAbsoluteLocationChanged(LocationChangeEventArgs e)
         {
 
@@ -95,8 +97,12 @@ namespace ZatsHackBase.GUI
             set
             {
                 _Parent = value;
-                var e = new LocationChangeEventArgs();
-                e.AbsoluteLocation.Vec = _Parent.AbsoluteBounds.Location;
+
+                var e = new LocationChangeEventArgs
+                {
+                    AbsoluteLocation = { Vec = _Parent.AbsoluteBounds.Location }
+                };
+
                 ParentAbsoluteLocationChanged(e);
             }
         }
@@ -121,8 +127,8 @@ namespace ZatsHackBase.GUI
         public Padding Padding;
 
         // Back- & Fore- color
-        public RawColor4 BackColor;
-        public RawColor4 ForeColor;
+        public Color BackColor;
+        public Color ForeColor;
 
         // Layout description
         public bool OverrideLayout { get; set; }

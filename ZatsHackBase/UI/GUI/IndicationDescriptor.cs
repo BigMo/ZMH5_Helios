@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Mathematics.Interop;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.GUI
 {
@@ -11,11 +12,11 @@ namespace ZatsHackBase.GUI
     {
 
         public IndicationDescriptor(
-            RawColor4 default_,
-            RawColor4 focused,
-            RawColor4 entered,
-            RawColor4 pressed,
-            RawColor4 disabled
+            Color default_,
+            Color focused,
+            Color entered,
+            Color pressed,
+            Color disabled
             )
         {
             Default = default_;
@@ -25,7 +26,7 @@ namespace ZatsHackBase.GUI
             Disabled = disabled;
         }
 
-        public RawColor4 Get(ControlState state)
+        public Color Get(ControlState state)
         {
             switch (state)
             {
@@ -44,10 +45,10 @@ namespace ZatsHackBase.GUI
             }
         }
 
-        public RawColor4 Default;
-        public RawColor4 Focused;
-        public RawColor4 Entered;
-        public RawColor4 Pressed;
-        public RawColor4 Disabled;
+        public Color Default;
+        public Color Focused;
+        public Color Entered;
+        public Color Pressed;
+        public Color Disabled;
     }
 }

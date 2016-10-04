@@ -10,7 +10,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 {
     public class ReloadSettingsModule : HotkeyModule
     {
-        public ReloadSettingsModule() : base(ModulePriority.Low)
+        public ReloadSettingsModule() : base(Program.Hack, ModulePriority.Low)
         {
         }
 

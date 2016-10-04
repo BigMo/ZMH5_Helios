@@ -35,7 +35,7 @@ namespace ZatsHackBase.Core
         #endregion
 
         #region CONSTRUCTORS
-        public HotkeyModule(ModulePriority prio) : base(prio)
+        public HotkeyModule(Hack hack, ModulePriority prio) : base(hack, prio)
         {
             Hotkey = System.Windows.Forms.Keys.None;
             Mode = KeyMode.Hold;
@@ -54,7 +54,7 @@ namespace ZatsHackBase.Core
         {
             base.OnUpdate(args);
 
-            isDown = ZatsHackBase.WinAPI.GetAsyncKeyState(Hotkey) != 0;
+            isDown = WinAPI.GetAsyncKeyState(Hotkey) != 0;
             if (waitForUp)
             {
                 waitForUp = isDown;

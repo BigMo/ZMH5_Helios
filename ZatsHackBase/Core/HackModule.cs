@@ -18,11 +18,13 @@ namespace ZatsHackBase.Core
         public ModulePriority Priority { get; private set; }
         protected bool TimerEnabled { get; set; }
         protected int TimerInterval { get; set; }
+        protected Hack Hack { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public HackModule(ModulePriority prio)
+        public HackModule(Hack hack, ModulePriority prio)
         {
+            Hack = hack;
             this.Priority = prio;
             TimerEnabled = false;
             TimerInterval = (int)(1000f / 60f);

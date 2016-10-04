@@ -24,7 +24,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         public RPMLazyArray<GlowObjectDefinition> Array { get; private set; }
         #endregion
 
-        public GlowModule() : base(ModulePriority.High)
+        public GlowModule() : base(Program.Hack, ModulePriority.High)
         {
         }
         

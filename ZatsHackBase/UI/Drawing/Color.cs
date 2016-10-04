@@ -10,7 +10,10 @@ namespace ZatsHackBase.UI.Drawing
     public struct Color
     {
         #region VARIABLES
-        public float A, R, G, B;
+        public float R;
+        public float G;
+        public float B;
+        public float A;
         #endregion
 
         #region PROPERTIES

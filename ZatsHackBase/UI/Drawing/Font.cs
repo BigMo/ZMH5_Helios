@@ -13,14 +13,12 @@ using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
 using InterpolationMode = System.Drawing.Drawing2D.InterpolationMode;
 using System.Linq;
+using ZatsHackBase.UI.Drawing.FontHelpers;
 
 namespace ZatsHackBase.UI
 {
     public class Font : IDisposable
     {
-
-        private const float rgb2f = 1f / 255f;
-
         #region Constructor
         public static Font CreateDummy(string family, float height, bool bold = false, bool italic = false)
         {
@@ -33,6 +31,7 @@ namespace ZatsHackBase.UI
             Height = height;
             Family = family;
             IsDisposed = true;
+            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(3, 3));
 
             //Make this a dummy font in case renderer isn't ready yet
             if (renderer == null || !renderer.Initialized)
@@ -47,11 +46,8 @@ namespace ZatsHackBase.UI
         #region Variables
 
         private Renderer _Renderer;
-        
-        private Dictionary<char, Glyph> _Glyphs;
-        private SharpDX.Direct3D11.Texture2D _Texture;
-        private SharpDX.Direct3D11.ShaderResourceView _Resource;
-        private SharpDX.Direct3D11.SamplerState _SamplerState;
+
+        private GlyphAtlas atlas;
         private static int idCounter;
         #endregion
 
@@ -63,226 +59,16 @@ namespace ZatsHackBase.UI
         public bool IsDisposed { get; private set; }
         #endregion
 
+        #region PROPERTIES
+        
+        #endregion
+
         #region Method
         private void Init()
         {
-            int texture_size = 0;
-            int max_texture_width = 1024;
-            int texture_width = 0;
-            int texture_height = 0;
+            var font = new System.Drawing.Font(new FontFamily(Family), Height, FontStyle.Regular);
 
-            Bitmap bm = null;
-
-            using (var font = new System.Drawing.Font(new FontFamily(Family), Height, FontStyle.Regular))
-            {
-                _Glyphs = new Dictionary<char, Glyph>();
-
-                IsDisposed = false;
-                // static cfg - char padding
-                int wide_pad = 3;
-                int high_pad = 3;
-
-                var graphics = Graphics.FromHwnd(IntPtr.Zero);
-
-                int cur_width = 0;
-
-                int cur_height = 0;
-
-                int greatest_char = 0;
-
-                for (int i = 32; i < 1000; ++i)
-                {
-
-                    char char_ = Convert.ToChar(i);
-
-                    var size = graphics.MeasureString(char_.ToString(), font, new SizeF(100f, 100f),
-                        StringFormat.GenericTypographic);
-
-                    size.Width += wide_pad;
-                    size.Height += high_pad;
-
-                    if (size.Height > cur_height)
-                        cur_height = (int)size.Height;
-
-                    if (greatest_char < cur_height)
-                        greatest_char = cur_height;
-
-                    var n_w = cur_width + size.Width;
-
-                    if (n_w > max_texture_width)
-                    {
-                        if (cur_width > texture_width)
-                            texture_width = cur_width;
-                        texture_height += cur_height;
-                        cur_height = 0;
-                        cur_width = 0;
-                        continue;
-                    }
-
-                    cur_width = (int)n_w;
-                }
-
-                if (texture_width == 0) texture_width = cur_width;
-                if (texture_height == 0) texture_height = cur_height;
-
-                bm = new Bitmap(texture_width, texture_height);
-
-                var bm_g = Graphics.FromImage(bm);
-
-                cur_width = cur_height = 0;
-
-                float x = 0;
-                float y = 0;
-
-                bm_g.Clear(System.Drawing.Color.Transparent);
-                bm_g.SmoothingMode = SmoothingMode.HighQuality;
-                bm_g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-                var brush = new SolidBrush(System.Drawing.Color.White);
-                var outlinebrush = new SolidBrush(System.Drawing.Color.Black);
-
-                for (int i = 32; i < 1000; ++i)
-                {
-
-                    char char_ = Convert.ToChar(i);
-
-                    var glyph = new Glyph();
-
-                    var size = graphics.MeasureString(char_.ToString(), font, new SizeF(100f, 100f),
-                        StringFormat.GenericTypographic);
-
-                    if (size.Width + 1 + x > max_texture_width)
-                    {
-                        x = 0;
-                        y += cur_height;
-                        cur_height = 0;
-                    }
-
-                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x-1, y);
-                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x+1, y);
-                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x, y-1);
-                    bm_g.DrawString(char_.ToString(), font, outlinebrush, x, y+1);
-                    bm_g.DrawString(char_.ToString(), font, brush, x, y);
-
-                    glyph = new Glyph
-                    {
-                        Size = new SizeF(size) { Width = size.Width, Height = size.Height },
-                        UV = new[]
-                        {
-                            new Vector2(x / texture_width, y / texture_height),
-                            new Vector2((x+size.Width+wide_pad) / texture_width, (y+size.Height) / texture_height),
-                        },
-                        Code = char_
-                    };
-
-                    size.Width += wide_pad;
-                    size.Height += high_pad;
-
-                    x += size.Width;
-
-                    if (size.Height > cur_height)
-                        cur_height = (int)size.Height;
-
-                    _Glyphs.Add(char_, glyph);
-                }
-
-                outlinebrush.Dispose();
-                brush.Dispose();
-
-                bm.Save("test.png", ImageFormat.Png);
-
-            }
-
-            _Texture = new SharpDX.Direct3D11.Texture2D(_Renderer.Device, new Texture2DDescription
-            {
-                Width = texture_width,
-                Height = texture_height,
-                ArraySize = 1,
-                BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource,
-                Usage = SharpDX.Direct3D11.ResourceUsage.Dynamic,
-                CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.Write,
-                Format = SharpDX.DXGI.Format.R32G32B32A32_Float,
-                MipLevels = 1,
-                OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-            }, (SharpDX.DataBox[])null);
-
-            DataStream stream;
-
-            _Resource = new ShaderResourceView(_Renderer.Device, _Texture);
-
-            var databox = _Renderer.DeviceContext.MapSubresource(_Texture, 0, MapMode.WriteDiscard, MapFlags.None, out stream);
-
-            var pitch = databox.RowPitch;
-            var rows = texture_height;
-            var stride = sizeof(float) * 4;
-
-            using (var bm2 = new Bitmap(texture_width,texture_height))
-            {
-
-                    for (int row = 0; row < rows; ++row)
-                    {
-
-                        for (int i = 0, x = 0; i < pitch; i += stride, ++x)
-                        {
-
-                            int offset = (pitch * row) + i;
-
-                            stream.Seek(offset, SeekOrigin.Begin);
-
-                            if (x >= texture_width)
-                                continue;
-
-                            var color = bm.GetPixel(x, row);
-
-                            stream.Write(rgb2f * color.R);
-                            stream.Write(rgb2f * color.G);
-                            stream.Write(rgb2f * color.B);
-                            stream.Write(rgb2f * color.A);
-
-                        /*if (color.A == 0 || (color.R == 1 && color.B == 1 && color.G == 1))
-                        {
-
-                            stream.Write(rgb2f * color.R);
-                            stream.Write(rgb2f * color.G);
-                            stream.Write(rgb2f * color.B);
-                            stream.Write(rgb2f * color.A);
-
-                            //bm2.SetPixel(x,row, color);
-                        }
-                        else
-                        {
-                            var alpha = (color.R + color.G + color.B) / 3f * rgb2f;
-                            stream.Write(1f);
-                            stream.Write(1f);
-                            stream.Write(1f);
-                            stream.Write(alpha);
-                        //bm2.SetPixel(x, row, System.Drawing.Color.FromArgb((int)(255f * alpha), System.Drawing.Color.White));
-                        }*/
-                    }
-
-                    
-                }
-                    //bm2.Save("test2.png", ImageFormat.Png);
-            }
-
-            _Renderer.DeviceContext.UnmapSubresource(_Texture, 0);
-
-            bm.Dispose();
-
-            _SamplerState = new SamplerState(_Renderer.Device, new SamplerStateDescription()
-            {
-                Filter = Filter.MinMagMipLinear,
-                AddressU = TextureAddressMode.Clamp,
-                AddressV = TextureAddressMode.Clamp,
-                AddressW = TextureAddressMode.Clamp,
-                BorderColor = new RawColor4(1f, 0f, 1f, 1f),
-                ComparisonFunction = Comparison.Never,
-                MaximumAnisotropy = 16,
-                MipLodBias = 0,
-                MinimumLod = 0,
-                MaximumLod = 16
-            });
+            atlas.Init(_Renderer, font);
         }
 
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text)
@@ -315,7 +101,11 @@ namespace ZatsHackBase.UI
                     continue;
                 }
 
-                var glyph = _Glyphs[c];
+                Glyph glyph;
+                if (!atlas.Glyphs.ContainsKey(c))
+                    glyph = atlas.Glyphs['?'];
+                else
+                    glyph = atlas.Glyphs[c];
 
                 if (glyph.Size.Height > highest_char)
                     highest_char = glyph.Size.Height;
@@ -342,52 +132,10 @@ namespace ZatsHackBase.UI
             }
 
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
-            geometry_buffer.SetupTexture(_Resource, _SamplerState);
+            geometry_buffer.SetupTexture(atlas.Resource, atlas.SamplerState);
             geometry_buffer.Trim();
 
         }
-
-        /*public Vector2 MeasureString(string text)
-        {
-            float height = 0f;
-            int lines = 0;
-            var space = Height * 0.35f;
-
-
-            float width = 0f;
-            float cur_width = 0f;
-            float highest_char = 0f;
-
-            foreach (var c in text)
-            {
-                if (c == ' ')
-                {
-                    cur_width += space;
-                    continue;
-                }
-                if (c == '\n')
-                {
-                    height += highest_char == 0f ? Height : highest_char;
-                    if (cur_width > width)
-                        width = cur_width;
-                    cur_width = 0f;
-                    highest_char = 0f;
-                    continue;
-                }
-
-                var glyph = _Glyphs[c];
-
-                width += glyph.Size.Width;
-
-                if (glyph.Size.Height > highest_char)
-                    highest_char = glyph.Size.Height;
-            }
-
-            if (lines == 0)
-                height = Height;
-
-            return new Vector2(width,height);
-        }*/
 
         public Vector2 MeasureString(string text)
         {
@@ -398,7 +146,7 @@ namespace ZatsHackBase.UI
             float height = 0f;
 
             MeasureString(text, out line_widths, out height);
-            
+
             return new Vector2(line_widths.Max(x => x), height);
         }
 
@@ -429,7 +177,11 @@ namespace ZatsHackBase.UI
                     width = 0f;
                 }
 
-                var glyph = _Glyphs[c];
+                Glyph glyph;
+                if (atlas.Glyphs.ContainsKey(c))
+                    glyph = atlas.Glyphs[c];
+                else
+                    glyph = atlas.Glyphs['?'];
 
                 width += glyph.Size.Width;
 
@@ -459,7 +211,7 @@ namespace ZatsHackBase.UI
                 return;
 
             float wide = 0f;
-            float space = Height*0.35f;
+            float space = Height * 0.35f;
             float highest_char = 0f;
 
             short vertex_offset = 0;
@@ -513,7 +265,11 @@ namespace ZatsHackBase.UI
                     }
                 }
 
-                var glyph = _Glyphs[c];
+                Glyph glyph;
+                if(atlas.Glyphs.ContainsKey(c))
+                    glyph = atlas.Glyphs[c];
+                else
+                    glyph = atlas.Glyphs['?'];
 
                 geometry_buffer.AppendVertices(
                     new Vertex(wide, location.Y, color, glyph.UV[0].X, glyph.UV[0].Y),
@@ -541,7 +297,7 @@ namespace ZatsHackBase.UI
             }
 
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
-            geometry_buffer.SetupTexture(_Resource, _SamplerState);
+            geometry_buffer.SetupTexture(atlas.Resource, atlas.SamplerState);
             geometry_buffer.Trim();
         }
 
@@ -550,9 +306,9 @@ namespace ZatsHackBase.UI
         public void Dispose()
         {
             IsDisposed = true;
-            _Resource?.Dispose();
-            _Texture?.Dispose();
-            _Glyphs?.Clear();
+
+            if (!atlas.IsDisposed)
+                atlas.Dispose();
         }
     }
 }

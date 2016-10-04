@@ -17,7 +17,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private Vector3 lastPunch = Vector3.Zero;
         #endregion
 
-        public NoRecoilModule() : base(ModulePriority.Normal)
+        public NoRecoilModule() : base(Program.Hack, ModulePriority.Normal)
         {
         }
 

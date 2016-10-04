@@ -8,6 +8,7 @@ using ZatsHackBase.UI;
 using System.Threading;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Input;
 
 namespace ZatsHackBase.Core
 {
@@ -16,17 +17,20 @@ namespace ZatsHackBase.Core
         #region VARIABLES
         private LoopTicker ticker;
         private List<HackModule> modules;
+        private bool first = true;
         #endregion
 
         #region PROPERTIES
         public EUCProcess Process { get; private set; }
         public Memory Memory { get { return Process.Memory; } }
         public HackOverlay Overlay { get; private set; }
+        public HackInput Input { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
         public Hack (string processName, int tickRate = 60, bool createOverlay = true, int timeOut = -1)
         {
+            Input = new HackInput();
             Process = EUCProcess.WaitForProcess(processName, timeOut);
             ticker = new LoopTicker();
             ticker.TickRate = tickRate;
@@ -66,9 +70,15 @@ namespace ZatsHackBase.Core
             ticker.Run();
         }
 
-        public virtual void AfterRun() { }
-        public virtual void BeforeRun() { }
-        public virtual void OnTick(TickEventArgs args)
+        protected virtual void OnFirstTick(TickEventArgs args)
+        {
+            first = false;
+            SetupModules();
+        }
+        protected abstract void SetupModules();
+        protected virtual void AfterRun() { }
+        protected virtual void BeforeRun() { }
+        protected virtual void OnTick(TickEventArgs args)
         {
             Process.Process.Refresh();
             if(!Process.IsRunning)
@@ -76,6 +86,15 @@ namespace ZatsHackBase.Core
                 args.Stop = true;
                 return;
             }
+
+            if (first)
+                OnFirstTick(args);
+
+            if (WinAPI.GetForegroundWindow() != Process.Process.MainWindowHandle)
+                return;
+
+            Input.Update();
+
             BeforePluginsTick(args);
 
             foreach (var mod in modules.OrderByDescending(x => x.Priority))
@@ -83,7 +102,7 @@ namespace ZatsHackBase.Core
 
             AfterPluginsTick(args);
         }
-        public virtual void BeforePluginsTick(TickEventArgs args)
+        protected virtual void BeforePluginsTick(TickEventArgs args)
         {
             if (Overlay != null)
             {
@@ -91,7 +110,7 @@ namespace ZatsHackBase.Core
                 Overlay.Renderer.Clear(Overlay.BackColor);
             }
         }
-        public virtual void AfterPluginsTick(TickEventArgs args)
+        protected virtual void AfterPluginsTick(TickEventArgs args)
         {
             if (Overlay != null)
                 Overlay.Renderer.Present();

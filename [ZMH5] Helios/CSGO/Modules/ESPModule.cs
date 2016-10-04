@@ -16,11 +16,11 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
-        private Font espFont = Font.CreateDummy("Segoe UI", 12);
+        private Font espFont = Font.CreateDummy("Verdana", 9);
         #endregion
 
         #region CONSTRUCTORS
-        public ESPModule() : base(ModulePriority.Normal)
+        public ESPModule() : base(Program.Hack, ModulePriority.Normal)
         { }
         #endregion
 
@@ -42,15 +42,15 @@ namespace _ZMH5__Helios.CSGO.Modules
             var alivePlayers = Program.Hack.StateMod.GetAllPlayers().
                 Where(x => x != null && x.IsValid).
                 Where(x => x.m_lifeState.Value == Enums.LifeState.Alive);//.
-                //Where(x => x.m_Skeleton.Value != null);
+                                                                         //Where(x => x.m_Skeleton.Value != null);
 
             var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
                 OrderBy(x => x.DistanceTo(lp));
             var allies = alivePlayers.Where(x => x.m_iTeamNum.Value == lp.m_iTeamNum.Value).
                 OrderBy(x => x.DistanceTo(lp));
-            
+
             var vEnts = Program.Hack.StateMod.RadarEntries.Value == null ?
-                new SnapshotHelpers.RadarEntry[0] : 
+                new SnapshotHelpers.RadarEntry[0] :
                 Program.Hack.StateMod.RadarEntries.Value.Where(x => !string.IsNullOrEmpty(x.Name)).ToArray();
 
             foreach (var enemy in enemies)
@@ -65,7 +65,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 float dist = lp.DistanceTo(enemy);
                 Vector2 size = new Vector2((ptDown.Y - ptUp.Y) * 0.5f, ptDown.Y - ptUp.Y); //TODO: Präziser berechnen, am besten über Bones
                 Vector2 upperLeft = new Vector2((ptUp.X + ptDown.X) / 2f - size.X * 0.5f, ptUp.Y);
-                
+
                 DrawOutlinedRect(upperLeft, size, Color.Red, Color.Black);
 
                 Vector2 barSize = new Vector2(size.X, size.Y / 20f);
@@ -74,17 +74,17 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green, Color.Black);
                 DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White, Color.Black);
-                
-                    if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
-                    {
-                        var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
+
+                if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
+                {
+                    var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
 
                     espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
                     var textPos = upperLeft + Vector2.UnitX * size.X;
                     var wep = enemy.m_ActiveWeapon.Value;
                     string text = ent.Name;
                     if (wep != null && wep.IsValid)
-                        text += "\n" + wep.m_ClientClass.Value.NetworkName.Value;
+                        text += "\n" + wep.m_ClientClass.Value.NetworkName.Value.Replace("CWeapon", "");
                     Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, textPos, text);
                 }
             }

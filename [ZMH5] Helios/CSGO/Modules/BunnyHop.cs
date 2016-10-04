@@ -13,7 +13,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 {
     public class BunnyHop : HackModule
     {
-        public BunnyHop() : base(ModulePriority.Normal) { }
+        public BunnyHop() : base(Program.Hack, ModulePriority.Normal) { }
 
         protected override void OnUpdate(TickEventArgs args)
         {

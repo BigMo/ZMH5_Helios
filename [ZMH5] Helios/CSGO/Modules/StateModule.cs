@@ -39,7 +39,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         #endregion
 
         #region CONSTRUCTORS
-        public StateModule() : base(ModulePriority.Highest)
+        public StateModule() : base(Program.Hack, ModulePriority.Highest)
         {
             LocalPlayer = new LazyCache<CSLocalPlayer>(() =>
             {
@@ -117,6 +117,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             ViewMatrix.Reset();
             GameRules.Reset();
             PlayerResources.Reset();
+            RadarEntries.Reset();
 
             PlayersOld.Clear();
             PlayersOld.CopyFrom(Players);
@@ -134,12 +135,12 @@ namespace _ZMH5__Helios.CSGO.Modules
 
         public CSPlayer[] GetAllPlayers()
         {
-            for (int i = 1; i <= 32; i++)
+            for (int i = 1; i <= 64; i++)
             {
                 var pl = Players[i];
             }
 
-            return Players.Entites.Where(x => x != null).ToArray();
+            return Players.Entites.Where(x => x != null && x.IsValid).ToArray();
         }
         #endregion
     }

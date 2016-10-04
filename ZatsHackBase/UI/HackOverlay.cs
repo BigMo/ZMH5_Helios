@@ -54,8 +54,10 @@ namespace ZatsHackBase.UI
             if (!Renderer.Initialized)
                 return;
 
+
             Form.Invoke((MethodInvoker)delegate
             {
+                WinAPI.BringWindowToTop(Form.Handle);
                 WinAPI.RECT rect = new WinAPI.RECT();
                 WinAPI.POINT pt = new WinAPI.POINT();
                 

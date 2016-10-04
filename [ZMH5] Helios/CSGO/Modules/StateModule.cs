@@ -117,6 +117,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             ViewMatrix.Reset();
             GameRules.Reset();
             PlayerResources.Reset();
+            RadarEntries.Reset();
 
             PlayersOld.Clear();
             PlayersOld.CopyFrom(Players);
@@ -139,7 +140,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 var pl = Players[i];
             }
 
-            return Players.Entites.Where(x => x != null).ToArray();
+            return Players.Entites.Where(x => x != null && x.IsValid).ToArray();
         }
         #endregion
     }

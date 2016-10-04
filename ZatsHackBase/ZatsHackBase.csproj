@@ -129,6 +129,7 @@
     <Compile Include="UI\Drawing\Buffers\EllipseBuffer.cs" />
     <Compile Include="UI\Drawing\Buffers\TransformationBuffer.cs" />
     <Compile Include="UI\Drawing\FontCache.cs" />
+    <Compile Include="UI\Drawing\FontHelpers\GlyphAtlas.cs" />
     <Compile Include="UI\Drawing\TextAlignment.cs" />
     <Compile Include="UI\Drawing\Batch.cs" />
     <Compile Include="UI\Drawing\Color.cs" />

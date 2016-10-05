@@ -17,6 +17,7 @@ namespace _ZMH5__Helios
 
         public Test() : base("notepad", 60, true)
         {
+            Overlay.BackColor = Color.Red;
             this.Run();
         }
 
@@ -24,7 +25,7 @@ namespace _ZMH5__Helios
         {
             base.BeforePluginsTick(args);
 
-            font = Overlay.Renderer.Fonts[font];
+            //font = Overlay.Renderer.Fonts[font];
             Overlay.Renderer.DrawString(Color.Red, font, new Vector2(10f, 10f), DateTime.Now.ToLongTimeString());
         }
         static bool once = false;

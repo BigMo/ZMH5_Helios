@@ -17,7 +17,10 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
 {
     internal struct PrimitiveColor
     {
-        public float a, r, g, b;
+        public byte b;
+        public byte g;
+        public byte r;
+        public byte a;
     }
     public class GlyphAtlas : IDisposable
     {
@@ -176,6 +179,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
 
             unsafe
             {
+                int s = System.Runtime.InteropServices.Marshal.SizeOf(typeof(PrimitiveColor));
                 BitmapData data = Image.LockBits(new System.Drawing.Rectangle(0, 0, Image.Width, Image.Height), ImageLockMode.ReadOnly, Image.PixelFormat);
                 byte* scan0 = (byte*)data.Scan0.ToPointer();
 

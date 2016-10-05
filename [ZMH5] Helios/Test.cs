@@ -13,18 +13,19 @@ namespace _ZMH5__Helios
 {
     public class Test : Hack
     {
-        private Font font = Font.CreateDummy("Verdana", 20f);
+        private Font font = Font.CreateDummy("Verdana", 12f);
 
         public Test() : base("notepad", 60, true)
         {
             this.Run();
+            Overlay.BackColor = Color.Red;
+            int a = 0;
         }
 
         protected override void BeforePluginsTick(TickEventArgs args)
         {
             base.BeforePluginsTick(args);
-
-            font = Overlay.Renderer.Fonts[font];
+            
             Overlay.Renderer.DrawString(Color.Red, font, new Vector2(10f, 10f), DateTime.Now.ToLongTimeString());
         }
         static bool once = false;

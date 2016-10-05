@@ -84,10 +84,17 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 for (char c = (char)CharFrom; c <= CharTo; c++)
                 {
                     var size = g.MeasureString(c.ToString(), font, msSize, StringFormat.GenericTypographic);
-                    sizes[c - CharFrom] = size;
+
+                    if (size.Width < 0)
+                        size.Width = -size.Width;
+
+                    if (size.Height < 0)
+                        size.Height = -size.Height;
 
                     size.Width += Padding.X;
                     size.Height += Padding.Y;
+
+                    sizes[c - CharFrom] = size;
 
                     curHeight = System.Math.Max(curHeight, (int)size.Height);
                     grChar = System.Math.Max(grChar, (int)size.Height);
@@ -188,7 +195,8 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     for (int x = 0, i = 0; x < data.Width; x++, i += databox.RowPitch)
                     {
                         PrimitiveColor* dat = (PrimitiveColor*)(scan0 + y * data.Stride + x * 4);
-                        stream.Seek((databox.RowPitch * y) + 1, SeekOrigin.Begin);
+
+                        stream.Seek((databox.RowPitch * y) + (x * sizeof(int) * sizeof(float)), SeekOrigin.Begin);
 
                         stream.Write(rgb2f * dat->a);
                         stream.Write(rgb2f * dat->r);

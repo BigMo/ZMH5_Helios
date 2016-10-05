@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpDX.Direct3D11;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.GUI.Controls
 {
@@ -23,6 +24,10 @@ namespace ZatsHackBase.GUI.Controls
             graphics.FillRectangle ( m_idColors.Array [ m_iControlState ], m_rctAbsBounds );
 	        graphics.DrawString ( m_pFont, m_colForeColor, m_szCaption, m_rctAbsBounds, Drawing::Center | Drawing::VCenter );
 	        */
+            e.Renderer.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
+            //e.Renderer.DrawString(Color.Red, )
+
+
             base.Render(e);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Mathematics.Interop;
+using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.GUI.Controls
 {
@@ -17,6 +18,8 @@ namespace ZatsHackBase.GUI.Controls
 
         public override void Render(RenderEventArgs e)
         {
+
+            e.Renderer.FillRectangle(BackColor, AbsoluteBounds.Location, AbsoluteBounds.Size);
 
             //clear bg with bgcol
             //set clip rect our client area

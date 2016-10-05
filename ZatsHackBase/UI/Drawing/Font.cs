@@ -301,6 +301,19 @@ namespace ZatsHackBase.UI
             geometry_buffer.Trim();
         }
 
+        public void Debug(GeometryBuffer buf)
+        {
+            var color = new RawColor4(1f,1f,1f,1f);
+            buf.AppendVertices(
+                new Vertex(0f, 0f, color, 0f, 0f),
+                new Vertex(1024, 0f, color, 1f, 0f),
+                new Vertex(0f, 512, color, 0f, 1f),
+                new Vertex(1024, 512, color, 1f, 1f));
+            buf.AppendIndices(0, 1, 2, 1, 2, 3);
+            buf.SetupTexture(atlas.Resource, atlas.SamplerState);
+            buf.Trim();
+        }
+
         #endregion
 
         public void Dispose()

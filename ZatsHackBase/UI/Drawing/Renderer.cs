@@ -191,8 +191,7 @@ namespace ZatsHackBase.UI
                         discard;
                     }
 
-                    float4 combined = input_color * input_color;
-                    combined.w = texture_color.w;
+                    float4 combined = texture_color.x > 0.15f ? texture_color * input_color : texture_color;
                     return combined;
                 }
                 ";

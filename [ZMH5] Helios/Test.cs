@@ -13,7 +13,7 @@ namespace _ZMH5__Helios
 {
     public class Test : Hack
     {
-        private Font font = Font.CreateDummy("Verdana", 12f);
+        private Font font = Font.CreateDummy("Verdana", 20f);
 
         public Test() : base("notepad", 60, true)
         {

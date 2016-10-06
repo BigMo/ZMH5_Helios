@@ -31,7 +31,7 @@ namespace ZatsHackBase.UI
             Height = height;
             Family = family;
             IsDisposed = true;
-            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(5, 4));
+            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(height * 0.75f, height * 0.33333333333333333333333333333333f));
 
             //Make this a dummy font in case renderer isn't ready yet
             if (renderer == null || !renderer.Initialized)
@@ -66,9 +66,11 @@ namespace ZatsHackBase.UI
         #region Method
         private void Init()
         {
-            var font = new System.Drawing.Font(new FontFamily(Family), Height, FontStyle.Regular);
+            var font = new System.Drawing.Font(new FontFamily(Family), Height, FontStyle.Regular,GraphicsUnit.Pixel);
 
             atlas.Init(_Renderer, font);
+
+            font.Dispose();
         }
 
         public void DrawString(GeometryBuffer geometry_buffer, Vector2 location, RawColor4 color, string text)

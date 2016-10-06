@@ -146,7 +146,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                         {
                             new Vector2(x / Image.Width, y / Image.Height),
                             new Vector2(
-                                (x + size.Width + Padding.X) / Image.Width,
+                                (x + size.Width) / Image.Width,
                                 (y + size.Height) / Image.Height
                             ),
                         },

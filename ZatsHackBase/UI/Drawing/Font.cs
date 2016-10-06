@@ -31,7 +31,7 @@ namespace ZatsHackBase.UI
             Height = height;
             Family = family;
             IsDisposed = true;
-            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(3, 3));
+            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(5, 4));
 
             //Make this a dummy font in case renderer isn't ready yet
             if (renderer == null || !renderer.Initialized)

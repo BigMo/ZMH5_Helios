@@ -19,14 +19,16 @@ namespace _ZMH5__Helios
         {
             this.Run();
             Overlay.BackColor = Color.Red;
-            int a = 0;
         }
 
         protected override void BeforePluginsTick(TickEventArgs args)
         {
             base.BeforePluginsTick(args);
             
-            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(10f, 10f), DateTime.Now.ToLongTimeString());
+            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(10f, 10f), DateTime.Now.ToLongTimeString() + @"\n
+ABCDEFGHIJKLMNOPQRSTUVWXYZ\n
+abcdefghijklmnopqrstuvwxyz\n
+0123456789 eee");
         }
         static bool once = false;
         protected override void AfterPluginsTick(TickEventArgs args)

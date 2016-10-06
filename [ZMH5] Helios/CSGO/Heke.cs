@@ -74,6 +74,7 @@ namespace _ZMH5__Helios.CSGO
 #if DEBUG
             Program.Logger.Log("Performing SigScans...");
             Program.Offsets.SigScan();
+            Program.Offsets.Save("offsets.json");
 #endif
             Program.Logger.Log("Grabbing ClientClasses...");
             do

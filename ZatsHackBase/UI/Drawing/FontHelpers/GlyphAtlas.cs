@@ -91,7 +91,8 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     if (size.Height < 0)
                         size.Height = -size.Height;
 
-                    size.Width += Padding.X;
+                    //TODO: Experimentell
+                    size.Width *= 1.3f;// Padding.X;
                     size.Height += Padding.Y;
 
                     sizes[c - CharFrom] = size;

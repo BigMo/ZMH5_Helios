@@ -9,6 +9,7 @@ using ZatsHackBase.Maths;
 using _ZMH5__Helios.CSGO.ClassIDs;
 using _ZMH5__Helios.CSGO.Misc;
 using _ZMH5__Helios.CSGO.Entities.EntityHelpers;
+using _ZMH5__Helios.CSGO.Enums;
 
 namespace _ZMH5__Helios.CSGO.Entities
 {
@@ -20,7 +21,7 @@ namespace _ZMH5__Helios.CSGO.Entities
 
         #region PROPERTIES
         public int Size { get { return Data.Length; } }
-        public LazyCache<int> m_iTeamNum { get; private set; }
+        public LazyCache<Team> m_iTeamNum { get; private set; }
         public LazyCache<int> m_iID { get; private set; }
         public LazyCache<Vector3> m_vecOrigin { get; private set; }
         public LazyCache<Vector3> m_angRotation { get; private set; }
@@ -74,7 +75,7 @@ namespace _ZMH5__Helios.CSGO.Entities
 
             m_bDormant = new LazyCache<byte>(() => this.ReadAt<byte>(0xE9));
             m_iGlowIndex = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iGlowIndex));
-            m_iTeamNum = new LazyCache<int>(() => ReadNetVar<int>("m_iTeamNum"));
+            m_iTeamNum = new LazyCache<Team>(() => (Team)ReadNetVar<int>("m_iTeamNum"));
             m_flSimulationTime = new LazyCache<float>(() => ReadNetVar<float>("m_flSimulationTime"));
             m_iID = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iID));
             m_vecOrigin = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("m_vecOrigin"));

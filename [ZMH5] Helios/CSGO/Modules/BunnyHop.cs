@@ -19,6 +19,9 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
+            if (!Program.Settings.MiscBunnyHop)
+                return;
+
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
                 return;

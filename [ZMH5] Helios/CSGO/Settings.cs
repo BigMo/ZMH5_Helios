@@ -86,6 +86,11 @@ namespace _ZMH5__Helios.CSGO
         public Color EspC4Color;
         public Color EspGrenadeColor;
         #endregion
+
+        #region MISC
+        public bool MiscAutoPistol;
+        public bool MiscBunnyHop;
+        #endregion
         #endregion
 
         #region CONSTRUCTORS
@@ -134,6 +139,9 @@ namespace _ZMH5__Helios.CSGO
             EspC4Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
             EspGrenadeColor = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
             EspWeaponColor = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
+
+            MiscAutoPistol = true;
+            MiscBunnyHop = true;
         }
         public static Settings FromFile(string file)
         {

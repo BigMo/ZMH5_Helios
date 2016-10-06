@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpDX.Direct3D11;
+using ZatsHackBase.Maths;
+using ZatsHackBase.UI;
 using ZatsHackBase.UI.Drawing;
 
 namespace ZatsHackBase.GUI.Controls
@@ -16,6 +18,10 @@ namespace ZatsHackBase.GUI.Controls
 
         public Button(ContainerControl parent) : base(parent)
         {
+            var hovered = 0.83921568627450980392156862745098f;
+            var pressed = 0.91764705882352941176470588235294f;
+            IndicationDescriptor = new IndicationDescriptor(new Color(0.8f, 0.8f, 0.8f), Color.Transparent,
+                new Color(hovered, hovered, hovered), new Color(pressed, pressed, pressed), Color.Transparent);
         }
 
         public override void Render(RenderEventArgs e)
@@ -25,7 +31,11 @@ namespace ZatsHackBase.GUI.Controls
 	        graphics.DrawString ( m_pFont, m_colForeColor, m_szCaption, m_rctAbsBounds, Drawing::Center | Drawing::VCenter );
 	        */
             e.Renderer.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
-            //e.Renderer.DrawString(Color.Red, )
+
+            var center = AbsoluteBounds.Location;
+            center.X += AbsoluteBounds.Width/2;
+            center.Y += AbsoluteBounds.Height/2;
+            e.Renderer.DrawString(Color.Black, Font, center, Caption, TextAlignment.Center, TextAlignment.Center);
 
 
             base.Render(e);
@@ -91,6 +101,8 @@ namespace ZatsHackBase.GUI.Controls
 
         private bool PressedFromKey;
         private ControlState PrevState;
+
+        private Font Font;
 
     }
 

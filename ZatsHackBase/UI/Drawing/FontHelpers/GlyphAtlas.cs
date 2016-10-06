@@ -24,6 +24,9 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
     }
     public class GlyphAtlas : IDisposable
     {
+        //TODO: fix character placement
+        //TODO: http://jrgraphix.net/research/unicode_blocks.php <=> only add character ranges
+
         private const float rgb2f = 1f / 255f;
 
         #region VARIABLES

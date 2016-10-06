@@ -18,8 +18,8 @@ namespace ZatsHackBase.GUI.Controls
 
         public override void Render(RenderEventArgs e)
         {
-
-            e.Renderer.FillRectangle(BackColor, AbsoluteBounds.Location, AbsoluteBounds.Size);
+            if (BackColor != Color.Transparent) 
+                e.Renderer.FillRectangle(BackColor, AbsoluteBounds.Location, AbsoluteBounds.Size);
 
             //clear bg with bgcol
             //set clip rect our client area

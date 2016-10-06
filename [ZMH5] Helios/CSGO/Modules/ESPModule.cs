@@ -17,7 +17,7 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
-        private Font espFont = Font.CreateDummy("Segoe UI", 12);
+        private Font espFont = Font.CreateDummy("Segoe UI", 14);
         #endregion
 
         #region CONSTRUCTORS
@@ -56,7 +56,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (Program.Settings.EspShowAllies)
                 DrawPlayerSet(lp, allies, Program.Settings.EspAlliesColor, vEnts);
-            if (Program.Settings.EspShowAllies)
+            if (Program.Settings.EspShowEnemies)
                 DrawPlayerSet(lp, enemies, Program.Settings.EspEnemiesColor, vEnts);
         }
 

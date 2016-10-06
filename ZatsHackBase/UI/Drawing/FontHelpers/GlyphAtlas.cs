@@ -106,7 +106,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                         texHeight += curHeight;
                         curHeight = 0;
                         curWidth = 0;
-                        continue;
+                        newWidth = size.Width;
                     }
 
                     locations[c - CharFrom] = new Vector2(curWidth, texHeight);
@@ -160,7 +160,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 brOutline.Dispose();
             }
 
-            Image.Save("test.png", ImageFormat.Png);
+            Image.Save(string.Format("{0} {1}.png", font.FontFamily.Name, (int)font.Size), ImageFormat.Png);
         }
         private void CreateTexture(Renderer renderer)
         {

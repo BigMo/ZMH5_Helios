@@ -9,6 +9,7 @@ using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Core;
 using _ZMH5__Helios.CSGO.Modules.SnapshotHelpers;
 using ZatsHackBase.Maths;
+using _ZMH5__Helios.CSGO.Enums;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -140,7 +141,21 @@ namespace _ZMH5__Helios.CSGO.Modules
                 var pl = Players[i];
             }
 
-            return Players.Entites.Where(x => x != null && x.IsValid).ToArray();
+            return Players.Entites.Where(x => x != null).ToArray();
+        }
+
+        public CSPlayer[] GetPlayersSet(bool isValid=true, bool isAlive=true, Team team = Team.None)
+        {
+            var players = (IEnumerable<CSPlayer>)GetAllPlayers();
+
+            if (isValid)
+                players = players.Where(x => x.IsValid);
+            if (isAlive)
+                players = players.Where(x => x.m_lifeState.Value == LifeState.Alive);
+            if (team != Team.None)
+                players = players.Where(x => x.m_iTeamNum.Value == team);
+
+            return players.ToArray();
         }
         #endregion
     }

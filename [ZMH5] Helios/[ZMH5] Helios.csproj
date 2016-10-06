@@ -124,6 +124,7 @@
     <Compile Include="CSGO\Enums\MoveState.cs" />
     <Compile Include="CSGO\Enums\PlayerState.cs" />
     <Compile Include="CSGO\Enums\ObserverMode.cs" />
+    <Compile Include="CSGO\Enums\Team.cs" />
     <Compile Include="CSGO\Heke.cs" />
     <Compile Include="CSGO\Misc\RPMLazyArray.cs" />
     <Compile Include="CSGO\Modules\AimModule.cs" />

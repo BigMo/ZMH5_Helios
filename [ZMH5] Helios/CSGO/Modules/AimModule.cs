@@ -31,6 +31,9 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
+            if (!Program.Settings.AimEnabled)
+                return;
+
             Hotkey = Program.Settings.AimKey;
             Mode = Program.Settings.AimMode;
 
@@ -139,10 +142,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int GetTarget(Vector3 src)
         {
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            var enemies = Program.Hack.StateMod.GetAllPlayers().
-                Where(x => x != null && x.IsValid).
-                Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
-                Where(x => x.m_lifeState.Value == Enums.LifeState.Alive).
+            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, lp.m_iTeamNum.Value == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
                 OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();           
 
             Vector3 closest = Vector3.Zero;

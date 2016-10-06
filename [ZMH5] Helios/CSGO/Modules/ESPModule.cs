@@ -1,4 +1,5 @@
 ﻿using _ZMH5__Helios.CSGO.Entities;
+using _ZMH5__Helios.CSGO.Modules.SnapshotHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace _ZMH5__Helios.CSGO.Modules
     {
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
-        private Font espFont = Font.CreateDummy("Verdana", 9);
+        private Font espFont = Font.CreateDummy("Segoe UI", 12);
         #endregion
 
         #region CONSTRUCTORS
@@ -35,14 +36,14 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
+            if (!Program.Settings.EspEnabled)
+                return;
+
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
                 return;
 
-            var alivePlayers = Program.Hack.StateMod.GetAllPlayers().
-                Where(x => x != null && x.IsValid).
-                Where(x => x.m_lifeState.Value == Enums.LifeState.Alive);//.
-                                                                         //Where(x => x.m_Skeleton.Value != null);
+            var alivePlayers = Program.Hack.StateMod.GetPlayersSet().Where(x=>x.Address != lp.Address);
 
             var enemies = alivePlayers.Where(x => x.m_iTeamNum.Value != lp.m_iTeamNum.Value).
                 OrderBy(x => x.DistanceTo(lp));
@@ -51,9 +52,17 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             var vEnts = Program.Hack.StateMod.RadarEntries.Value == null ?
                 new SnapshotHelpers.RadarEntry[0] :
-                Program.Hack.StateMod.RadarEntries.Value.Where(x => !string.IsNullOrEmpty(x.Name)).ToArray();
+                Program.Hack.StateMod.RadarEntries.Value.Where(x => !string.IsNullOrEmpty(x.Name));
 
-            foreach (var enemy in enemies)
+            if (Program.Settings.EspShowAllies)
+                DrawPlayerSet(lp, allies, Program.Settings.EspAlliesColor, vEnts);
+            if (Program.Settings.EspShowAllies)
+                DrawPlayerSet(lp, enemies, Program.Settings.EspEnemiesColor, vEnts);
+        }
+
+        private void DrawPlayerSet(CSLocalPlayer lp, IEnumerable<CSPlayer> players, Color espColor, IEnumerable<RadarEntry> vEnts)
+        {
+            foreach (var enemy in players)
             {
                 var ptDown3d = enemy.m_vecOrigin.Value - MARGINS_Z;
                 var ptUp3d = enemy.m_Skeleton.Value.m_Bones[6].ToVector() + MARGINS_Z;
@@ -66,26 +75,38 @@ namespace _ZMH5__Helios.CSGO.Modules
                 Vector2 size = new Vector2((ptDown.Y - ptUp.Y) * 0.5f, ptDown.Y - ptUp.Y); //TODO: Präziser berechnen, am besten über Bones
                 Vector2 upperLeft = new Vector2((ptUp.X + ptDown.X) / 2f - size.X * 0.5f, ptUp.Y);
 
-                DrawOutlinedRect(upperLeft, size, Color.Red, Color.Black);
+                if (Program.Settings.EspPlayerShowBox)
+                    DrawOutlinedRect(upperLeft, size, espColor, Color.Black);
 
                 Vector2 barSize = new Vector2(size.X, size.Y / 20f);
                 Vector2 barHP = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y * 0.5f);
                 Vector2 barArmor = new Vector2(upperLeft.X, upperLeft.Y + size.Y + barSize.Y + barSize.Y);
 
-                DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, Color.Red, Color.Transparent, Color.Green, Color.Black);
-                DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, Color.Red, Color.Transparent, Color.White, Color.Black);
-
-                if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
+                if (Program.Settings.EspPlayerShowLifeArmor)
                 {
-                    var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
+                    DrawHBar(barHP, barSize, enemy.m_iHealth / 100f, espColor, Color.Transparent, Color.Green, Color.Black);
+                    DrawHBar(barArmor, barSize, enemy.m_ArmorValue / 100f, espColor, Color.Transparent, Color.White, Color.Black);
+                }
 
-                    espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
-                    var textPos = upperLeft + Vector2.UnitX * size.X;
-                    var wep = enemy.m_ActiveWeapon.Value;
-                    string text = ent.Name;
-                    if (wep != null && wep.IsValid)
-                        text += "\n" + wep.m_ClientClass.Value.NetworkName.Value.Replace("CWeapon", "");
-                    Program.Hack.Overlay.Renderer.DrawString(Color.Red, espFont, textPos, text);
+                if (Program.Settings.EspPlayerShowName || Program.Settings.EspPlayerShowWeapon)
+                {
+                    if (vEnts.Any(x => x.Id == enemy.m_iID.Value))
+                    {
+                        var ent = vEnts.First(x => x.Id == enemy.m_iID.Value);
+
+                        espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
+                        var textPos = upperLeft + Vector2.UnitX * size.X;
+                        var wep = enemy.m_ActiveWeapon.Value;
+                        string text = "";
+                        
+                        if (Program.Settings.EspPlayerShowName)
+                            text += ent.Name;
+                        if (Program.Settings.EspPlayerShowWeapon && wep != null && wep.IsValid)
+                            text += (text.Length != 0 ? "\n" : "") + wep.m_ClientClass.Value.NetworkName.Value.Replace("CWeapon", "");
+
+                        if (text.Length > 0)
+                            Program.Hack.Overlay.Renderer.DrawString(espColor, espFont, textPos, text);
+                    }
                 }
             }
         }

@@ -112,7 +112,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 SizeF msSize = new SizeF(100f, 100f);
                 for (int i = 0; i < chars.Length; i++)
                 {
-                    var size = g.MeasureString(chars[i].ToString(), font, msSize, StringFormat.GenericTypographic);
+                    var size = g.MeasureString(chars[i].ToString(), font, msSize, StringFormat.GenericDefault);
 
                     if (size.Width < 0)
                         size.Width = -size.Width;

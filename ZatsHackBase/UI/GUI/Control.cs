@@ -72,18 +72,18 @@ namespace ZatsHackBase.GUI
             AbsoluteBounds.Left += Bounds.Left; ;
             AbsoluteBounds.Top += Bounds.Top;
 
-            if (OverrideLayout == true)
-            {
-                AbsoluteBounds.Left += LayoutChange.Left;
-                AbsoluteBounds.Top += LayoutChange.Top;
-                AbsoluteBounds.Width = Bounds.Width;
-                AbsoluteBounds.Height = Bounds.Height;
-            }
-            else
-            {
-                AbsoluteBounds.Width = LayoutSize.Width;
-                AbsoluteBounds.Height = LayoutSize.Height;
-            }
+            //if (OverrideLayout == true)
+            //{
+            //    AbsoluteBounds.Left += LayoutChange.Left;
+            //    AbsoluteBounds.Top += LayoutChange.Top;
+            //    AbsoluteBounds.Width = Bounds.Width;
+            //    AbsoluteBounds.Height = Bounds.Height;
+            //}
+            //else
+            //{
+            //    AbsoluteBounds.Width = LayoutSize.Width;
+            //    AbsoluteBounds.Height = LayoutSize.Height;
+            //}
 
             OnParentAbsoluteLocationChanged.Invoke(this, e);
         }

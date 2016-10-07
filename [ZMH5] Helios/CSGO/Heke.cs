@@ -173,7 +173,7 @@ namespace _ZMH5__Helios.CSGO
 
                     string text = string.Join("\n",
                         specs.Select(x => 
-                            string.Format("- {0} ({1})",
+                            string.Format("▻ {0} ({1})",
                             StateMod.RadarEntries.Value.Any(y=>y.Id == x.m_iID.Value) ? StateMod.RadarEntries.Value.First(y => y.Id == x.m_iID.Value).Name : x.m_iID.Value.ToString(),
                             x.m_iObserverMode.Value.ToString())
                         )

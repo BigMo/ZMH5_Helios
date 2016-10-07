@@ -29,7 +29,30 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
 
         private const float rgb2f = 1f / 255f;
 
+        #region CLASSES
+        public class CharRange
+        {
+            public char From { get; private set; }
+            public char To { get; private set; }
+            public SizeF[] Sizes { get; private set; }
+            public Vector2[] Locations { get; private set; }
+            public char[] Chars { get; private set; }
+
+            public CharRange(char from, char to)
+            {
+                From = from;
+                To = to;
+                Sizes = new SizeF[to - from];
+                Locations = new Vector2[to - from];
+                Chars = new char[to - from];
+                for (int i = 0; i < Chars.Length; i++)
+                    Chars[i] = (char)(from + i);
+            }
+        }
+        #endregion
+
         #region VARIABLES
+        private char[] chars;
         private SizeF[] sizes;
         private Vector2[] locations;
         #endregion
@@ -40,23 +63,19 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
         public Texture2D Texture { get; private set; }
         public Bitmap Image { get; private set; }
         public Dictionary<char, Glyph> Glyphs { get; private set; }
-        public char CharFrom { get; private set; }
-        public char CharTo { get; private set; }
         public Vector2 Padding { get; private set; }
-
 
         public bool IsDisposed { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public GlyphAtlas(char charFrom, char charTo, Vector2 padding)
+        public GlyphAtlas(CharRange[] ranges, Vector2 padding)
         {
             Padding = padding;
-            CharFrom = charFrom;
-            CharTo = charTo;
             Glyphs = new Dictionary<char, Glyph>();
-            sizes = new SizeF[CharTo - CharFrom + 1];
-            locations = new Vector2[CharTo - CharFrom + 1];
+            chars = ranges.SelectMany(x => x.Chars).ToArray();
+            locations = new Vector2[chars.Length];
+            sizes = new SizeF[chars.Length];
 
             SamplerState = null;
             Resource = null;
@@ -67,6 +86,14 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
         #endregion
 
         #region METHODS
+        public void InitDebug(string family, float height)
+        {
+            using (System.Drawing.Font fnt = new System.Drawing.Font(family, height))
+            {
+                PrepareTextureAtlas(fnt);
+                DrawTextureAtlas(fnt);
+            }
+        }
         public void Init(Renderer renderer, System.Drawing.Font font, int maxTextureWidth = 1024)
         {
             PrepareTextureAtlas(font, maxTextureWidth);
@@ -83,10 +110,9 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 int texWidth = 0, texHeight = 0;
                 int grChar = 0;
                 SizeF msSize = new SizeF(100f, 100f);
-
-                for (char c = (char)CharFrom; c <= CharTo; c++)
+                for (int i = 0; i < chars.Length; i++)
                 {
-                    var size = g.MeasureString(c.ToString(), font, msSize, StringFormat.GenericTypographic);
+                    var size = g.MeasureString(chars[i].ToString(), font, msSize, StringFormat.GenericTypographic);
 
                     if (size.Width < 0)
                         size.Width = -size.Width;
@@ -98,7 +124,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     size.Width *= 1.3f;// Padding.X;
                     size.Height += Padding.Y;
 
-                    sizes[c - CharFrom] = size;
+                    sizes[i] = size;
 
                     curHeight = System.Math.Max(curHeight, (int)size.Height);
                     grChar = System.Math.Max(grChar, (int)size.Height);
@@ -113,9 +139,11 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                         newWidth = size.Width;
                     }
 
-                    locations[c - CharFrom] = new Vector2(curWidth, texHeight);
+                    locations[i] = new Vector2(curWidth, texHeight);
                     curWidth = (int)newWidth;
+
                 }
+                texHeight += curHeight;
 
                 Image = new Bitmap(texWidth, texHeight, PixelFormat.Format32bppArgb);
             }
@@ -131,17 +159,21 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 var brString = new SolidBrush(System.Drawing.Color.White);
                 var brOutline = new SolidBrush(System.Drawing.Color.Black);
 
-                for (char c = CharFrom; c <= CharTo; c++)
+                for (int i = 0; i < chars.Length; i++)
                 {
-                    var x = locations[c - CharFrom].X;
-                    var y = locations[c - CharFrom].Y;
-                    var size = sizes[c - CharFrom];
+                    if (Glyphs.ContainsKey(chars[i]))
+                        continue;
 
-                    g.DrawString(c.ToString(), font, brOutline, x - 1, y);
-                    g.DrawString(c.ToString(), font, brOutline, x + 1, y);
-                    g.DrawString(c.ToString(), font, brOutline, x, y - 1);
-                    g.DrawString(c.ToString(), font, brOutline, x, y + 1);
-                    g.DrawString(c.ToString(), font, brString, x, y);
+                    var x = locations[i].X;
+                    var y = locations[i].Y;
+                    var size = sizes[i];
+
+                    var c = chars[i].ToString();
+                    g.DrawString(c, font, brOutline, x - 1, y);
+                    g.DrawString(c, font, brOutline, x + 1, y);
+                    g.DrawString(c, font, brOutline, x, y - 1);
+                    g.DrawString(c, font, brOutline, x, y + 1);
+                    g.DrawString(c, font, brString, x, y);
 
                     var glyph = new Glyph
                     {
@@ -154,14 +186,15 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                                 (y + size.Height) / Image.Height
                             ),
                         },
-                        Code = c
+                        Code = chars[i]
                     };
 
-                    Glyphs.Add(c, glyph);
+                    Glyphs.Add(chars[i], glyph);
                 }
 
                 brString.Dispose();
                 brOutline.Dispose();
+
             }
 
             Image.Save(string.Format("{0} {1}.png", font.FontFamily.Name, (int)font.Size), ImageFormat.Png);

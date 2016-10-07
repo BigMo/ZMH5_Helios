@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZatsHackBase.UI;
+using ZatsHackBase.UI.Drawing.FontHelpers;
 
 namespace _ZMH5__Helios
 {
@@ -26,6 +27,20 @@ namespace _ZMH5__Helios
 
         static void Main(string[] args)
         {
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    GlyphAtlas t = new ZatsHackBase.UI.Drawing.FontHelpers.GlyphAtlas(new GlyphAtlas.CharRange[] {
+            //        new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
+            //        new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
+            //        new GlyphAtlas.CharRange((char)0x0500, (char)0x052f), //Cyrillic Supplementary
+            //        new GlyphAtlas.CharRange((char)0x02b0, (char)0x02ff), //Block Elements
+            //        new GlyphAtlas.CharRange((char)0x2580, (char)0x259f), //Block Elements
+            //        new GlyphAtlas.CharRange((char)0x25A0, (char)0x25ff) //Geometric Shapes
+            //    }, ZatsHackBase.Maths.Vector2.Unit * 3f);
+            //    t.InitDebug("Segoe UI", 10 + i);
+            //}
+            //return;
+
             //new Test();
             //return;
             //Setup

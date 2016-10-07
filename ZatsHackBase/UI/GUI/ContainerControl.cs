@@ -12,6 +12,11 @@ namespace ZatsHackBase.GUI
     {
         public ContainerControl(ContainerControl parent = null) : base(parent)
         {
+            Controls = new List<Control>();
+            LayoutEngine = new LayoutEngine();
+            LayoutEngine.Destination = this;
+            Scroll = new Point();
+            FocusControl = null;
         }
 
         public override void MouseDown(MouseEventArgs e)

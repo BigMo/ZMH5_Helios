@@ -19,49 +19,48 @@ namespace ZatsHackBase.GUI
         public Control(ContainerControl parent)
         {
             Parent = parent;
-            
         }
 
         public EventHandler<RenderEventArgs> OnRender;
         public virtual void Render(RenderEventArgs e)
         {
-            OnRender.Invoke(this, e);
+            OnRender?.Invoke(this, e);
         }
 
         public EventHandler<MouseEventArgs> OnMouseDown;
         public virtual void MouseDown(MouseEventArgs e)
         {
-            OnMouseDown.Invoke(this, e);
+            OnMouseDown?.Invoke(this, e);
         }
 
         public EventHandler<MouseEventArgs> OnMouseUp;
         public virtual void MouseUp(MouseEventArgs e)
         {
-            OnMouseUp.Invoke(this, e);
+            OnMouseUp?.Invoke(this, e);
         }
 
         public EventHandler<MouseEventArgs> OnMouseMove;
         public virtual void MouseMove(MouseEventArgs e)
         {
-            OnMouseMove.Invoke(this, e);
+            OnMouseMove?.Invoke(this, e);
         }
 
         public EventHandler<MouseEventArgs> OnMouseScroll;
         public virtual void MouseScroll(MouseEventArgs e)
         {
-            OnMouseScroll.Invoke(this, e);
+            OnMouseScroll?.Invoke(this, e);
         }
 
         public EventHandler<KeyEventArgs> OnKeyDown;
         public virtual void KeyDown(KeyEventArgs e)
         {
-            OnKeyDown.Invoke(this, e);
+            OnKeyDown?.Invoke(this, e);
         }
 
         public EventHandler<KeyEventArgs> OnKeyUp;
         public virtual void KeyUp(KeyEventArgs e)
         {
-            OnKeyUp.Invoke(this, e);
+            OnKeyUp?.Invoke(this, e);
         }
 
         public EventHandler<LocationChangeEventArgs> OnParentAbsoluteLocationChanged;
@@ -98,12 +97,15 @@ namespace ZatsHackBase.GUI
             {
                 _Parent = value;
 
-                var e = new LocationChangeEventArgs
+                if (value != null)
                 {
-                    AbsoluteLocation = { Vec = _Parent.AbsoluteBounds.Location }
-                };
+                    var e = new LocationChangeEventArgs
+                    {
+                        AbsoluteLocation = {Vec = _Parent.AbsoluteBounds.Location}
+                    };
 
-                ParentAbsoluteLocationChanged(e);
+                    ParentAbsoluteLocationChanged(e);
+                }
             }
         }
 

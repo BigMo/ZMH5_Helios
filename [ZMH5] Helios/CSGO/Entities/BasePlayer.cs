@@ -21,7 +21,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         public LazyCache<BaseCombatWeapon> m_ActiveWeapon { get; private set; }
         public LazyCache<int> m_iDefaultFOV { get; private set; }
         public LazyCache<Flags> m_fFlags { get; private set; }
-        public LazyCache<ObserverMode> m_hObserverMode { get; private set; }
+        public LazyCache<ObserverMode> m_iObserverMode { get; private set; }
         public LazyCache<LifeState> m_lifeState { get; private set; }
         public override int MemSize { get { return memSize.Value; } }
         #endregion
@@ -45,7 +45,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             m_iDefaultFOV = new LazyCache<int>(() => ReadNetVar<int>("DT_BasePlayer", "m_iDefaultFOV"));
             m_hObserverTarget = new LazyCache<int>(() => ReadNetVar<int>("DT_BasePlayer", "m_hObserverTarget") & 0xFFF);
             m_fFlags = new LazyCache<Flags>(() => (Flags)ReadNetVar<int>("DT_BasePlayer", "m_fFlags"));
-            m_hObserverMode = new LazyCache<ObserverMode>(() => (ObserverMode)ReadNetVar<int>("DT_BasePlayer", "m_hObserverMode"));
+            m_iObserverMode = new LazyCache<ObserverMode>(() => (ObserverMode)ReadNetVar<int>("DT_BasePlayer", "m_iObserverMode"));
             m_hActiveWeapon = new LazyCache<int>(() => ReadNetVar<int>("DT_BaseCombatCharacter", "m_hActiveWeapon") & 0xFFF);
             m_ActiveWeapon = new LazyCache<BaseCombatWeapon>(() => Program.Hack.StateMod.Weapons[m_hActiveWeapon.Value]);
         }

@@ -43,11 +43,8 @@ namespace _ZMH5__Helios
 
             LoadSettings();
             Settings.Save("settings.json");
-#if DEBUG
-            Offsets = new Offsets();
-#else
+
             LoadOffsets();
-#endif
             Offsets.Save("offsets.json");
             //Wait for game
             Logger.Warning("WAITING FOR CSGO...");

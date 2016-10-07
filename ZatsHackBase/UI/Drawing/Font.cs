@@ -31,7 +31,16 @@ namespace ZatsHackBase.UI
             Height = height;
             Family = family;
             IsDisposed = true;
-            atlas = new GlyphAtlas((char)32, (char)1000, new Vector2(height * 0.75f, height * 0.33333333333333333333333333333333f));
+            atlas = new GlyphAtlas(
+                new GlyphAtlas.CharRange[] {
+                    new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
+                    new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
+                    new GlyphAtlas.CharRange((char)0x0500, (char)0x052f), //Cyrillic Supplementary
+                    new GlyphAtlas.CharRange((char)0x02b0, (char)0x02ff), //Block Elements
+                    new GlyphAtlas.CharRange((char)0x2580, (char)0x259f), //Block Elements
+                    new GlyphAtlas.CharRange((char)0x25A0, (char)0x25ff) //Geometric Shapes
+                }, 
+                new Vector2(height * 0.75f, height * 0.33333333333333333333333333333333f));
 
             //Make this a dummy font in case renderer isn't ready yet
             if (renderer == null || !renderer.Initialized)

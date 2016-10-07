@@ -24,7 +24,7 @@ namespace _ZMH5__Helios.CSGO
     public class Heke : Hack
     {
         #region VARIABLES
-        private Font dbg = Font.CreateDummy("Courier New", 10);
+        private Font dbg = Font.CreateDummy("Segoe UI", 14);
         #endregion
 
         #region PROPERTIES
@@ -90,6 +90,7 @@ namespace _ZMH5__Helios.CSGO
             ClientClassParser.DumpNetVarsJson("netvars.json");
 #endif
             Program.Logger.Info("Helios is ready.");
+            Program.Logger.Info("sizeof(RadarEntry): {0}", System.Runtime.InteropServices.Marshal.SizeOf(typeof(Modules.SnapshotHelpers.RadarEntry)));
         }
 
         protected override void AfterRun()
@@ -156,6 +157,39 @@ namespace _ZMH5__Helios.CSGO
                 Input.MousePos.ToString() + "\n" +
                 Input.MouseMoveDist.ToString() + "\n" + 
                 string.Join(", ", Input.KeysDown.Select(x=>x.ToString())));
+
+            var lp = StateMod.LocalPlayer.Value;
+            Color drawColor = Color.White;
+            if (CSLocalPlayer.IsProcessable(lp))
+            {
+                var players = StateMod.GetPlayersSet(true, false);
+                if (players.Any(x => x.m_hObserverTarget.Value == lp.m_iID.Value))
+                {
+                    var specs = players.Where(x => x.m_hObserverTarget.Value == lp.m_iID.Value);
+                    if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.Ego))
+                        drawColor = Color.Red;
+                    else if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.ThirdPerson))
+                        drawColor = Color.Orange;
+
+                    string text = string.Join("\n",
+                        specs.Select(x => 
+                            string.Format("▻ {0} ({1})",
+                            StateMod.RadarEntries.Value.Any(y=>y.Id == x.m_iID.Value) ? StateMod.RadarEntries.Value.First(y => y.Id == x.m_iID.Value).Name : x.m_iID.Value.ToString(),
+                            x.m_iObserverMode.Value.ToString())
+                        )
+                    );
+                    Overlay.Renderer.DrawString(
+                        drawColor,
+                        dbg,
+                        Vector2.UnitY * (Overlay.Size.Y / 2f),
+                        "[Specs]\n" + text);
+                }
+                else
+                    Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");
+            } else
+            {
+                Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<not ingame>");
+            }
 
             base.AfterPluginsTick(args);
         }

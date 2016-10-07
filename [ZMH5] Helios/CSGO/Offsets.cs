@@ -13,12 +13,18 @@ namespace _ZMH5__Helios.CSGO
     public class Offsets
     {
         #region PROPERTIES
+        //TODO: Add to sigscan
         public int EntityList { get; set; }
+        //TODO: Add to sigscan
         public int LocalPlayer { get; set; }
+        //TODO: Add to sigscan
         public int ClientState { get; set; }
         public int SetViewAngles { get; set; }
+        //TODO: Add to sigscan
         public int State { get; set; }
+        //TODO: Add to sigscan
         public int ForceAttack { get; set; }
+        //TODO: Add to sigscan
         public int ForceJump { get; set; }
         public int ClassIDBase { get; set; }
         public int GlowManager { get; set; }
@@ -27,31 +33,22 @@ namespace _ZMH5__Helios.CSGO
         public int m_iID { get; set; }
         public int m_iCrosshairID { get; set; }
         public int m_iGlowIndex { get; set; }
+        //TODO: Add to sigscan
         public int m_pBoneMatrix { get; set; }
+        //TODO: Add to sigscan
         public int m_mViewMatrix { get; set; }
         public int GameRulesProxy { get; set; }
         public int PlayerResources { get; set; }
+        //TODO: Add to sigscan
         public int RadarBase { get; set; }
+        //TODO: Add to sigscan
         public int RadarOffset { get; set; }
         #endregion
 
         #region CONSTRUCTORS
         public Offsets()
-        {
-            EntityList = 0x4A58F94;
-            GlowManager = 0;
-            LocalPlayer = 0x00A3B43C;
-            ClientState = 0x5BB2D4;
-            State = 0x100;
-            ForceAttack = 0x02E98FFC;
-            ForceJump = 0x04EEE444;
-            m_iID = 0;
-            m_iCrosshairID = 0xaa54;
-            m_pBoneMatrix = 0x2698;
-            m_mViewMatrix = 0x04A4AB34;
-            RadarBase = 0x004E8DCBC; //TODO: Sigscan!
-            RadarOffset = 0x50; //TODO: Sigscan!
-        }
+        { }
+
         public static Offsets FromFile(string file)
         {
             JsonSerializer s = new JsonSerializer();

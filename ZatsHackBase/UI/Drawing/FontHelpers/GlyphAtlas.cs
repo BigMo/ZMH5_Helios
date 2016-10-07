@@ -120,11 +120,11 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     if (size.Height < 0)
                         size.Height = -size.Height;
 
+                    sizes[i] = size;
+
                     //TODO: Experimentell
                     size.Width *= 1.3f;// Padding.X;
                     size.Height += Padding.Y;
-
-                    sizes[i] = size;
 
                     curHeight = System.Math.Max(curHeight, (int)size.Height);
                     grChar = System.Math.Max(grChar, (int)size.Height);

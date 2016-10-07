@@ -417,6 +417,13 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized || font == null)
                 return;
+            
+            if (font.IsDisposed)
+            {
+                font = Fonts[font];
+                if (font == null || font.IsDisposed)
+                    return;
+            }
 
             GeometryBuffer.SetShader(fontShader);
             

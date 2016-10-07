@@ -132,8 +132,8 @@ namespace ZatsHackBase.GUI
 
         // Layout description
         public bool OverrideLayout { get; set; }
-        public Point LayoutChange { get; set; }
-        public Size LayoutSize { get; set; }
+        public Vector2 LayoutChange { get; set; }
+        public Vector2 LayoutSize { get; set; }
         #endregion
     }
 }

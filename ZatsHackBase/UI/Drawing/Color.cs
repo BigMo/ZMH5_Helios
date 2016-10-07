@@ -62,6 +62,14 @@ namespace ZatsHackBase.UI.Drawing
         {
             return new Color(color.A - col2.A, color.R - col2.R, color.G - col2.G, color.B - col2.B);
         }
+        public static bool operator ==(Color color, Color col2)
+        {
+            return color.A == col2.A && color.R == col2.R && color.G == col2.G && color.B == col2.B;
+        }
+        public static bool operator !=(Color color, Color col2)
+        {
+            return !(color == col2);
+        }
         #endregion
     }
 }

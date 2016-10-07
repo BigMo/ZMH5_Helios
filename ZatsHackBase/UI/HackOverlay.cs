@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
+using ZatsHackBase.GUI.Controls;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
 
@@ -20,6 +21,7 @@ namespace ZatsHackBase.UI
         public Color BackColor { get; set; }
         public Thread FormThread { get; private set; }
         public Vector2 Size { get; private set; }
+        public Frame BaseContainer { get; private set; }
         #endregion
 
         #region CONSTRUCTORS

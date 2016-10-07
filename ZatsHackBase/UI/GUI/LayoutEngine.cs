@@ -41,7 +41,7 @@ namespace ZatsHackBase.GUI
                     {
                         dock.Left = dockOffset.Left;
                         dock.Top = dockOffset.Top;
-                        dock.Height = bounds.Width - dockOffset.Right;
+                        dock.Height = bounds.Height - (dockOffset.Left + dockOffset.Right);
 
                         layout = dock.Location;
                         layout -= e.Bounds.Location;
@@ -55,7 +55,7 @@ namespace ZatsHackBase.GUI
 
                         dock.Left = dockOffset.Left;
                         dock.Top = dockOffset.Top;
-                        dock.Width = bounds.Width - dockOffset.Right;
+                        dock.Width = bounds.Width - (dockOffset.Left + dockOffset.Right);
 
                         layout = dock.Location;
                         layout -= e.Bounds.Location;
@@ -63,10 +63,26 @@ namespace ZatsHackBase.GUI
                         e.LayoutChange = layout;
                         e.LayoutSize = dock.Size;
 
+                        dockOffset.Top += dock.Height;
                         break;
                     case DockStyle.Bottom:
+
+                        dock.Left = dockOffset.Left;
+                        dock.Top = bounds.Height - (dockOffset.Top + dockOffset.Bottom) - dock.Height;
+                        dock.Width = bounds.Width - (dockOffset.Left + dockOffset.Right);
+
+                        layout = dock.Location;
+                        layout -= e.Bounds.Location;
+
+                        e.LayoutChange = layout;
+                        e.LayoutSize = dock.Size;
+
+                        dockOffset.Bottom += dock.Height;
                         break;
                     case DockStyle.Right:
+
+                        dock.Left = bounds.Width - (dockOffset.Left + dockOffset.Right) - dock.Width;
+
                         break;
                     case DockStyle.Fill:
                         break;

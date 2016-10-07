@@ -25,10 +25,12 @@ namespace _ZMH5__Helios
         {
             base.BeforePluginsTick(args);
 
-            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(10f, 10f), DateTime.Now.ToLongTimeString() + @"\n" +
+            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(100f, 10f), DateTime.Now.ToLongTimeString() + @"\n" +
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
                 "abcdefghijklmnopqrstuvwxyz\n" +
                 "0123456789 eee");
+
+            Overlay.Renderer.Debug(font);
         }
         static bool once = false;
         protected override void AfterPluginsTick(TickEventArgs args)

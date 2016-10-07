@@ -72,6 +72,7 @@ namespace ZatsHackBase.UI
         public int Indices => _Indices.Count;
         public int VertexDataSize => _Vertices.Count * Vertex.Size;
         public int IndexDataSize => _Indices.Count * sizeof(short);
+        public int CopiedMemory => VertexDataSize + IndexDataSize;
 
         public RectangleF ClipRegion
         {
@@ -198,6 +199,9 @@ namespace ZatsHackBase.UI
             int index_offset = 0;
 
             ShaderSet last_shader = null;
+            Drawing.Buffer last_buffer = null;
+            D3D11.SamplerState last_sampler = null;
+            D3D11.ShaderResourceView last_res = null;
 
             RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
 
@@ -207,22 +211,30 @@ namespace ZatsHackBase.UI
             foreach (var batch in _Batches)
             {
 
-               // if (batch.TargetShader != null && batch.TargetShader != last_shader)
+                if (batch.TargetShader != null && batch.TargetShader != last_shader)
                 {
-                    batch.TargetShader?.Apply();
-                    //last_shader = batch.TargetShader;
+                    batch.TargetShader.Apply();
+                    last_shader = batch.TargetShader;
                 }
 
-                if (batch.UseClipping == true && batch.ClipRectangle != clip)
+                if (batch.ShaderBuffer != null && batch.ShaderBuffer != last_buffer)
                 {
-                    //_ClipBuffer.ClipRegion = batch.ClipRectangle;
-                    //_ClipBuffer.Synchronise();
+                    batch.ShaderBuffer.Apply();
+                    last_shader = batch.TargetShader;
                 }
 
-                batch.ShaderBuffer?.Apply();
+                if (batch.Sampler != null && batch.Sampler != last_sampler)
+                {
+                    _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
+                    last_sampler = batch.Sampler;
+                }
+
+                if (batch.Texture != null && batch.Texture != last_res)
+                {
+                    _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
+                    last_res = batch.Texture;
+                }
                 
-                _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
-                _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
                 _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
                
                 if (batch.UseIndices == true)

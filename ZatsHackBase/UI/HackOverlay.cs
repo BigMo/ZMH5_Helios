@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
 using ZatsHackBase.GUI.Controls;
+using ZatsHackBase.Input;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Drawing;
 
@@ -22,12 +23,14 @@ namespace ZatsHackBase.UI
         public Thread FormThread { get; private set; }
         public Vector2 Size { get; private set; }
         public Frame BaseContainer { get; private set; }
+        public HackInput Input { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public HackOverlay(EUCProcess proc)
+        public HackOverlay(EUCProcess proc, HackInput input)
         {
             BackColor = Color.Transparent;
+            Input = input;
             Process = proc;
             Renderer = new Renderer();
             FormThread = new Thread(() =>
@@ -43,6 +46,8 @@ namespace ZatsHackBase.UI
             });
             FormThread.IsBackground = true;
             Size = Vector2.Zero;
+            BaseContainer = new Frame();
+            BaseContainer.BackColor = Color.Transparent;
         }
         #endregion
 
@@ -51,7 +56,41 @@ namespace ZatsHackBase.UI
         {
             FormThread.Start();
         }
-        public void AdjustForm()
+        public void Update()
+        {
+            AdjustForm();
+            ProcessInput();
+        }
+
+        private void ProcessInput()
+        {
+            #region MOUSE
+            if (Input.MouseMoveDist.Length > 0)
+                BaseContainer.MouseMove(new MouseEventArgs(MouseButtons.None, 0, (int)Input.MousePos.X, (int)Input.MousePos.Y, 0));
+
+            HandleMouseButton(Input.LeftMouseButton, MouseButtons.Left);
+            HandleMouseButton(Input.RightMouseButton, MouseButtons.Right);
+            HandleMouseButton(Input.MiddleMouseButton, MouseButtons.Middle);
+            HandleMouseButton(Input.XMouseButton1, MouseButtons.XButton1);
+            HandleMouseButton(Input.XMouseButton2, MouseButtons.XButton2);
+            #endregion
+
+            #region KEYBOARD
+            foreach (var key in Input.KeysWentDown)
+                BaseContainer.KeyDown(new KeyEventArgs(key));
+
+            foreach (var key in Input.KeysWentUp)
+                BaseContainer.KeyUp(new KeyEventArgs(key));
+            #endregion
+        }
+        private void HandleMouseButton(Input.Button button, MouseButtons mbutton)
+        {
+            if (button.WentUp)
+                BaseContainer.MouseUp(new MouseEventArgs(mbutton, 0, (int)Input.MousePos.X, (int)Input.MousePos.Y, 0));
+            else if (button.WentDown)
+                BaseContainer.MouseDown(new MouseEventArgs(mbutton, 0, (int)Input.MousePos.X, (int)Input.MousePos.Y, 0));
+        }
+        private void AdjustForm()
         {
             if (!Renderer.Initialized)
                 return;
@@ -75,8 +114,10 @@ namespace ZatsHackBase.UI
                         Form.Location.Y != pt.Y;
 
                     if (sizeChanged)
+                    {
                         Size = new Vector2(rect.Right - rect.Left, rect.Bottom - rect.Top);
-
+                        BaseContainer.Bounds.Size = Size;
+                    }
                     if (posChanged || sizeChanged)
                     {
                         WinAPI.SetWindowPos(Form.Handle,

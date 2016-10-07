@@ -106,7 +106,7 @@ namespace ZatsHackBase.Core
         {
             if (Overlay != null)
             {
-                Overlay.AdjustForm();
+                Overlay.Update();
                 Overlay.Renderer.Clear(Overlay.BackColor);
             }
         }

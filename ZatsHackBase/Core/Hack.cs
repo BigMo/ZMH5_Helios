@@ -37,7 +37,7 @@ namespace ZatsHackBase.Core
             modules = new List<HackModule>();
             if (createOverlay)
             {
-                Overlay = new HackOverlay(Process);
+                Overlay = new HackOverlay(Process, Input);
                 Overlay.Start();
             }
             

@@ -29,12 +29,19 @@ namespace ZatsHackBase.UI.Drawing
         #region CONSTRUCTORS
         public Color(float a, float r, float g, float b)
         {
-            A = Math.Min(1f, Math.Max(0f, a));
-            R = Math.Min(1f, Math.Max(0f, r));
-            G = Math.Min(1f, Math.Max(0f, g));
-            B = Math.Min(1f, Math.Max(0f, b));
+            float max = Math.Max(Math.Max(Math.Max(Math.Max(1, g), b), r), a);
+            float min = Math.Min(Math.Min(Math.Min(Math.Min(0, g), b), r), a);
+            float range = Math.Abs(min - max);
+            A = (a + min) / range;
+            R = (r + min) / range;
+            G = (g + min) / range;
+            B = (b + min) / range;
         }
         public Color(float r, float g, float b) : this(1f, r, g, b) { }
+        public static Color FromKnownColor(Color col, float a)
+        {
+            return new Color(a, col.R, col.G, col.B);
+        }
         #endregion
 
         #region OPERATORS

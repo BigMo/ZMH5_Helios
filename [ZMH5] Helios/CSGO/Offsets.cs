@@ -13,18 +13,12 @@ namespace _ZMH5__Helios.CSGO
     public class Offsets
     {
         #region PROPERTIES
-        //TODO: Add to sigscan
         public int EntityList { get; set; }
-        //TODO: Add to sigscan
         public int LocalPlayer { get; set; }
-        //TODO: Add to sigscan
         public int ClientState { get; set; }
         public int SetViewAngles { get; set; }
-        //TODO: Add to sigscan
         public int State { get; set; }
-        //TODO: Add to sigscan
         public int ForceAttack { get; set; }
-        //TODO: Add to sigscan
         public int ForceJump { get; set; }
         public int ClassIDBase { get; set; }
         public int GlowManager { get; set; }
@@ -33,15 +27,11 @@ namespace _ZMH5__Helios.CSGO
         public int m_iID { get; set; }
         public int m_iCrosshairID { get; set; }
         public int m_iGlowIndex { get; set; }
-        //TODO: Add to sigscan
         public int m_pBoneMatrix { get; set; }
-        //TODO: Add to sigscan
         public int m_mViewMatrix { get; set; }
         public int GameRulesProxy { get; set; }
         public int PlayerResources { get; set; }
-        //TODO: Add to sigscan
         public int RadarBase { get; set; }
-        //TODO: Add to sigscan
         public int RadarOffset { get; set; }
         #endregion
 
@@ -71,6 +61,14 @@ namespace _ZMH5__Helios.CSGO
 #if DEBUG
         public void SigScan()
         {
+            SigRadarBase();
+            SigViewMatrix();
+            SigBoneMatrix();
+            SigForceAttack();
+            SigForceJump();
+            SigClientState();
+            SigLocalPlayer();
+            SigEntityList();
             SigClassIDBase();
             SigClassIDManager();
             SigEntityID();
@@ -80,6 +78,124 @@ namespace _ZMH5__Helios.CSGO
             SigGlowIndex();
             SigGameRulesProxy();
             SigPlayerResources();
+        }
+        private void SigRadarBase()
+        {
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x6A, 0x00, 0xFF, 0x90, 0x98, 0x00
+            }, "xxxxxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var address = Program.Hack.Memory.Read<int>(scan.Address + 0x13);
+                var val = address - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                RadarBase = val;
+            }
+        }
+        private void SigViewMatrix()
+        {
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0xE8, 0x00, 0x00, 0x00, 0x00, 0x8D, 0x95, 0xE0
+            }, "x????xxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var address = Program.Hack.Memory.Read<int>(scan.Address - 0x1A);
+                var val = address + 0x90 - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                m_mViewMatrix = val;
+            }
+        }
+        private void SigBoneMatrix()
+        {
+            //75 15 8B 87 98 26 00 00 8B CF 8B 17 03 44 24 14 50
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x75, 0x15, 0x8B, 0x87, 0x00, 0x00, 0x00, 0x00, 0x8B, 0xCF, 0x8B, 0x17, 0x03, 0x44, 0x24, 0x14, 0x50
+            }, "xxxx????xxxxxxxxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(4);
+                m_pBoneMatrix = val;
+            }
+        }
+        private void SigForceAttack()
+        {
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x89, 0x15, 0x00, 0x00, 0x00, 0x00, //mov [client.dll+xxxx],edx
+                0x8B, 0x15, 0x00, 0x00, 0x00, 0x00, //mov edx, [client.dll+????]
+                0xF6, 0xC2, 0x03,                   //test dl, 03
+                0x74, 0x03,                         //je client.dll+???? 
+                0x83, 0xCE, 0x04,                   //or esi,04
+                0xA8, 0x04
+            }, "xx????xx????xxxxxxxxxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(2) - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                ForceAttack = val;
+            }
+        }
+        private void SigForceJump()
+        {
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0x89, 0x15, 0x00, 0x00, 0x00, 0x00, //mov [client.dll+xxxx],edx
+                0x8B, 0x15, 0x00, 0x00, 0x00, 0x00, //mov edx,[client.dll+xxxx]
+                0xF6, 0xC2, 0x03,                   //test dl, 03
+                0x74, 0x03,                         //je client.dll+???? 
+                0x83, 0xCE, 0x08, //or esi,08
+                0xA8, 0x08
+            }, "xx????xx????xxxxxxxxxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(2) - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                ForceJump = val;
+            }
+        }
+        private void SigClientState()
+        {
+            var scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0xA1, 0x00, 0x00, 0x00, 0x00,
+                0x80, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x75, 0x0C,
+                0x83, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x7F, 0x03
+            }, "x????xx????xxxxx????xxx", Program.Hack.EngineDll);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(1) - Program.Hack.EngineDll.BaseAddress.ToInt32();
+                ClientState = val;
+            }
+        }
+        private void SigLocalPlayer()
+        {
+            ScanResult scan = Program.Hack.Memory.PerformSignatureScan(new byte[]{
+                0x8D, 0x34, 0x85, 0x00, 0x00, 0x00, 0x00,       //lea esi, [eax*4+client.dll+xxxx]
+                0x89, 0x15, 0x00, 0x00, 0x00, 0x00,             //mov [client.dll+xxxx],edx
+                0x8B, 0x41, 0x08,                               //mov eax,[ecx+08]
+                0x8B, 0x48, 0x00                                //mov ecx,[eax+04]
+                }, "xxx????xx????xxxxx?", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var val1 = scan.Stream.Read<int>(3);
+                var val2 = scan.Stream.Read<byte>(18);
+                var val = val1 + val2 - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                LocalPlayer = val;
+            }
+        }
+        private void SigEntityList()
+        {
+            ScanResult scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
+            {
+                0xBA, 0x00, 0x00, 0x00, 0x00,
+                0x89, 0x55, 0xFC, 0x8D, 0x64, 0x24, 0x00, 0x83, 0xFF, 0x01
+            }, "x????xxxxxxxxxx", Program.Hack.ClientDll);
+            if (scan.Success)
+            {
+                var val = scan.Stream.Read<int>(1) - Program.Hack.ClientDll.BaseAddress.ToInt32();
+                EntityList = val;
+            }
         }
         private void SigPlayerResources()
         {

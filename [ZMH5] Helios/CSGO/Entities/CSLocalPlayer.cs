@@ -26,7 +26,7 @@ namespace _ZMH5__Helios.CSGO.Entities
 
         #region CONSTRUCTORS
         public CSLocalPlayer() : base() { }
-        public CSLocalPlayer(long address) : base(address, memSize.Value) { }
+        public CSLocalPlayer(int address) : base(address, memSize.Value) { }
 
         public CSLocalPlayer(BaseEntity other) : base(other) { }
         #endregion

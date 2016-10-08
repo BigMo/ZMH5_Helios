@@ -99,7 +99,7 @@ namespace _ZMH5__Helios.CSGO
 
             Program.Logger.Info("Terminating.");
         }
-
+        
         public T GetEntityByAddress<T>(int address, bool addToSnapshot = true) where T : EntityPrototype, new()
         {
             if (address <= 0)
@@ -109,6 +109,18 @@ namespace _ZMH5__Helios.CSGO
             {
                 T entity = new T();
                 entity.Init(address, entity.MemSize);
+
+                if (addToSnapshot && entity != null && entity.IsValid)
+                {
+                    var t = typeof(T);
+                    if (t == typeof(BaseEntity))
+                        StateMod.BaseEntitites[(entity as BaseEntity).m_iID] = entity as BaseEntity;
+                    else if (t == typeof(BaseCombatWeapon))
+                        StateMod.BaseEntitites[(entity as BaseCombatWeapon).m_iID] = entity as BaseCombatWeapon;
+                    else if (t == typeof(CSPlayer))
+                        StateMod.BaseEntitites[(entity as CSPlayer).m_iID] = entity as CSPlayer;
+                }
+
                 return entity;
             }catch { return null; }
         }

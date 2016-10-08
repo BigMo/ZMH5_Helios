@@ -41,8 +41,8 @@ namespace _ZMH5__Helios
             //}
             //return;
 
-            new Test();
-            return;
+            //new Test();
+            //return;
             //Setup
             Animation = new ConsoleAnimation();
             Animation.Text = Name = string.Format("[ZMH5] Helios v.{0}", Assembly.GetExecutingAssembly().GetName().Version);

@@ -31,8 +31,8 @@ namespace _ZMH5__Helios.CSGO.Entities
         public BasePlayer(BaseEntity other) : this(other, memSize.Value) { }
         public BasePlayer(BaseEntity other, int newSize) : base(other, newSize) { }
 
-        public BasePlayer(long address, int size) : base(address, size) { }
-        public BasePlayer(long address) : base(address, memSize.Value) { }
+        public BasePlayer(int address, int size) : base(address, size) { }
+        public BasePlayer(int address) : base(address, memSize.Value) { }
         #endregion
 
         #region METHODS

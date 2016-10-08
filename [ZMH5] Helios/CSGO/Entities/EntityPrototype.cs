@@ -16,7 +16,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         #endregion
 
         #region PROPERTIES
-        public long Address { get; private set; }
+        public int Address { get; private set; }
         public byte[] Data { get; protected set; }
         public LazyCache<int> m_iVMT { get; private set; }
         public LazyCache<ManagedClientClass> m_ClientClass { get; private set; }
@@ -32,7 +32,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         #endregion
 
         #region METHODS
-        public void Init(long address, int size)
+        public void Init(int address, int size)
         {
             Address = address;
             Data = new byte[size + 64];

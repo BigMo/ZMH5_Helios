@@ -61,8 +61,8 @@ namespace _ZMH5__Helios.CSGO.Entities
 
         }
 
-        public BaseEntity(long address) : this(address, memSize.Value) { }
-        public BaseEntity(long address, int size) : base()
+        public BaseEntity(int address) : this(address, memSize.Value) { }
+        public BaseEntity(int address, int size) : base()
         {
             Init(address, size);
         }
@@ -136,7 +136,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             if (other == null)
                 return 0f;
 
-            return (other.m_vecOrigin.Value = this.m_vecOrigin.Value).Length;
+            return (other.m_vecOrigin.Value - this.m_vecOrigin.Value).Length;
         }
         #endregion
     }

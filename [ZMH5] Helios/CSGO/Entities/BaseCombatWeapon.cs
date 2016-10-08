@@ -166,8 +166,8 @@ namespace _ZMH5__Helios.CSGO.Entities
         public BaseCombatWeapon(BaseEntity other) : this(other, memSize.Value) { }
         public BaseCombatWeapon(BaseEntity other, int newSize) : base(other, newSize) { }
 
-        public BaseCombatWeapon(long address, int size) : base(address, size) { }
-        public BaseCombatWeapon(long address) : base(address, memSize.Value) { }
+        public BaseCombatWeapon(int address, int size) : base(address, size) { }
+        public BaseCombatWeapon(int address) : base(address, memSize.Value) { }
         #endregion
 
         #region METHODS

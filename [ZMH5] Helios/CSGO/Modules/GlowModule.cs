@@ -71,6 +71,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                         EncolorObject(obj, Program.Settings.GlowGrenadeColor, i);
                     else if (Program.Settings.GlowShowWeapons)
                         EncolorObject(obj, Program.Settings.GlowWeaponColor, i);
+
+                    Program.Hack.StateMod.Weapons[wep.m_iID] = wep;
                 }
                 else if (player != null && player.IsValid)
                 {
@@ -82,9 +84,14 @@ namespace _ZMH5__Helios.CSGO.Modules
                         EncolorObject(obj, Program.Settings.GlowAlliesColor, i);
                     if (Program.Settings.GlowShowEnemies && !friend)
                         EncolorObject(obj, Program.Settings.GlowEnemiesColor, i);
-                } else if (proto.m_ClientClass.Value.NetworkName.Value == "CChicken")
+                }
+                else
                 {
-                    EncolorObject(obj, Color.Orange, i);
+                    if (proto.m_ClientClass.Value.NetworkName.Value == "CChicken")
+                        EncolorObject(obj, Color.Orange, i);
+
+                    var baseEnt = Program.Hack.GetEntityByAddress<BaseEntity>(proto.Address);
+
                 }
             }
         }
@@ -109,10 +116,12 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             if (Array.Length <= index)
                 return;
-            
-            int address = glowManager.m_pGlowArray + RPMLazyArray<GlowObjectDefinition>.Size * index;
-            Program.Hack.Memory.Write<GlowObjectDefinition>(address, obj, 0x04, 0x14); //colors
-            Program.Hack.Memory.Write<GlowObjectDefinition>(address, obj, 0x24, 0x03); //flags
+            try
+            {
+                int address = glowManager.m_pGlowArray + RPMLazyArray<GlowObjectDefinition>.Size * index;
+                Program.Hack.Memory.Write<GlowObjectDefinition>(address, obj, 0x04, 0x14); //colors
+                Program.Hack.Memory.Write<GlowObjectDefinition>(address, obj, 0x24, 0x03); //flags
+            }catch { }
         }
     }
 }

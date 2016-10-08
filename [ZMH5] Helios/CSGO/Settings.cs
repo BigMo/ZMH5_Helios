@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using _ZMH5__Helios.CSGO.Misc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -70,21 +71,14 @@ namespace _ZMH5__Helios.CSGO
         #endregion
 
         #region ESP
-        public bool EspEnabled;
-        public bool EspShowAllies;
-        public bool EspShowEnemies;
-        public bool EspShowWeapons;
-        public bool EspShowC4;
-        public bool EspShowGrenades;
-        public bool EspPlayerShowName;
-        public bool EspPlayerShowWeapon;
-        public bool EspPlayerShowLifeArmor;
-        public bool EspPlayerShowBox;
-        public Color EspAlliesColor;
-        public Color EspEnemiesColor;
-        public Color EspWeaponColor;
-        public Color EspC4Color;
-        public Color EspGrenadeColor;
+        public ESPSettings EspAllies;
+        public ESPSettings EspEnemies;
+        public ESPSettings EspChickens;
+        public ESPSettings EspWeapons;
+        public ESPSettings EspGrenades;
+        public ESPSettings EspC4;
+        public bool EspC4ShowTime;
+        public bool EspPlayersShowWeapon;
         #endregion
 
         #region MISC
@@ -128,17 +122,54 @@ namespace _ZMH5__Helios.CSGO
             GlowGrenadeColor = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
             GlowWeaponColor = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
 
-            EspEnabled = true;
-            EspShowAllies = true;
-            EspShowEnemies = true;
-            EspShowWeapons = true;
-            EspShowC4 = true;
-            EspShowGrenades = true;
-            EspAlliesColor = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
-            EspEnemiesColor = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
-            EspC4Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            EspGrenadeColor = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            EspWeaponColor = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
+            EspAllies = new ESPSettings();
+            EspC4 = new ESPSettings();
+            EspChickens = new ESPSettings();
+            EspEnemies = new ESPSettings();
+            EspGrenades = new ESPSettings();
+            EspWeapons = new ESPSettings();
+
+            EspAllies.Enabled = true;
+            EspC4.Enabled = true;
+            EspChickens.Enabled = true;
+            EspEnemies.Enabled = true;
+            EspGrenades.Enabled = true;
+            EspWeapons.Enabled = true;
+
+            EspAllies.ShowBox = true;
+            EspC4.ShowBox = true;
+            EspChickens.ShowBox = true;
+            EspEnemies.ShowBox = true;
+            EspGrenades.ShowBox = true;
+            EspWeapons.ShowBox = true;
+
+            EspAllies.ShowName = true;
+            EspC4.ShowName = true;
+            EspChickens.ShowName = true;
+            EspEnemies.ShowName = true;
+            EspGrenades.ShowName = true;
+            EspWeapons.ShowName = true;
+
+            EspAllies.ShowDist = true;
+            EspC4.ShowDist = true;
+            EspChickens.ShowDist = true;
+            EspEnemies.ShowDist = true;
+            EspGrenades.ShowDist = true;
+            EspWeapons.ShowDist = true;
+
+            EspAllies.ShowLifeArmor = true;
+            EspC4.ShowLifeArmor = false;
+            EspChickens.ShowLifeArmor = true;
+            EspEnemies.ShowLifeArmor = true;
+            EspGrenades.ShowLifeArmor = false;
+            EspWeapons.ShowLifeArmor = false;
+
+            EspAllies.Color = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
+            EspC4.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            EspChickens.Color = Color.FromKnownColor(Color.Orange, 0.9f);
+            EspEnemies.Color = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
+            EspGrenades.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            EspWeapons.Color = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
 
             MiscAutoPistol = true;
             MiscBunnyHop = true;

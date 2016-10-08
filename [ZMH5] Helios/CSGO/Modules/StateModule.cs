@@ -31,6 +31,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         public EntityCache<CSPlayer> PlayersOld { get; private set; }
         public EntityCache<CSPlayer> Players { get; private set; }
         public EntityCache<BaseCombatWeapon> Weapons { get; private set; }
+        public EntityCache<BaseEntity> BaseEntitites { get; private set; }
         public LazyCache<Vector3> ViewAngles { get; private set; }
         public LazyCache<Matrix> ViewMatrix { get; private set; }
         public LazyCache<CSGameRulesProxy> GameRules { get; private set; }
@@ -100,6 +101,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             PlayersOld = new EntityCache<CSPlayer>();
             PlayersOld.RequestMissingEntities = false;
             Weapons = new EntityCache<BaseCombatWeapon>();
+            BaseEntitites = new EntityCache<BaseEntity>();
             pEntityList = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.EntityList;
             pClientState = Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.ClientState;
             pLocalPlayer = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.LocalPlayer;
@@ -120,6 +122,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             PlayerResources.Reset();
             RadarEntries.Reset();
 
+            BaseEntitites.Clear();
             PlayersOld.Clear();
             PlayersOld.CopyFrom(Players);
             Players.Clear();

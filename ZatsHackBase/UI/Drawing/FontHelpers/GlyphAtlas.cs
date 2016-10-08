@@ -11,7 +11,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ZatsHackBase.Maths;
+using Point = System.Drawing.Point;
 
 namespace ZatsHackBase.UI.Drawing.FontHelpers
 {
@@ -55,6 +57,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
         private char[] chars;
         private SizeF[] sizes;
         private Vector2[] locations;
+        private static StringFormat stringFormat = new StringFormat {Alignment = StringAlignment.Near, FormatFlags = StringFormatFlags.NoWrap, HotkeyPrefix = HotkeyPrefix.None, Trimming = StringTrimming.Word};
         #endregion
 
         #region PROPERTIES
@@ -123,8 +126,8 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     sizes[i] = size;
 
                     //TODO: Experimentell
-                    size.Width *= 1.3f;// Padding.X;
-                    size.Height += Padding.Y;
+                    size.Width = (int)(size.Width * 1.3f);// Padding.X;
+                    size.Height = (int)(size.Height + Padding.Y);
 
                     curHeight = System.Math.Max(curHeight, (int)size.Height);
                     grChar = System.Math.Max(grChar, (int)size.Height);
@@ -169,12 +172,13 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     var size = sizes[i];
 
                     var c = chars[i].ToString();
-                    g.DrawString(c, font, brOutline, x - 1, y);
-                    g.DrawString(c, font, brOutline, x + 1, y);
-                    g.DrawString(c, font, brOutline, x, y - 1);
-                    g.DrawString(c, font, brOutline, x, y + 1);
-                    g.DrawString(c, font, brString, x, y);
-
+                    
+                    g.DrawString(c, font, brOutline, x - 1, y, StringFormat.GenericTypographic);
+                    g.DrawString(c, font, brOutline, x + 1, y, StringFormat.GenericTypographic);
+                    g.DrawString(c, font, brOutline, x, y - 1, StringFormat.GenericTypographic);
+                    g.DrawString(c, font, brOutline, x, y + 1, StringFormat.GenericTypographic);
+                    g.DrawString(c, font, brString, x, y, StringFormat.GenericTypographic);
+                    
                     var glyph = new Glyph
                     {
                         Size = size,

@@ -13,7 +13,7 @@ namespace _ZMH5__Helios
 {
     public class Test : Hack
     {
-        private Font font = Font.CreateDummy("Segoe UI", 14f);
+        private Font font = Font.CreateDummy("Verdana", 14f);
 
         public Test() : base("notepad", 60, true)
         {
@@ -25,10 +25,10 @@ namespace _ZMH5__Helios
         {
             base.BeforePluginsTick(args);
 
-            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(300f, 10f), DateTime.Now.ToLongTimeString() + @"\n" +
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
-                "abcdefghijklmnopqrstuvwxyz\n" +
-                "0123456789 eee");
+            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(400f, 10f), DateTime.Now.ToLongTimeString() + @"
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                abcdefghijklmnopqrstuvwxyz
+                0123456789 eee");
 
             Overlay.Renderer.Debug(font);
         }

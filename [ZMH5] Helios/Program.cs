@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ZatsHackBase.UI;
 using ZatsHackBase.UI.Drawing.FontHelpers;
 
@@ -40,7 +41,7 @@ namespace _ZMH5__Helios
             //    t.InitDebug("Segoe UI", 10 + i);
             //}
             //return;
-
+            Application.SetCompatibleTextRenderingDefault(false);
             new Test();
             return;
             //Setup

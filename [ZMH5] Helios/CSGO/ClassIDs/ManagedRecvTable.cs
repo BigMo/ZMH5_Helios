@@ -19,6 +19,10 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
         public LazyCache<ManagedRecvProp[]> RecvProps { get; private set; }
         [JsonIgnore]
         public LazyCache<int> HighestOffset { get; private set; }
+        public LazyCache<int> BaseClassDepth { get; private set; }
+        public LazyCache<ManagedRecvTable> BaseClass { get; private set; }
+        public LazyCache<IEnumerable<ManagedRecvTable>> BaseClasses { get; private set; }
+        public LazyCache<int> Size { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -33,7 +37,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
             RecvProps = new LazyCache<ManagedRecvProp[]>(() => {
                 ManagedRecvProp[] props = new ManagedRecvProp[r.Value.m_nProps];
                 for (int i = 0; i < props.Length; i++)
-                    props[i] = new ManagedRecvProp(r.Value.m_pProps + i * 0x3C);
+                    props[i] = new ManagedRecvProp(r.Value.m_pProps + i * 0x3C, this);
 
                 return props;
             });
@@ -41,6 +45,19 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
             {
                 return RecvProps.Value.Max(x => x == null ? 0 : x.Offset);// GetHighestOffset(this);
             });
+            BaseClassDepth = new LazyCache<int>(() =>
+            {
+                if (BaseClass.Value != null)
+                    return 1 + BaseClass.Value.BaseClassDepth;
+                return 0;
+            });
+            BaseClass = new LazyCache<ManagedRecvTable>(() =>
+            {
+                if (RecvProps.Value.Any(x => x.VarName == "baseclass"))
+                    return RecvProps.Value.First(x => x.VarName == "baseclass").SubTable;
+                return null;
+            });
+            Size = new LazyCache<int>(() => RecvProps.Value.Length > 0 ? RecvProps.Value.Last().Size : 0);
         }
         #endregion
 

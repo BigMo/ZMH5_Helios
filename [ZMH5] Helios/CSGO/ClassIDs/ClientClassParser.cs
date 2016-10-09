@@ -85,6 +85,81 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
                 s.Serialize(writer, ClientClasses);
             }
         }
+        public static void DumpCppClasses(string file)
+        {
+            var tables = DataTables.Values.OrderBy(x => x.BaseClassDepth.Value);
+            using (StreamWriter writer = new StreamWriter(file, false))
+                foreach (var table in tables)
+                    DumpCppClass(writer, table);
+        }
+        private static void DumpCppClass(TextWriter o, ManagedRecvTable table)
+        {
+            const int padding = 32;
+
+            var bc = table.BaseClass.Value;
+            int currentOffset = 0;
+            int pad = 0;
+
+            if (bc != null)
+                currentOffset = bc.Size;
+
+            var props = table.RecvProps.Value.OrderBy(x => x.Offset).ToArray();
+
+            if (bc != null)
+                o.WriteLine("class {0} : {1} {{", table.NetTableName.Value, bc.NetTableName.Value);
+            else
+                o.WriteLine("class {0} {{", table.NetTableName.Value);
+
+            for(int i = 0; i < props.Length;i++)
+            {
+                var prop = props[i];
+                if (prop.VarName.Value == "baseclass")
+                    continue;
+
+                //Pad
+                if (prop.Offset != currentOffset)
+                {
+                    o.WriteLine("\t{0} {1}//0x{2}",
+                        "char".PadRight(padding, ' '),
+                        string.Format("pad{0}[{1}];",
+                            (pad++).ToString().PadLeft(2, '0'), 
+                            prop.Offset - currentOffset
+                        ).PadRight(padding, ' '),
+                        currentOffset.ToString("X8"));
+                    currentOffset = prop.Offset;
+                }
+
+                switch (prop.Type)
+                {
+                    case RecvProp_t.ePropType.DataTable:
+                        o.WriteLine("\t{0} {1}//0x{2}",
+                            prop.SubTable.Value.NetTableName.Value.PadRight(padding, ' '),
+                            (prop.VarName.Value + ";").PadRight(padding, ' '),
+                            prop.Offset.ToString("X8"));
+                        break;
+                    case RecvProp_t.ePropType.Array:
+                        o.WriteLine("\t{0} {1}//0x{2}", 
+                            (prop.ArrayProp.Value.Length > 0 ? prop.ArrayProp.Value[0].Type.ToString() : "void*").PadRight(padding, ' '), 
+                            string.Format("{0}[{1}];", 
+                                prop.VarName.Value, 
+                                prop.ElementCount).PadRight(padding, ' '),
+                            prop.Offset.ToString("X8"));
+                        break;
+                    default:
+                        o.WriteLine("\t{0} {1}//0x{2}", 
+                            prop.Type.ToString().PadRight(padding, ' '), 
+                            (prop.VarName.Value + ";").PadRight(padding, ' '), 
+                            prop.Offset.ToString("X8"));
+                        break;
+                }
+                if (i < props.Length - 1)
+                    currentOffset += Math.Min(prop.Size, props[i + 1].Offset - currentOffset);
+                else
+                    currentOffset += prop.Size;
+            }
+
+            o.WriteLine("}\n");
+        }
         private static void DumpTable(ManagedRecvTable table, StreamWriter writer, bool full = false, string depth = "")
         {
             if (table == null)

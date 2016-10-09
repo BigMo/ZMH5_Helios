@@ -88,6 +88,7 @@ namespace _ZMH5__Helios.CSGO
             ClientClassParser.DumpNetVars(false, "netvars.txt");
             ClientClassParser.DumpNetVars(true, "netvars_full.txt");
             ClientClassParser.DumpNetVarsJson("netvars.json");
+            ClientClassParser.DumpCppClasses("clientclasses.cpp");
 #endif
             Program.Logger.Info("Helios is ready.");
             Program.Logger.Info("sizeof(RadarEntry): {0}", System.Runtime.InteropServices.Marshal.SizeOf(typeof(Modules.SnapshotHelpers.RadarEntry)));

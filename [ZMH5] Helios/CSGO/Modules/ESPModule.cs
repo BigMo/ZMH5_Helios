@@ -227,7 +227,11 @@ namespace _ZMH5__Helios.CSGO.Modules
                 settings,
                 (w) => w.m_vecOrigin,
                 (w) => w.m_vecOrigin,
-                (d, u) => u - d,
+                (d, u) =>
+                {
+                    var f = d - u;
+                    return new Vector2(System.Math.Max(f.X, f.Y));
+                },
                 null,
                 null,
                 (w, s) =>

@@ -78,7 +78,8 @@ namespace _ZMH5__Helios.CSGO
         public ESPSettings EspGrenades;
         public ESPSettings EspC4;
         public bool EspC4ShowTime;
-        public bool EspPlayersShowWeapon;
+        public bool EspAlliesShowWeapon;
+        public bool EspEnemiesShowWeapon;
         #endregion
 
         #region MISC

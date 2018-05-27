@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
+using ZatsHackBase.Core.Timing;
 using ZatsHackBase.GUI.Controls;
 using ZatsHackBase.Input;
 using ZatsHackBase.Maths;
@@ -24,6 +25,7 @@ namespace ZatsHackBase.UI
         public Vector2 Size { get; private set; }
         public Frame BaseContainer { get; private set; }
         public HackInput Input { get; private set; }
+        public List<Controls.Control> Controls { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -48,6 +50,7 @@ namespace ZatsHackBase.UI
             Size = Vector2.Zero;
             BaseContainer = new Frame();
             BaseContainer.BackColor = Color.Transparent;
+            Controls = new List<Controls.Control>();
         }
         #endregion
 
@@ -56,10 +59,16 @@ namespace ZatsHackBase.UI
         {
             FormThread.Start();
         }
-        public void Update()
+        public void Update(Time time, Vector2 cursorPos)
         {
             AdjustForm();
             ProcessInput();
+
+            foreach (var c in Controls)
+            {
+                c.Update(time, Input, cursorPos);
+                c.Draw(Renderer);
+            }
         }
 
         private void ProcessInput()

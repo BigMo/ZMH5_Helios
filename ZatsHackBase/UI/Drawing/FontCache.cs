@@ -47,7 +47,7 @@ namespace ZatsHackBase.UI.Drawing
                     //Remove disposed fonts
                     fonts.Remove(font.ID);
                     //Create a new one
-                    fnt = renderer.CreateFont(fnt.Family, fnt.Height);
+                    fnt = renderer.CreateFont(fnt.Family, fnt.Height, fnt.AdditionalRangeFrom,fnt.AdditionalRangeTo);
                     //Discard it if creation failed though
                     if (fnt != null && !fnt.IsDisposed)
                         return fonts[font.ID] = fnt;

@@ -43,7 +43,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
             });
             HighestOffset = new LazyCache<int>(() =>
             {
-                return RecvProps.Value.Max(x => x == null ? 0 : x.Offset);// GetHighestOffset(this);
+                return RecvProps.Value.Length == 0 ? 0 : RecvProps.Value.Max(x => x == null ? 0 : x.Offset);// GetHighestOffset(this);
             });
             BaseClassDepth = new LazyCache<int>(() =>
             {

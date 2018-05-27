@@ -27,20 +27,36 @@ namespace ZatsHackBase.UI.Drawing
         #endregion
 
         #region CONSTRUCTORS
+        public Color(System.Drawing.Color color) : this(color.A / 255f, color.R / 255f, color.G / 255f, color.B / 255f)
+        {
+
+        }
         public Color(float a, float r, float g, float b)
         {
-            float max = Math.Max(Math.Max(Math.Max(Math.Max(1, g), b), r), a);
+            /*float max = Math.Max(Math.Max(Math.Max(Math.Max(1, g), b), r), a);
             float min = Math.Min(Math.Min(Math.Min(Math.Min(0, g), b), r), a);
             float range = Math.Abs(min - max);
             A = (a + min) / range;
             R = (r + min) / range;
             G = (g + min) / range;
-            B = (b + min) / range;
+            B = (b + min) / range;*/
+            A = a;
+            R = r;
+            G = g;
+            B = b;
         }
         public Color(float r, float g, float b) : this(1f, r, g, b) { }
         public static Color FromKnownColor(Color col, float a)
         {
             return new Color(a, col.R, col.G, col.B);
+        }
+        public System.Drawing.Color ToColor()
+        {
+            return System.Drawing.Color.FromArgb(
+                (byte)(A * 255f),
+                (byte)(R * 255f),
+                (byte)(G * 255f),
+                (byte)(B * 255f));
         }
         #endregion
 

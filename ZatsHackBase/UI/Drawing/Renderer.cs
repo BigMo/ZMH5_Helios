@@ -257,10 +257,10 @@ namespace ZatsHackBase.UI
         #endregion
 
         #region RENDER FEATURES
-        public Font CreateFont(string family, float height)
+        public Font CreateFont(string family, float height, char additonalRangeFrom, char additionalRangeTo)
         {
             if (!Initialized) //Return dummy-font
-                return new Font(null, family, height, false, false);
+                return new Font(null, family, height, false, false, additonalRangeFrom, additionalRangeTo);
 
             //Return cached font
             var fnt = Fonts.GetFont(family, height);
@@ -268,7 +268,7 @@ namespace ZatsHackBase.UI
                 return fnt;
 
             //... or else create a new one
-            return new Font(this, family, height, false, false);
+            return new Font(this, family, height, false, false, additonalRangeFrom, additionalRangeTo);
         }
 
         public void DrawLine(Color color, Vector2 from, Vector2 to)
@@ -287,7 +287,6 @@ namespace ZatsHackBase.UI
             //    0,
             //    1
             //});
-
             GeometryBuffer.SetShader(primitiveShader);
 
             GeometryBuffer.DisableUseOfIndices();

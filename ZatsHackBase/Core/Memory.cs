@@ -80,6 +80,8 @@ namespace ZatsHackBase.Core
                         }
                     }
 
+                if (length - mask.Length == 0)
+                    break;
                 idx += length - mask.Length;
                 if (this.Position >= start + size)
                     break;

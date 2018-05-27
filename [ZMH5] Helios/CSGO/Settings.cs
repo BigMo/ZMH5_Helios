@@ -27,60 +27,16 @@ namespace _ZMH5__Helios.CSGO
         public string _InfoModes = "SmoothModes are: " + string.Join(", ", Enum.GetNames(typeof(SmoothMode)).Select(x => "" + x + ""));
         #endregion
 
-        #region AIM
-        public bool AimEnabled;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Keys AimKey;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyMode AimMode;
-        public float AimFov;
-        public bool AimLock;
-        public int AimBone;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public SmoothMode AimSmoothMode;
-        public bool AimSmoothEnabled;
-        public float AimSmoothScalar;
-        public Vector2 AimSmoothPerAxis;
-        public bool AimPredict;
-        #endregion
+        public bool DebugShowBones;
 
-        #region TRIGGER
-        public bool TriggerEnabled;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Keys TriggerKey;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyMode TriggerMode;
-        public int TriggerDelay;
-        public bool TriggerBurst;
-        public int TriggerBurstCount;
-        public int TriggerBurstDelay;
-        #endregion
+        public AimSettings Aim;
 
-        #region GLOW
-        public bool GlowEnabled;
-        public bool GlowShowAllies;
-        public bool GlowShowEnemies;
-        public bool GlowShowWeapons;
-        public bool GlowShowC4;
-        public bool GlowShowGrenades;
-        public Color GlowAlliesColor;
-        public Color GlowEnemiesColor;
-        public Color GlowWeaponColor;
-        public Color GlowC4Color;
-        public Color GlowGrenadeColor;
-        #endregion
-
-        #region ESP
-        public ESPSettings EspAllies;
-        public ESPSettings EspEnemies;
-        public ESPSettings EspChickens;
-        public ESPSettings EspWeapons;
-        public ESPSettings EspGrenades;
-        public ESPSettings EspC4;
-        public bool EspC4ShowTime;
-        public bool EspAlliesShowWeapon;
-        public bool EspEnemiesShowWeapon;
-        #endregion
+        public TriggerSettings Trigger;
+        public GlowSettings Glow;
+        public ESPSettings ESP;
+        public NoRecoilSettings NoRecoil;
+        public bool IsActive;
+        public string Name;
 
         #region MISC
         public bool MiscAutoPistol;
@@ -89,88 +45,111 @@ namespace _ZMH5__Helios.CSGO
         #endregion
 
         #region CONSTRUCTORS
-        public Settings()
+        public Settings(string name = "dummySettings")
         {
-            AimEnabled = true;
-            AimKey = Keys.MButton;
-            AimMode = KeyMode.Toggle;
-            AimLock = true;
-            AimFov = 1f;
-            AimBone = 6;
-            AimPredict = true;
-            AimSmoothEnabled = false;
-            AimSmoothMode = SmoothMode.MaxDist;
-            AimSmoothScalar = 0.2f;
-            AimSmoothPerAxis = new Vector2(0.01f, 0.01f);
+            Name = name;
+            Aim = new AimSettings();
+            Aim.Key = Keys.MButton;
+            Aim.Mode = KeyMode.Toggle;
+            Aim.Lock = true;
+            Aim.FOV= 1f;
+            Aim.Bone = 6;
+            Aim.Predict = true;
+            Aim.Sticky = true;
+            Aim.VisibleOnly = true;
+            Aim.Enabled = true;
+            
+            Aim.Smoothing = new AimSmooth();
+            Aim.Smoothing.Enabled = false;
+            Aim.Smoothing.Mode = SmoothMode.MaxDist;
+            Aim.Smoothing.Scalar = 0.2f;
+            Aim.Smoothing.PerAxis = new Vector2(0.01f, 0.01f);
 
-            TriggerEnabled = true;
-            TriggerKey = Keys.XButton2;
-            TriggerMode = KeyMode.Toggle;
-            TriggerDelay = 20;
-            TriggerBurst = false;
-            TriggerBurstCount = 5;
-            TriggerBurstDelay = 200;
+            Trigger = new TriggerSettings();
+            Trigger.Enabled = true;
+            Trigger.Key = Keys.XButton2;
+            Trigger.Mode = KeyMode.Toggle;
+            Trigger.Delay = 20;
 
-            GlowEnabled = true;
-            GlowShowAllies = true;
-            GlowShowEnemies = true;
-            GlowShowWeapons = true;
-            GlowShowC4 = true;
-            GlowShowGrenades = true;
-            GlowAlliesColor = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
-            GlowEnemiesColor = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
-            GlowC4Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            GlowGrenadeColor = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            GlowWeaponColor = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
+            Trigger.Burst = new BurstSettings();
+            Trigger.Burst.Enabled = false;
+            Trigger.Burst.Count = 5;
+            Trigger.Burst.Delay = 200;
 
-            EspAllies = new ESPSettings();
-            EspC4 = new ESPSettings();
-            EspChickens = new ESPSettings();
-            EspEnemies = new ESPSettings();
-            EspGrenades = new ESPSettings();
-            EspWeapons = new ESPSettings();
+            Glow = new GlowSettings();
 
-            EspAllies.Enabled = true;
-            EspC4.Enabled = true;
-            EspChickens.Enabled = true;
-            EspEnemies.Enabled = true;
-            EspGrenades.Enabled = true;
-            EspWeapons.Enabled = true;
+            Glow.Allies = new GlowEntry();
+            Glow.Enemies = new GlowEntry();
+            Glow.C4 = new GlowEntry();
+            Glow.Grenades = new GlowEntry();
+            Glow.Weapons = new GlowEntry();
 
-            EspAllies.ShowBox = true;
-            EspC4.ShowBox = true;
-            EspChickens.ShowBox = true;
-            EspEnemies.ShowBox = true;
-            EspGrenades.ShowBox = true;
-            EspWeapons.ShowBox = true;
+            Glow.Enabled = true;
+            Glow.Allies.Enabled = true;
+            Glow.Enemies.Enabled = true;
+            Glow.C4.Enabled = true;
+            Glow.Grenades.Enabled = true;
+            Glow.Weapons.Enabled = true;
+            Glow.Allies.Color = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
+            Glow.Enemies.Color = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
+            Glow.C4.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            Glow.Grenades.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            Glow.Weapons.Color = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
 
-            EspAllies.ShowName = true;
-            EspC4.ShowName = true;
-            EspChickens.ShowName = true;
-            EspEnemies.ShowName = true;
-            EspGrenades.ShowName = true;
-            EspWeapons.ShowName = true;
+            ESP = new ESPSettings();
 
-            EspAllies.ShowDist = true;
-            EspC4.ShowDist = true;
-            EspChickens.ShowDist = true;
-            EspEnemies.ShowDist = true;
-            EspGrenades.ShowDist = true;
-            EspWeapons.ShowDist = true;
+            ESP.Allies = new ESPEntry();
+            ESP.C4 = new ESPEntry();
+            ESP.Chickens = new ESPEntry();
+            ESP.Enemies = new ESPEntry();
+            ESP.Grenades = new ESPEntry();
+            ESP.Weapons = new ESPEntry();
 
-            EspAllies.ShowLifeArmor = true;
-            EspC4.ShowLifeArmor = false;
-            EspChickens.ShowLifeArmor = true;
-            EspEnemies.ShowLifeArmor = true;
-            EspGrenades.ShowLifeArmor = false;
-            EspWeapons.ShowLifeArmor = false;
+            ESP.Allies.Enabled = true;
+            ESP.C4.Enabled = true;
+            ESP.Chickens.Enabled = true;
+            ESP.Enemies.Enabled = true;
+            ESP.Grenades.Enabled = true;
+            ESP.Weapons.Enabled = true;
 
-            EspAllies.Color = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
-            EspC4.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            EspChickens.Color = Color.FromKnownColor(Color.Orange, 0.9f);
-            EspEnemies.Color = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
-            EspGrenades.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
-            EspWeapons.Color = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
+            ESP.Allies.ShowBox = true;
+            ESP.C4.ShowBox = true;
+            ESP.Chickens.ShowBox = true;
+            ESP.Enemies.ShowBox = true;
+            ESP.Grenades.ShowBox = true;
+            ESP.Weapons.ShowBox = true;
+
+            ESP.Allies.ShowName = true;
+            ESP.C4.ShowName = true;
+            ESP.Chickens.ShowName = true;
+            ESP.Enemies.ShowName = true;
+            ESP.Grenades.ShowName = true;
+            ESP.Weapons.ShowName = true;
+
+            ESP.Allies.ShowDist = true;
+            ESP.C4.ShowDist = true;
+            ESP.Chickens.ShowDist = true;
+            ESP.Enemies.ShowDist = true;
+            ESP.Grenades.ShowDist = true;
+            ESP.Weapons.ShowDist = true;
+
+            ESP.Allies.ShowHealth = true;
+            ESP.C4.ShowHealth = false;
+            ESP.Chickens.ShowHealth = true;
+            ESP.Enemies.ShowHealth = true;
+            ESP.Grenades.ShowHealth = false;
+            ESP.Weapons.ShowHealth = false;
+
+            ESP.Allies.Color = new Color() { A = 1f, R = 0f, G = 0f, B = 0.7f };
+            ESP.C4.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            ESP.Chickens.Color = Color.FromKnownColor(Color.Orange, 0.9f);
+            ESP.Enemies.Color = new Color() { A = 1f, R = 0.9f, G = 0.1f, B = 0f };
+            ESP.Grenades.Color = new Color() { A = 0.9f, R = 1f, G = 0f, B = 0f };
+            ESP.Weapons.Color = new Color() { A = 0.5f, R = 0f, G = 7f, B = 0f };
+
+            NoRecoil = new NoRecoilSettings();
+            NoRecoil.Enabled = true;
+            NoRecoil.Force = 1f;
 
             MiscAutoPistol = true;
             MiscBunnyHop = true;
@@ -184,12 +163,18 @@ namespace _ZMH5__Helios.CSGO
         #endregion
 
         #region METHODS
-        public void Save(string file)
+        public void Save()
         {
+            var file = Path.Combine("configs", Name + ".json");
             JsonSerializer s = new JsonSerializer();
             s.Formatting = Formatting.Indented;
             using (StreamWriter writer = new StreamWriter(file, false))
                 s.Serialize(writer, this);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
         #endregion
     }

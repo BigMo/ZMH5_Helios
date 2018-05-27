@@ -20,7 +20,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
-            if (!Program.Settings.MiscAutoPistol)
+            if (!Program.CurrentSettings.MiscAutoPistol)
                 return;
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;

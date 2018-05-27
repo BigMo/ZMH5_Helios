@@ -28,6 +28,7 @@ namespace ZatsHackBase.Core
             }
         }
         public Memory Memory { get; private set; }
+        public bool IsInForeground { get { return WinAPI.GetForegroundWindow() == Process.MainWindowHandle; } }
         #endregion
 
         #region CONSTRUCTORS

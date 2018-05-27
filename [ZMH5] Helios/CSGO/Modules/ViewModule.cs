@@ -25,7 +25,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (delta != Vector3.Zero)
             {
-                var final = ClampAngle(Program.Hack.StateMod.ViewAngles + delta);
+                var final = ClampAngle(Program.Hack.StateMod.ClientState.Value.ViewAngles + delta);
                 Program.Hack.StateMod.WriteViewAngles(final);
                 delta = Vector3.Zero;
             }

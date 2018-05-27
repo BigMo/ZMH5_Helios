@@ -65,25 +65,25 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 if (wep != null && wep.IsValid)
                 {
-                    if (Program.Settings.GlowShowC4 && wep.IsC4)
-                        EncolorObject(obj, Program.Settings.GlowC4Color, i);
-                    else if (Program.Settings.GlowShowGrenades && wep.IsGrenadeProjectile)
-                        EncolorObject(obj, Program.Settings.GlowGrenadeColor, i);
-                    else if (Program.Settings.GlowShowWeapons)
-                        EncolorObject(obj, Program.Settings.GlowWeaponColor, i);
+                    if (Program.CurrentSettings.Glow.C4.Enabled && wep.IsC4)
+                        EncolorObject(obj, Program.CurrentSettings.Glow.C4.Color, i);
+                    else if (Program.CurrentSettings.Glow.Grenades.Enabled && wep.IsGrenadeProjectile)
+                        EncolorObject(obj, Program.CurrentSettings.Glow.Grenades.Color, i);
+                    else if (Program.CurrentSettings.Glow.Weapons.Enabled)
+                        EncolorObject(obj, Program.CurrentSettings.Glow.Weapons.Color, i);
 
                     Program.Hack.StateMod.Weapons[wep.m_iID] = wep;
                 }
                 else if (player != null && player.IsValid)
                 {
-                    if (lp == null || !lp.IsValid)
+                    if (lp == null || !lp.IsValid || ((Heke)Hack).AimBot.CurrentTarget == player.m_iID.Value)
                         continue;
 
                     bool friend = lp.m_iTeamNum.Value == player.m_iTeamNum.Value;
-                    if (Program.Settings.GlowShowAllies && friend)
-                        EncolorObject(obj, Program.Settings.GlowAlliesColor, i);
-                    if (Program.Settings.GlowShowEnemies && !friend)
-                        EncolorObject(obj, Program.Settings.GlowEnemiesColor, i);
+                    if (Program.CurrentSettings.Glow.Allies.Enabled && friend)
+                        EncolorObject(obj, Program.CurrentSettings.Glow.Allies.Color, i);
+                    if (Program.CurrentSettings.Glow.Enemies.Enabled && !friend)
+                        EncolorObject(obj, Program.CurrentSettings.Glow.Enemies.Color, i);
                 }
                 else
                 {

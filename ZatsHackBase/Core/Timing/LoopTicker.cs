@@ -51,11 +51,11 @@ namespace ZatsHackBase.Core.Timing
         #endregion
 
         #region CONSTRUCTORS
-        public LoopTicker()
+        public LoopTicker(int tickRate = 60, bool limitFrames = true)
         {
             counter = new TickCounter();
-            LimitFrames = true;
-            TickRate = 60;
+            LimitFrames = limitFrames;
+            TickRate = tickRate;
         }
         #endregion
 

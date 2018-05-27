@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace _ZMH5__Helios.CSGO
 {
@@ -16,7 +17,9 @@ namespace _ZMH5__Helios.CSGO
         public int EntityList { get; set; }
         public int LocalPlayer { get; set; }
         public int ClientState { get; set; }
-        public int SetViewAngles { get; set; }
+        public int ClientStateSetViewAngles { get; set; }
+        public int ClientStateMapDirectory { get; set; }
+        public int ClientStateState { get; set; }
         public int State { get; set; }
         public int ForceAttack { get; set; }
         public int ForceJump { get; set; }
@@ -33,6 +36,9 @@ namespace _ZMH5__Helios.CSGO
         public int PlayerResources { get; set; }
         public int RadarBase { get; set; }
         public int RadarOffset { get; set; }
+        public int PlayerResourcesNames { get; set; }
+        public int m_iItemDefinitionIndex { get; set; }
+        public int GameDirectory { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -78,6 +84,16 @@ namespace _ZMH5__Helios.CSGO
             SigGlowIndex();
             SigGameRulesProxy();
             SigPlayerResources();
+            this.m_mViewMatrix = 0x4A76154;
+            this.GlowManager = 0x4FB14E8;
+            this.ForceAttack = 0x2EC6AC8;
+            this.ForceJump = 0x4F1B9E0;
+            this.RadarBase = 0x4EB9424;
+            PlayerResourcesNames = 0x9E0;
+            m_iItemDefinitionIndex = 0x2F88;
+            ClientStateMapDirectory = 0x188;
+            ClientStateState = 0x108;
+            GameDirectory = 0x61D870;
         }
         private void SigRadarBase()
         {
@@ -90,6 +106,9 @@ namespace _ZMH5__Helios.CSGO
                 var address = Program.Hack.Memory.Read<int>(scan.Address + 0x13);
                 var val = address - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 RadarBase = val;
+            } else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigViewMatrix()
@@ -104,6 +123,10 @@ namespace _ZMH5__Helios.CSGO
                 var val = address + 0x90 - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 m_mViewMatrix = val;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigBoneMatrix()
         {
@@ -116,6 +139,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 var val = scan.Stream.Read<int>(4);
                 m_pBoneMatrix = val;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigForceAttack()
@@ -134,6 +161,10 @@ namespace _ZMH5__Helios.CSGO
                 var val = scan.Stream.Read<int>(2) - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 ForceAttack = val;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigForceJump()
         {
@@ -151,6 +182,10 @@ namespace _ZMH5__Helios.CSGO
                 var val = scan.Stream.Read<int>(2) - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 ForceJump = val;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigClientState()
         {
@@ -166,6 +201,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 var val = scan.Stream.Read<int>(1) - Program.Hack.EngineDll.BaseAddress.ToInt32();
                 ClientState = val;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigLocalPlayer()
@@ -183,18 +222,27 @@ namespace _ZMH5__Helios.CSGO
                 var val = val1 + val2 - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 LocalPlayer = val;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigEntityList()
         {
             ScanResult scan = Program.Hack.Memory.PerformSignatureScan(new byte[]
             {
-                0xBA, 0x00, 0x00, 0x00, 0x00,
-                0x89, 0x55, 0xFC, 0x8D, 0x64, 0x24, 0x00, 0x83, 0xFF, 0x01
-            }, "x????xxxxxxxxxx", Program.Hack.ClientDll);
+                //{&HBB, 0, 0, 0, 0, &H83, &HFF, &H1, &HF, &H8C, 0, 0, 0, 0, &H3B, &HF8}
+                0xBB, 0x00, 0x00, 0x00, 0x00,
+                0x83, 0xFF, 0x01, 0x0f, 0x8C, 0x00, 0x00, 0x00, 0x00, 0x3B, 0xF8
+            }, "x????xxxxx????xx", Program.Hack.ClientDll);
             if (scan.Success)
             {
                 var val = scan.Stream.Read<int>(1) - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 EntityList = val;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigPlayerResources()
@@ -215,6 +263,10 @@ namespace _ZMH5__Helios.CSGO
                 var val = scan.Stream.Read<int>(16) - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 PlayerResources = val;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigGameRulesProxy()
         {
@@ -233,6 +285,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 var val = scan.Stream.Read<int>(15) - Program.Hack.ClientDll.BaseAddress.ToInt32();
                 GameRulesProxy = val;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigGlowIndex()
@@ -253,6 +309,10 @@ namespace _ZMH5__Helios.CSGO
                 int tmp = scan.Stream.Read<int>(5);
                 m_iGlowIndex = tmp;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigGlowManager()
         {
@@ -271,6 +331,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 int tmp = scan.Stream.Read<int>(13);
                 GlowManager = tmp - Program.Hack.ClientDll.BaseAddress.ToInt32();
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigSetViewAngles()
@@ -291,7 +355,11 @@ namespace _ZMH5__Helios.CSGO
                     "xxxx????xxxxx", Program.Hack.EngineDll);
             if (scan.Success) {
                 var value = scan.Stream.Read<int>(4);
-                SetViewAngles = value;
+                ClientStateSetViewAngles = value;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigClassIDBase()
@@ -313,6 +381,10 @@ namespace _ZMH5__Helios.CSGO
                 ClassIDBase = tmp - Program.Hack.EngineDll.BaseAddress.ToInt32();
                 ClassIDBaseOffset = tmp2;
             }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
+            }
         }
         private void SigClassIDManager()
         {
@@ -321,17 +393,29 @@ namespace _ZMH5__Helios.CSGO
             {
                     0x2B, 0xC6,
                     0xD3, 0xEF,
-                    0x89, 0x44, 0x24, 0x00,
-                    0x89, 0x7C, 0x24, 0x00,
-                    0x89, 0x54, 0x24, 0x00,
-                    0x8B, 0x44, 0x24, 0x00,
+                    0x89, 0x00, 0x24, 0x00,
+                    0x8B, 0x00, 0x24, 0x00,
+                    0x89, 0x00, 0x24, 0x00,
+                    0x8B, 0x00, 0x24, 0x00,
                     0x8B, 0x88, 0x00, 0x00, 0x00, 0x00, //<<!
                     0x85, 0xC9
-            }, "xxxxxxx?xxx?xxx?xxx?xx????xx", Program.Hack.EngineDll, false);
+            }, 
+            "xx" +
+            "xx" +
+            "x?x?" +
+            "x?x?" +
+            "x?x?" +
+            "x?x?" +
+            "xx????" +
+            "xx", Program.Hack.EngineDll, true);
             if (scan.Success)
             {
                 int tmp = scan.Stream.Read<int>(22);
                 ClassIDManager = tmp;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigEntityID()
@@ -343,6 +427,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 byte tmp = scan.Stream.Read<byte>(8);
                 m_iID = tmp;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
         private void SigCrosshairIdx()
@@ -359,6 +447,10 @@ namespace _ZMH5__Helios.CSGO
             {
                 var off = scan.Stream.Read<int>(5);
                 m_iCrosshairID = off;
+            }
+            else
+            {
+                Console.WriteLine("[SIG] Failed: " + new StackTrace().GetFrame(0).GetMethod().Name);
             }
         }
 #endif

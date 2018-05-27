@@ -7,13 +7,24 @@ using ZatsHackBase.UI.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Misc
 {
-    public struct ESPSettings
+    public class ESPSettings
+    {
+        public bool Enabled;
+        public ESPEntry Allies,
+            Enemies,
+            Weapons,
+            C4,
+            Grenades,
+            Chickens;
+    }
+    public class ESPEntry
     {
         public bool Enabled;
         public bool ShowName;
         public bool ShowBox;
-        public bool ShowLifeArmor;
+        public bool ShowHealth;
         public bool ShowDist;
+        public bool ShowWeapon;
         public Color Color;
     }
 }

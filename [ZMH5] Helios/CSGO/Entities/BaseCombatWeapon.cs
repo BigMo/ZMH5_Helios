@@ -10,7 +10,7 @@ namespace _ZMH5__Helios.CSGO.Entities
     public class BaseCombatWeapon : BaseEntity
     {
         #region VARIABLES
-        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable("DT_BaseCombatWeapon", "DT_WeaponCSBase", "DT_LocalActiveWeaponData"));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable("DT_BaseCombatWeapon", "DT_WeaponCSBase", "DT_LocalActiveWeaponData"), Program.Offsets.m_iItemDefinitionIndex + 4));
         private static LazyCache<int[]> idsPistol = new LazyCache<int[]>(() => {
             return ClassIDs.ClientClassParser.ClientClasses.Where(x => clsPistol.Contains(x.NetworkName)).Select(x => x.ClassID).ToArray();
         });
@@ -151,6 +151,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         public LazyCache<bool> IsC4 { get; private set; }
         public LazyCache<bool> IsKnife { get; private set; }
         public LazyCache<bool> IsPumpgun { get; private set; }
+        public LazyCache<int> WeaponId { get; private set; }
         public override bool IsValid
         {
             get
@@ -197,6 +198,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             IsC4 = new LazyCache<bool>(() => m_ClientClass != null && idsC4.Value.Contains(m_ClientClass.Value.ClassID));
             IsKnife = new LazyCache<bool>(() => m_ClientClass != null && idsKnife.Value.Contains(m_ClientClass.Value.ClassID));
             IsPumpgun = new LazyCache<bool>(() => m_ClientClass != null && idsPumpgun.Value.Contains(m_ClientClass.Value.ClassID));
+            WeaponId = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iItemDefinitionIndex));
         }
         #endregion
     }

@@ -39,7 +39,8 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesOut, true),
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesIn, true),
-                    (int)args.TicksPerSecond.TPS,
+                    ((int)Program.Hack.TicksPerSecond).ToString(),
+                    //(int)args.TicksPerSecond.TPS,
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesOut - lastOut, true),
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesIn - lastIn, true),
                     args.TicksPerSecond.TotalTicks.ToString().PadLeft(6,' ')

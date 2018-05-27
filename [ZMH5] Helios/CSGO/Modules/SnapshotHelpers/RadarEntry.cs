@@ -8,40 +8,30 @@ using ZatsHackBase.Maths;
 
 namespace _ZMH5__Helios.CSGO.Modules.SnapshotHelpers
 {
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]//, Pack=4)]
+    [StructLayout(LayoutKind.Explicit, CharSet=CharSet.Unicode)]//, Pack=4)]
     public struct RadarEntry
     {
-        private const int ENTRY_SIZE = 0x1Ec; //was 0x1e0
+        private const int ENTRY_SIZE = 0x1EC; //was 0x1e0
         
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x84)]
-        private byte[] pad0;
-
+        [FieldOffset(0x84)]
         public Vector3 Origin;
+        [FieldOffset(0x90)]
         public Vector3 ViewAngles;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
-        private byte[] pad1;
-
-        public float flSpawnTime;
-        public float flDeathTime;
-
-        //Two floats, the first one always -1000.0, the second one always 1.0
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-        private byte[] pad2;
-
+        [FieldOffset(0xC0)]
         public float flSimTime;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-        private byte[] pad3;
-        
+        [FieldOffset(0xCC)]
         public int Id;
+        [FieldOffset(0xD0)]
         public int Health;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] //0xD4
+        [FieldOffset(0xD4)]
         public string Name;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ENTRY_SIZE - (0xD4+64))]
-        private byte[] pad4;
+        [FieldOffset(0xF4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ENTRY_SIZE - 0xF4)]
+        public byte[] padding;
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -40,7 +40,6 @@ namespace ZatsHackBase.Core
                 OnFirstRun(args);
             }
             OnUpdate(args);
-
             if (TimerEnabled)
             {
                 var elapsed = DateTime.Now - lastTimer;

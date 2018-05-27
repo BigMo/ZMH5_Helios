@@ -25,7 +25,7 @@ namespace ZatsHackBase.Maths
         {
             get
             {
-                return (float)System.Math.Abs(X * X + Y * Y + Z * Z);
+                return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z);
             }
         }
         #endregion

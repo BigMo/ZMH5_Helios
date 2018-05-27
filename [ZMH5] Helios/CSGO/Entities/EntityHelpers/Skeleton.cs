@@ -11,7 +11,7 @@ namespace _ZMH5__Helios.CSGO.Entities.EntityHelpers
     [StructLayout(LayoutKind.Sequential)]
     public struct Skeleton
     {
-        private const int MAX_BONES = 32;
+        private const int MAX_BONES = 32;//32;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_BONES)]
         public Bone[] m_Bones;

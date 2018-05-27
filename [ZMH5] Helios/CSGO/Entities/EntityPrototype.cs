@@ -29,6 +29,12 @@ namespace _ZMH5__Helios.CSGO.Entities
         #region CONSTRUCTORS
         public EntityPrototype()
         { }
+
+        ~EntityPrototype()
+        {
+            if (stream != null)
+                stream.Dispose();
+        }
         #endregion
 
         #region METHODS
@@ -76,7 +82,8 @@ namespace _ZMH5__Helios.CSGO.Entities
         }
         protected static int LargestDataTable(params string[] tables)
         {
-            var filtered = ClientClassParser.DataTables.Values.Where(x => tables.Contains(x.NetTableName));
+            var ordered = ClientClassParser.DataTables.Values.OrderBy(x => x.NetTableName.Value).ToArray();
+            var filtered = ordered.Where(x => tables.Contains(x.NetTableName.Value));
             return filtered.Max(x => x.HighestOffset.Value);
         }
         public void WriteNetVar<T>(string className, string fieldName, T value) where T : struct

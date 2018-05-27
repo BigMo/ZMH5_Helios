@@ -19,27 +19,36 @@ namespace ZatsHackBase.UI
 {
     public class Font : IDisposable
     {
+        public char AdditionalRangeFrom { get; private set; }
+        public char AdditionalRangeTo { get; private set; }
+
         #region Constructor
-        public static Font CreateDummy(string family, float height, bool bold = false, bool italic = false)
+        public static Font CreateDummy(string family, float height, bool bold = false, bool italic = false, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
-            return new Font(null, family, height, bold, italic);
+            return new Font(null, family, height, bold, italic, additionRangeFrom, additionalRangeTo);
         }
-        internal Font(Renderer renderer, string family, float height, bool bold, bool italy)
+        internal Font(Renderer renderer, string family, float height, bool bold, bool italy, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
-            ID = ++idCounter;
-            _Renderer = renderer;
-            Height = height;
-            Family = family;
-            IsDisposed = true;
-            atlas = new GlyphAtlas(
-                new GlyphAtlas.CharRange[] {
+            AdditionalRangeFrom = additionRangeFrom;
+            AdditionalRangeTo = additionalRangeTo;
+            var ranges = new List<GlyphAtlas.CharRange>(new GlyphAtlas.CharRange[]{
                     new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
                     new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
                     new GlyphAtlas.CharRange((char)0x0500, (char)0x052f), //Cyrillic Supplementary
                     new GlyphAtlas.CharRange((char)0x02b0, (char)0x02ff), //Block Elements
                     new GlyphAtlas.CharRange((char)0x2580, (char)0x259f), //Block Elements
                     new GlyphAtlas.CharRange((char)0x25A0, (char)0x25ff) //Geometric Shapes
-                }, 
+                });
+            if (additionRangeFrom != 0 && additionalRangeTo != 0)
+                ranges.Add(new GlyphAtlas.CharRange(additionRangeFrom, additionalRangeTo));
+
+            ID = ++idCounter;
+            _Renderer = renderer;
+            Height = height;
+            Family = family;
+            IsDisposed = true;
+            atlas = new GlyphAtlas(
+                ranges.ToArray(), 
                 new Vector2(height * 0.75f, height * 0.33333333333333333333333333333333f));
 
             //Make this a dummy font in case renderer isn't ready yet
@@ -66,6 +75,7 @@ namespace ZatsHackBase.UI
         public float Height { get; private set; }
         public int ID { get; private set; }
         public bool IsDisposed { get; private set; }
+        public bool IsInitialized { get { return _Renderer != null; } }
         #endregion
 
         #region PROPERTIES

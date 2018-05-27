@@ -25,22 +25,22 @@ namespace ZatsHackBase.Core
         public Memory Memory { get { return Process.Memory; } }
         public HackOverlay Overlay { get; private set; }
         public HackInput Input { get; private set; }
+        public double TicksPerSecond { get { return ticker.TicksPerSeconds; } }
         #endregion
 
         #region CONSTRUCTORS
-        public Hack (string processName, int tickRate = 60, bool createOverlay = true, int timeOut = -1)
+        public Hack(string processName, int tickRate = 60, bool createOverlay = true, bool limitFrames = true, int timeOut = -1)
         {
             Input = new HackInput();
             Process = EUCProcess.WaitForProcess(processName, timeOut);
-            ticker = new LoopTicker();
-            ticker.TickRate = tickRate;
+            ticker = new LoopTicker(tickRate, limitFrames);
             modules = new List<HackModule>();
             if (createOverlay)
             {
-                Overlay = new HackOverlay(Process,Input);
+                Overlay = new HackOverlay(Process, Input);
                 Overlay.Start();
             }
-            
+
             ticker.Tick += (o, e) =>
             {
                 if (!Process.IsRunning)
@@ -81,32 +81,42 @@ namespace ZatsHackBase.Core
         protected virtual void OnTick(TickEventArgs args)
         {
             Process.Process.Refresh();
-            if(!Process.IsRunning)
+            if (!Process.IsRunning)
             {
                 args.Stop = true;
                 return;
             }
 
+
             if (first)
                 OnFirstTick(args);
 
-            if (WinAPI.GetForegroundWindow() != Process.Process.MainWindowHandle)
-                return;
-
-            Input.Update();
+            if (ProcessInput())
+                Input.Update();
 
             BeforePluginsTick(args);
 
-            foreach (var mod in modules.OrderByDescending(x => x.Priority))
-                mod.Update(args);
+            if (ProcessModules())
+            {
+                foreach (var mod in modules.OrderByDescending(x => x.Priority))
+                    mod.Update(args);
+            }
 
             AfterPluginsTick(args);
+        }
+        protected virtual bool ProcessModules()
+        {
+            return Process.IsInForeground;
+        }
+        protected virtual bool ProcessInput()
+        {
+            return true;
         }
         protected virtual void BeforePluginsTick(TickEventArgs args)
         {
             if (Overlay != null)
             {
-                Overlay.Update();
+                Overlay.Update(args.Time, Input.MousePos - new Vector2(Overlay.Form.Location.X, Overlay.Form.Location.Y));
                 Overlay.Renderer.Clear(Overlay.BackColor);
             }
         }

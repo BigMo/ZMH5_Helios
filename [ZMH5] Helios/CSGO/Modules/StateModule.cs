@@ -10,6 +10,7 @@ using ZatsHackBase.Core;
 using _ZMH5__Helios.CSGO.Modules.SnapshotHelpers;
 using ZatsHackBase.Maths;
 using _ZMH5__Helios.CSGO.Enums;
+using _ZMH5__Helios.CSGO.BSP;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -32,12 +33,15 @@ namespace _ZMH5__Helios.CSGO.Modules
         public EntityCache<CSPlayer> Players { get; private set; }
         public EntityCache<BaseCombatWeapon> Weapons { get; private set; }
         public EntityCache<BaseEntity> BaseEntitites { get; private set; }
-        public LazyCache<Vector3> ViewAngles { get; private set; }
+        //public LazyCache<Vector3> ViewAngles { get; private set; }
         public LazyCache<Matrix> ViewMatrix { get; private set; }
         public LazyCache<CSGameRulesProxy> GameRules { get; private set; }
         public LazyCache<CSPlayerResource> PlayerResources { get; private set; }
         public string[] Names { get; private set; }
         public LazyCache<RadarEntry[]> RadarEntries { get; private set; }
+        public LazyCache<ClientState> ClientState { get; private set; }
+        public LazyCache<string> GameDirectory { get; private set; }
+        public BSPFile Map { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -51,13 +55,17 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 return new CSLocalPlayer(address);
             });
-            ViewAngles = new LazyCache<Vector3>(() =>
+            ClientState = new LazyCache<ClientState>(() =>
             {
                 var address = Program.Hack.Memory.Read<int>(pClientState);
                 if (address == 0 || address == -1)
-                    return Vector3.Zero;
+                    return null;
 
-                return Program.Hack.Memory.Read<Vector3>(address + Program.Offsets.SetViewAngles);
+                return new ClientState(address);
+            });
+            GameDirectory = new LazyCache<string>(() =>
+            {
+                return Program.Hack.Memory.ReadString(Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.GameDirectory, 256, Encoding.UTF8);
             });
             GameRules = new LazyCache<CSGameRulesProxy>(() =>
             {
@@ -65,7 +73,9 @@ namespace _ZMH5__Helios.CSGO.Modules
                 if (address == 0 || address == -1)
                     return null;
 
-                return Program.Hack.GetEntityByAddress<CSGameRulesProxy>(address);
+                //var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(address);
+                var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(pGameRules);
+                return grp;
             });
             PlayerResources = new LazyCache<CSPlayerResource>(() =>
             {
@@ -77,16 +87,17 @@ namespace _ZMH5__Helios.CSGO.Modules
             });
             RadarEntries = new LazyCache<RadarEntry[]>(() =>
             {
-                var address = Program.Hack.Memory.Read<int>(pRadarAddress);
-                if (address == 0 || address == -1)
-                    return null;
+                //var address = Program.Hack.Memory.Read<int>(pRadarAddress);
+                //if (address == 0 || address == -1)
+                //    return null;
 
-                address = Program.Hack.Memory.Read<int>(address + Program.Offsets.RadarOffset);
-                if (address == 0 || address == -1)
-                    return null;
+                //address = Program.Hack.Memory.Read<int>(address + Program.Offsets.RadarOffset);
+                //if (address == 0 || address == -1)
+                //    return null;
 
-                Radar r = Program.Hack.Memory.Read<Radar>(address);
-                return r.Entries;
+                //Radar r = Program.Hack.Memory.Read<Radar>(address);
+                //return r.Entries;
+                return new RadarEntry[0];
             });
             ViewMatrix = new LazyCache<Matrix>(() => Program.Hack.Memory.Read<Matrix>(pViewMatrix));
         }
@@ -116,17 +127,20 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             //Grab local player
             LocalPlayer.Reset();
-            ViewAngles.Reset();
             ViewMatrix.Reset();
             GameRules.Reset();
             PlayerResources.Reset();
             RadarEntries.Reset();
+            ClientState.Reset();
+            GameDirectory.Reset();
 
             BaseEntitites.Clear();
             PlayersOld.Clear();
             PlayersOld.CopyFrom(Players);
             Players.Clear();
             Weapons.Clear();
+
+            //Load map
         }
         public void WriteViewAngles(Vector3 angles)
         {
@@ -134,7 +148,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             if (address == 0 || address == -1)
                 return;
 
-            Program.Hack.Memory.Write<Vector3>(address + Program.Offsets.SetViewAngles, angles);
+            Program.Hack.Memory.Write<Vector3>(address + Program.Offsets.ClientStateSetViewAngles, angles);
         }
 
         public CSPlayer[] GetAllPlayers()
@@ -147,7 +161,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             return Players.Entites.Where(x => x != null).ToArray();
         }
 
-        public CSPlayer[] GetPlayersSet(bool isValid=true, bool isAlive=true, Team team = Team.None)
+        public CSPlayer[] GetPlayersSet(bool isValid=true, bool isAlive=true, bool isActive=false, Team team = Team.None)
         {
             var players = (IEnumerable<CSPlayer>)GetAllPlayers();
 
@@ -155,6 +169,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                 players = players.Where(x => x.IsValid);
             if (isAlive)
                 players = players.Where(x => x.m_lifeState.Value == LifeState.Alive);
+            if(isActive)
+                players = players.Where(x => !x.IsDormant);
             if (team != Team.None)
                 players = players.Where(x => x.m_iTeamNum.Value == team);
 

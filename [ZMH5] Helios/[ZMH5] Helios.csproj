@@ -68,12 +68,27 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Grapevine, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Grapevine.4.1.1.0\lib\net40\Grapevine.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.RunTime.1.2.0.3\lib\net40-Client\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.Design.1.2.0.3\lib\net40\MetroFramework.Design.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.Fonts.1.2.0.3\lib\net40\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -126,8 +141,12 @@
     <Compile Include="CSGO\Enums\ObserverMode.cs" />
     <Compile Include="CSGO\Enums\Team.cs" />
     <Compile Include="CSGO\Heke.cs" />
+    <Compile Include="CSGO\Misc\AimSettings.cs" />
     <Compile Include="CSGO\Misc\ESPSettings.cs" />
+    <Compile Include="CSGO\Misc\GlowSettings.cs" />
+    <Compile Include="CSGO\Misc\NoRecoilSettings.cs" />
     <Compile Include="CSGO\Misc\RPMLazyArray.cs" />
+    <Compile Include="CSGO\Misc\TriggerSettings.cs" />
     <Compile Include="CSGO\Modules\AimModule.cs" />
     <Compile Include="CSGO\Modules\AutoPistolModule.cs" />
     <Compile Include="CSGO\Modules\BunnyHop.cs" />
@@ -138,6 +157,7 @@
     <Compile Include="CSGO\Modules\GlowHelpers\GlowObjectDefinition.cs" />
     <Compile Include="CSGO\Modules\GlowModule.cs" />
     <Compile Include="CSGO\Modules\NoRecoilModule.cs" />
+    <Compile Include="CSGO\Modules\SnapshotHelpers\ClientState.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\EntityCache.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\RadarEntry.cs" />
     <Compile Include="CSGO\Modules\TriggerModule.cs" />
@@ -151,6 +171,68 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="UI\ConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ConfigForm.Designer.cs">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\AimGeneralSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\AimGeneralSettings.Designer.cs">
+      <DependentUpon>AimGeneralSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\AimSmoothingSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\AimSmoothingSettings.Designer.cs">
+      <DependentUpon>AimSmoothingSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\ESPSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\ESPSettings.Designer.cs">
+      <DependentUpon>ESPSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\GlowSettingsUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\GlowSettingsUI.Designer.cs">
+      <DependentUpon>GlowSettingsUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\IValueObserver.cs" />
+    <Compile Include="UI\Controls\RCSSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\RCSSettings.Designer.cs">
+      <DependentUpon>RCSSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\SynchColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\SynchColorPicker.Designer.cs">
+      <DependentUpon>SynchColorPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\SynchToggle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\SynchToggle.Designer.cs">
+      <DependentUpon>SynchToggle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\TriggerSettingsUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\TriggerSettingsUI.Designer.cs">
+      <DependentUpon>TriggerSettingsUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\ValueObservable.cs" />
+    <Compile Include="UI\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -174,6 +256,41 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\ConfigForm.resx">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\AimGeneralSettings.resx">
+      <DependentUpon>AimGeneralSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\AimSmoothingSettings.resx">
+      <DependentUpon>AimSmoothingSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\ESPSettings.resx">
+      <DependentUpon>ESPSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\GlowSettingsUI.resx">
+      <DependentUpon>GlowSettingsUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\RCSSettings.resx">
+      <DependentUpon>RCSSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\SynchColorPicker.resx">
+      <DependentUpon>SynchColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\SynchToggle.resx">
+      <DependentUpon>SynchToggle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\TriggerSettingsUI.resx">
+      <DependentUpon>TriggerSettingsUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MetroFramework.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

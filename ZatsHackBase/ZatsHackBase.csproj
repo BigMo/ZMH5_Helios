@@ -121,6 +121,20 @@
     <Compile Include="Misc\GenericEventArgs.cs" />
     <Compile Include="Misc\SizeFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Controls\Button.cs" />
+    <Compile Include="UI\Controls\Control.cs" />
+    <Compile Include="UI\Controls\ControlConverter.cs" />
+    <Compile Include="UI\Controls\Distance.cs" />
+    <Compile Include="UI\Controls\Events\TArgs.cs" />
+    <Compile Include="UI\Controls\Events\TDiffArgs.cs" />
+    <Compile Include="UI\Controls\Label.cs" />
+    <Compile Include="UI\Controls\Layouts\Layout.cs" />
+    <Compile Include="UI\Controls\Layouts\LinearLayout.cs" />
+    <Compile Include="UI\Controls\Layouts\NoLayout.cs" />
+    <Compile Include="UI\Controls\Panel.cs" />
+    <Compile Include="UI\Controls\Rectangle.cs" />
+    <Compile Include="UI\Controls\TextAlignment.cs" />
+    <Compile Include="UI\Controls\Window.cs" />
     <Compile Include="UI\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>

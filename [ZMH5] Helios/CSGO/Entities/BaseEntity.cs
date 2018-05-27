@@ -16,11 +16,12 @@ namespace _ZMH5__Helios.CSGO.Entities
     public class BaseEntity : EntityPrototype
     {
         #region VARIABLES
-        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(Program.Offsets.m_iGlowIndex, LargestDataTable("DT_BaseEntity")));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(Program.Offsets.m_iGlowIndex, LargestDataTable("DT_BaseEntity", "DT_AnimTimeMustBeFirst")));
         #endregion
 
         #region PROPERTIES
         public int Size { get { return Data.Length; } }
+        public LazyCache<float> m_flAnimTime { get; private set; }
         public LazyCache<Team> m_iTeamNum { get; private set; }
         public LazyCache<int> m_iID { get; private set; }
         public LazyCache<Vector3> m_vecOrigin { get; private set; }
@@ -35,7 +36,8 @@ namespace _ZMH5__Helios.CSGO.Entities
         public LazyCache<byte> m_bDormant { get; private set; }
 
         public override int MemSize { get { return memSize.Value; } }
-        public override bool IsValid { get { return base.IsValid && m_iID.Value > 0 && m_ClientClass.Value.ClassID > 0 && m_bDormant.Value != 1; } }
+        public bool IsDormant { get { return m_bDormant.Value == 1; } }
+        public override bool IsValid { get { return base.IsValid && m_iID.Value > 0 && m_ClientClass.Value.ClassID > 0; } }
         #endregion
 
 
@@ -73,6 +75,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         {
             base.SetupFields();
 
+            m_flAnimTime = new LazyCache<float>(() => ReadNetVar<float>("DT_AnimTimeMustBeFirst", "m_flAnimTime"));
             m_bDormant = new LazyCache<byte>(() => this.ReadAt<byte>(0xE9));
             m_iGlowIndex = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iGlowIndex));
             m_iTeamNum = new LazyCache<Team>(() => (Team)ReadNetVar<int>("m_iTeamNum"));

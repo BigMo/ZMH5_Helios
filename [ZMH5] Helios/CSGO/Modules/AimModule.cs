@@ -14,8 +14,8 @@ namespace _ZMH5__Helios.CSGO.Modules
 {
     public class AimModule : HotkeyModule
     {
-        #region VARIABLES
-        private int currentId;
+        #region PROPERTIES
+        public int CurrentTarget { get; private set; }
         #endregion
 
         public AimModule() : base(Program.Hack, ModulePriority.Normal)
@@ -31,11 +31,11 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
-            if (!Program.Settings.AimEnabled)
+            if (!Program.CurrentSettings.Aim.Enabled)
                 return;
 
-            Hotkey = Program.Settings.AimKey;
-            Mode = Program.Settings.AimMode;
+            Hotkey = Program.CurrentSettings.Aim.Key;
+            Mode = Program.CurrentSettings.Aim.Mode;
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (!CSLocalPlayer.IsProcessable(lp))
@@ -43,84 +43,97 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (!ActiveByHotkey)
             {
-                currentId = 0;
+                CurrentTarget = 0;
                 return;
             }
 
-            var src = lp.m_vecOrigin.Value + lp.m_vecViewOffset.Value + lp.m_vecVelocity.Value * (float)args.Time.ElapsedTime.TotalSeconds;
-
-            if (Program.Settings.AimLock && currentId != 0)
+            var src = lp.m_vecOrigin.Value + lp.m_vecViewOffset.Value;// + lp.m_vecVelocity.Value * (float)args.Time.ElapsedTime.TotalSeconds;
+            if (Program.CurrentSettings.Aim.Predict)
             {
-                var enemy = Program.Hack.StateMod.Players[currentId];
+                var oldLp = Program.Hack.StateMod.PlayersOld[lp.m_iID.Value];
+                src += lp.m_vecOrigin.Value - oldLp.m_vecOrigin.Value;
+            }
+
+            if (Program.CurrentSettings.Aim.Lock && CurrentTarget != 0)
+            {
+                var enemy = Program.Hack.StateMod.Players[CurrentTarget];
                 if (enemy == null || !enemy.IsValid || enemy.m_lifeState.Value != Enums.LifeState.Alive || enemy.m_bDormant == 1)
                 {
-                    currentId = 0;
+                    CurrentTarget = 0;
                     Reset();
                 }
             }
             else
             {
-                currentId = GetTarget(src);
+                CurrentTarget = GetTarget(src);
             }
-            if (currentId != 0)
+            if (CurrentTarget != 0)
             {
-                var enemy = Program.Hack.StateMod.Players[currentId];
+                var enemy = Program.Hack.StateMod.Players[CurrentTarget];
                 if(enemy == null || !enemy.IsValid)
                 {
-                    currentId = 0;
+                    CurrentTarget = 0;
                     return;
                 }
-                Program.Hack.Glow.EncolorObject(Color.Blue, enemy.m_iGlowIndex);
+                float a = 0.75f + (float)(0.25 * System.Math.Sin(ZatsHackBase.Maths.Math.DegreesToRadians(DateTime.Now.TimeOfDay.TotalSeconds * 1500)));
+                
+                //Program.Hack.Glow.EncolorObject(Color.FromKnownColor(Color.Orange,
+                //    a)
+                //    , enemy.m_iGlowIndex);
 
-                var dest = enemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector();
-                //if Aimbot.Predict
-                var oldEnemy = Program.Hack.StateMod.PlayersOld[currentId];
-                if (oldEnemy != null && oldEnemy.IsValid)
+                var dest = enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
+                if (Program.CurrentSettings.Aim.Predict)
                 {
-                    var oldDest = oldEnemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector();
-                    dest = dest + (dest - oldDest);
+                    var oldEnemy = Program.Hack.StateMod.PlayersOld[CurrentTarget];
+                    if (oldEnemy != null && oldEnemy.IsValid)
+                    {
+                        var oldDest = oldEnemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
+                        dest = dest + (dest - oldDest);
+                    }
                 }
 
-                var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ViewAngles.Value;
+                dest += Vector3.UnitZ * ESPModule.MetersToUnits(Program.CurrentSettings.Aim.HeightOffset / 100f);
+
+                var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
                 angle = ViewModule.ClampAngle(angle);
-                if (Program.Settings.AimSmoothEnabled)
+                if (Program.CurrentSettings.Aim.Smoothing.Enabled)
                 {
-                    switch (Program.Settings.AimSmoothMode)
+                    switch (Program.CurrentSettings.Aim.Smoothing.Mode)
                     {
                         case Settings.SmoothMode.Scalar:
-                            angle *= Program.Settings.AimSmoothScalar;
+                            angle *= Program.CurrentSettings.Aim.Smoothing.Scalar;
                             break;
                         case Settings.SmoothMode.MaxDist:
-                            if (angle.Length > Program.Settings.AimSmoothPerAxis.Length)
+                            if (angle.Length > Program.CurrentSettings.Aim.Smoothing.PerAxis.Length)
                             {
                                 angle.Normalize();
-                                angle = angle * Program.Settings.AimSmoothPerAxis.Length;
+                                angle = angle * Program.CurrentSettings.Aim.Smoothing.PerAxis.Length;
                             }
                             break;
                         case Settings.SmoothMode.MaxDistPerAxis:
                             if (angle.X < 0f)
-                                angle.X = System.Math.Max(angle.X, -Program.Settings.AimSmoothPerAxis.X);
+                                angle.X = System.Math.Max(angle.X, -Program.CurrentSettings.Aim.Smoothing.PerAxis.X);
                             else if (angle.X > 0f)
-                                angle.X = System.Math.Min(angle.X, Program.Settings.AimSmoothPerAxis.X);
+                                angle.X = System.Math.Min(angle.X, Program.CurrentSettings.Aim.Smoothing.PerAxis.X);
 
                             if (angle.Y < 0f)
-                                angle.Y = System.Math.Max(angle.Y, -Program.Settings.AimSmoothPerAxis.Y);
+                                angle.Y = System.Math.Max(angle.Y, -Program.CurrentSettings.Aim.Smoothing.PerAxis.Y);
                             else if (angle.Y > 0f)
-                                angle.Y = System.Math.Min(angle.Y, Program.Settings.AimSmoothPerAxis.Y);
+                                angle.Y = System.Math.Min(angle.Y, Program.CurrentSettings.Aim.Smoothing.PerAxis.Y);
                             break;
                         case Settings.SmoothMode.ScalarPerAxis:
-                            angle = new Vector3(angle.X * Program.Settings.AimSmoothPerAxis.X, angle.Y * Program.Settings.AimSmoothPerAxis.Y, 0f);
+                            angle = new Vector3(angle.X * Program.CurrentSettings.Aim.Smoothing.PerAxis.X, angle.Y * Program.CurrentSettings.Aim.Smoothing.PerAxis.Y, 0f);
                             break;
                     }
                 }
 
                 Program.Hack.View.ApplyChange(angle);
             }
-            if(currentId != lastId)
+            if(CurrentTarget != lastId)
             {
-                var enemy = Program.Hack.StateMod.Players[currentId];
+                var enemy = Program.Hack.StateMod.Players[CurrentTarget];
                 Program.Logger.Log("[Aim] Aiming at {0}: {1}", enemy != null ? enemy.m_iID.Value : -1, enemy != null ? enemy.m_ClientClass.Value.NetworkName : "null");
-                lastId = currentId;
+                lastId = CurrentTarget;
             }
         }
 
@@ -142,26 +155,45 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int GetTarget(Vector3 src)
         {
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, lp.m_iTeamNum.Value == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
-                OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();           
+            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, true,lp.m_iTeamNum.Value == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
+                OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();
 
-            Vector3 closest = Vector3.Zero;
-            float closestFov = float.MaxValue;
-            foreach (var enemy in enemies)
+            var newEnemyId = 0;
+
+            if (Program.CurrentSettings.Aim.Sticky)
             {
-                var newAngles = CalcAngle(src, enemy.m_Skeleton.Value.m_Bones[Program.Settings.AimBone].ToVector()) - Program.Hack.StateMod.ViewAngles.Value;
-                newAngles = ViewModule.ClampAngle(newAngles);
-                float fov = newAngles.Length;
-                if (fov < closestFov && fov < Program.Settings.AimFov)
+                var inc = lp.m_iCrosshairIdx.Value;
+                if (inc == 0)
+                    return 0;
+                var enemy = Program.Hack.StateMod.Players[inc];
+                if (enemy == null || !enemy.IsValid || inc == lp.m_iID.Value || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
+                    return 0;
+                newEnemyId = enemy.m_iID;
+            }
+            else
+            {
+                Vector3 closest = Vector3.Zero;
+                float closestFov = float.MaxValue;
+                foreach (var enemy in enemies)
                 {
-                    Program.Logger.Log("[Aim] Aiming at {0} at {1}° delta", enemy.m_iID.Value, System.Math.Round(fov, 2));
-                    closestFov = fov;
-                    closest = newAngles;
-                    return enemy.m_iID.Value;
+                    if (Program.CurrentSettings.Aim.VisibleOnly && (!enemy.SeenBy(lp) && !lp.SeenBy(enemy)))
+                        continue;
+                    var newAngles = CalcAngle(src, enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector()) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
+                    newAngles = ViewModule.ClampAngle(newAngles);
+                    float fov = newAngles.Length;
+                    if (fov < closestFov && fov < Program.CurrentSettings.Aim.FOV)
+                    {
+                        closestFov = fov;
+                        closest = newAngles;
+                        newEnemyId = enemy.m_iID.Value;
+                    }
                 }
             }
+            var v = Program.Hack.StateMod.PlayerResources.Value;
+            if (newEnemyId != 0)
+                Program.Logger.Log("[Aim] Aiming at {0} [{1}]", Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[newEnemyId], newEnemyId);
 
-            return 0;
+            return newEnemyId;
         }
     }
 }

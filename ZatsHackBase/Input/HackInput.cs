@@ -46,6 +46,8 @@ namespace ZatsHackBase.Input
             MiddleMouseButton = new Button();
             XMouseButton1 = new Button();
             XMouseButton2 = new Button();
+
+            KeysDown = KeysUp = KeysWentDown = KeysWentUp = new Keys[0];
         }
         #endregion
 
@@ -59,7 +61,6 @@ namespace ZatsHackBase.Input
             //KeysWentDown = kbNew.PressedKeys.Where(x => !kbOld.PressedKeys.Contains(x)).Select(x => (Keys)x).ToArray();
             //KeysWentUp = kbOld.PressedKeys.Where(x => !kbNew.PressedKeys.Contains(x)).Select(x => (Keys)x).ToArray();
 
-            WinAPI.GetKeyState((int)Keys.A);
             Array.Copy(kbNew, kbOld, kbNew.Length);
             WinAPI.GetKeyboardState(kbNew);
             kbNew = kbNew.Select(x => (int)(x & 0x80) != 0 ? (byte)1 : (byte)0).ToArray();

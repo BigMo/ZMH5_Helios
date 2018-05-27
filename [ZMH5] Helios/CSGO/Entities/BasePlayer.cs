@@ -46,7 +46,9 @@ namespace _ZMH5__Helios.CSGO.Entities
             m_hObserverTarget = new LazyCache<int>(() => ReadNetVar<int>("DT_BasePlayer", "m_hObserverTarget") & 0xFFF);
             m_fFlags = new LazyCache<Flags>(() => (Flags)ReadNetVar<int>("DT_BasePlayer", "m_fFlags"));
             m_iObserverMode = new LazyCache<ObserverMode>(() => (ObserverMode)ReadNetVar<int>("DT_BasePlayer", "m_iObserverMode"));
-            m_hActiveWeapon = new LazyCache<int>(() => ReadNetVar<int>("DT_BaseCombatCharacter", "m_hActiveWeapon") & 0xFFF);
+            m_hActiveWeapon = new LazyCache<int>(
+                () => ReadNetVar<int>("DT_BaseCombatCharacter", "m_hActiveWeapon") & 0xFFF
+                );
             m_ActiveWeapon = new LazyCache<BaseCombatWeapon>(() => Program.Hack.StateMod.Weapons[m_hActiveWeapon.Value]);
         }
         #endregion

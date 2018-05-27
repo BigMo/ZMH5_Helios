@@ -11,6 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZatsHackBase.UI;
 using ZatsHackBase.UI.Drawing.FontHelpers;
+using Grapevine.Server;
+using System.Windows.Forms;
+using _ZMH5__Helios.UI;
+using System.IO;
 
 namespace _ZMH5__Helios
 {
@@ -21,10 +25,13 @@ namespace _ZMH5__Helios
         public static Logger Logger { get; private set; }
         public static ConsoleAnimation Animation { get; private set; }
         public static string Name { get; private set; }
-        public static Settings Settings { get; private set; }
+        public static Settings[] AllSettings { get; private set; }
+        public static Settings CurrentSettings { get; set; }
         public static Offsets Offsets { get; private set; }
+        public static IntPtr ConfigWindowHandle { get; private set; }
         #endregion
 
+        [STAThread]
         static void Main(string[] args)
         {
             //for (int i = 0; i < 20; i++)
@@ -57,19 +64,35 @@ namespace _ZMH5__Helios
             Logger.Info("Loaded {0} memes", Memes.Captions.Length);
 
             LoadSettings();
-            Settings.Save("settings.json");
+            CurrentSettings.Save();
 
             LoadOffsets();
             Offsets.Save("offsets.json");
             //Wait for game
             Logger.Warning("WAITING FOR CSGO...");
-            while (!EUCProcess.IsProcessRunning("spotify"))
+            var server = new RestServer(new ServerSettings()
+            {
+                 Host = "localhost",
+                 Port = "1337",
+                 PublicFolder = new PublicFolder("html")
+            });
+            server.Start();
+            while (!EUCProcess.IsProcessRunning("csgo"))
                 Thread.Sleep(500);
 
             Hack = new Heke();
 
+            var thread = new Thread(()=> {
+                var cfg = new ConfigForm();
+                ConfigWindowHandle = cfg.Handle;
+                Application.Run(cfg);
+                });
+            thread.TrySetApartmentState(ApartmentState.STA);
+            thread.Start();
+
             Logger.Info("> Running hack!");
             Hack.Run();
+            server.Stop();
             Console.ReadLine();
         }
 
@@ -77,12 +100,20 @@ namespace _ZMH5__Helios
         {
             try
             {
-                Settings = Settings.FromFile("settings.json");
+                if (!Directory.Exists("configs"))
+                    Directory.CreateDirectory("configs");
+
+                var files = Directory.GetFiles("configs", "*.json");
+                if (files.Length == 0)
+                    throw new Exception();
+
+                AllSettings = files.Select(x => Settings.FromFile(x)).ToArray();
+                CurrentSettings = AllSettings.FirstOrDefault(x => x.IsActive) ?? AllSettings.First();
             }
             catch (Exception ex)
             {
-                Settings = new Settings();
-                Settings.Save("settings.json");
+                CurrentSettings = new Settings("dummySettings");
+                CurrentSettings.Save();
                 Logger.Error("Failed to read settings!");
                 Logger.PrintException(ex, true, false);
             }

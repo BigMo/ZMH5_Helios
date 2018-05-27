@@ -18,6 +18,7 @@ using ZatsHackBase.UI;
 using ZatsHackBase.UI.Drawing;
 using _ZMH5__Helios.CSGO.Modules;
 using _ZMH5__Helios.CSGO.BSP;
+using ZatsHackBase.UI.Controls;
 
 namespace _ZMH5__Helios.CSGO
 {
@@ -42,10 +43,12 @@ namespace _ZMH5__Helios.CSGO
         public BSPFile Map { get; private set; }
         public ESPModule ESP { get; private set; }
         public ReloadSettingsModule ReloadSettings { get; private set; }
+
+        public bool IsOnServer { get { return Program.Hack.StateMod.ClientState.Value != null && Program.Hack.StateMod.ClientState.Value.State.Value == Modules.SnapshotHelpers.ClientState.SignOnState.Full; } }
         #endregion
 
         #region CONSTRUCTORS
-        public Heke() : base("csgo", 60, true)
+        public Heke() : base("csgo", 999, true, false)
         { }
         #endregion
 
@@ -92,6 +95,22 @@ namespace _ZMH5__Helios.CSGO
 #endif
             Program.Logger.Info("Helios is ready.");
             Program.Logger.Info("sizeof(RadarEntry): {0}", System.Runtime.InteropServices.Marshal.SizeOf(typeof(Modules.SnapshotHelpers.RadarEntry)));
+
+            //Window window = null;
+            //using (var frm = new UI.TestForm())
+            //    window = ControlConverter.Convert(frm);
+
+            //Overlay.Controls.Add(window);
+        }
+
+        protected override bool ProcessModules()
+        {
+            return Process.IsInForeground || WinAPI.GetForegroundWindow() == Program.ConfigWindowHandle;
+        }
+
+        protected override bool ProcessInput()
+        {
+            return Process.IsInForeground;
         }
 
         protected override void AfterRun()
@@ -103,11 +122,11 @@ namespace _ZMH5__Helios.CSGO
         
         public T GetEntityByAddress<T>(int address, bool addToSnapshot = true) where T : EntityPrototype, new()
         {
-            if (address <= 0)
-                return null;
+            /*if (address <= 0)
+                return null;*/
 
-            try
-            {
+            //try
+            //{
                 T entity = new T();
                 entity.Init(address, entity.MemSize);
 
@@ -123,7 +142,7 @@ namespace _ZMH5__Helios.CSGO
                 }
 
                 return entity;
-            }catch { return null; }
+            //}catch { return null; }
         }
 
         public T GetEntityByID<T>(int id, bool addToSnapshot = true) where T : EntityPrototype, new()
@@ -132,7 +151,8 @@ namespace _ZMH5__Helios.CSGO
             if (address == 0)
                 return null;
 
-            return GetEntityByAddress<T>(address);
+            var ent = GetEntityByAddress<T>(address);
+            return ent;
         }
 
         protected override void SetupModules()
@@ -166,44 +186,53 @@ namespace _ZMH5__Helios.CSGO
         {
             dbg = Overlay.Renderer.Fonts[dbg];
 
-            Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f, 
-                Input.MousePos.ToString() + "\n" +
-                Input.MouseMoveDist.ToString() + "\n" + 
-                string.Join(", ", Input.KeysDown.Select(x=>x.ToString())));
-
-            var lp = StateMod.LocalPlayer.Value;
-            Color drawColor = Color.White;
-            if (CSLocalPlayer.IsProcessable(lp))
+            if (Process.IsInForeground)
             {
-                var players = StateMod.GetPlayersSet(true, false);
-                if (players.Any(x => x.m_hObserverTarget.Value == lp.m_iID.Value))
-                {
-                    var specs = players.Where(x => x.m_hObserverTarget.Value == lp.m_iID.Value);
-                    if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.Ego))
-                        drawColor = Color.Red;
-                    else if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.ThirdPerson))
-                        drawColor = Color.Orange;
 
-                    string text = string.Join("\n",
-                        specs.Select(x => 
-                            string.Format("▻ {0} ({1})",
-                            StateMod.RadarEntries.Value.Any(y=>y.Id == x.m_iID.Value) ? StateMod.RadarEntries.Value.First(y => y.Id == x.m_iID.Value).Name : x.m_iID.Value.ToString(),
-                            x.m_iObserverMode.Value.ToString())
-                        )
-                    );
-                    Overlay.Renderer.DrawString(
-                        drawColor,
-                        dbg,
-                        Vector2.UnitY * (Overlay.Size.Y / 2f),
-                        "[Specs]\n" + text);
+                Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f,
+                    Input.MousePos.ToString() + "\n" +
+                    Input.MouseMoveDist.ToString() + "\n" +
+                    string.Join(", ", Input.KeysDown.Select(x => x.ToString())));
+
+                var lp = StateMod.LocalPlayer.Value;
+                Color drawColor = Color.White;
+                if (CSLocalPlayer.IsProcessable(lp) && !lp.IsDormant)
+                {
+                    var players = StateMod.GetPlayersSet(true, false, true);
+                    Func<CSPlayer, bool> filter = null;
+                    filter = (x) => x.m_iID.Value != lp.m_iID.Value && x.m_hObserverTarget.Value == lp.m_iID.Value;
+                    if (players.Any(filter))
+                    {
+                        var specs = players.Where(filter);
+                        if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.Ego))
+                            drawColor = Color.Red;
+                        else if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.ThirdPerson))
+                            drawColor = Color.Orange;
+
+                        if (StateMod.RadarEntries.Value != null)
+                        {
+                            string text = string.Join("\n",
+                                specs.Select(x =>
+                                    string.Format("▻ {0} ({1})",
+                                    Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[x.m_iID.Value],
+                                    x.m_iObserverMode.Value.ToString())
+                                )
+                            );
+                            Overlay.Renderer.DrawString(
+                                drawColor,
+                                dbg,
+                                Vector2.UnitY * (Overlay.Size.Y / 2f),
+                                "[Specs]\n" + text);
+                        }
+                    }
+                    else
+                        Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");
                 }
                 else
-                    Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");
-            } else
-            {
-                Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<not ingame>");
+                {
+                    Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<not ingame>");
+                }
             }
-
             base.AfterPluginsTick(args);
         }
         #endregion

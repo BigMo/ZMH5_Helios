@@ -39,8 +39,8 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnUpdate(args);
 
-            Hotkey = Program.Settings.TriggerKey;
-            Mode = Program.Settings.TriggerMode;
+            Hotkey = Program.CurrentSettings.Trigger.Key;
+            Mode = Program.CurrentSettings.Trigger.Mode;
 
             //Aquire localplayer
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
@@ -112,7 +112,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             else //Still the same enemy -> Check delay and fire
             {
                 lostOnce = false;
-                if ((DateTime.Now - lastEnemyDetection).TotalMilliseconds < Program.Settings.TriggerDelay)
+                if ((DateTime.Now - lastEnemyDetection).TotalMilliseconds < Program.CurrentSettings.Trigger.Delay)
                     return;
 
                 var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx.Value];
@@ -122,9 +122,9 @@ namespace _ZMH5__Helios.CSGO.Modules
                 //Program.Logger.Log("TRG: ALRIGHT");
                 if (wep.Value.m_iClip1.Value > 0)// && wep.Value.m_fAccuracyPenalty < 0.01f)
                 {
-                    if (Program.Settings.TriggerBurst)
+                    if (Program.CurrentSettings.Trigger.Burst.Enabled)
                     {
-                        shotsLeft += Program.Settings.TriggerBurstCount;
+                        shotsLeft += Program.CurrentSettings.Trigger.Burst.Count;
                     }
                     else
                     {
@@ -137,6 +137,10 @@ namespace _ZMH5__Helios.CSGO.Modules
 
         private void Shoot()
         {
+            //var address = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.ForceAttack;
+            //Program.Hack.Memory.Write<int>(address, 5);
+            //Thread.Sleep(5);
+            //Program.Hack.Memory.Write<int>(address, 4);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(1);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);

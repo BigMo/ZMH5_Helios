@@ -28,6 +28,10 @@ namespace ZatsHackBase.Maths
                 return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z);
             }
         }
+        public float LengthSqrt
+        {
+            get { return X * X + Y * Y + Z * Z; }
+        }
         #endregion
 
         #region CONSTRUCTOR

@@ -104,6 +104,7 @@ namespace _ZMH5__Helios.CSGO
             ESP.Enemies = new ESPEntry();
             ESP.Grenades = new ESPEntry();
             ESP.Weapons = new ESPEntry();
+            ESP.World = new ESPEntry();
 
             ESP.Allies.Enabled = true;
             ESP.C4.Enabled = true;

@@ -23,8 +23,8 @@ namespace ZatsHackBase.UI
         public GeometryBuffer(Renderer renderer)
         {
             _Renderer = renderer;
-            
-            _VertexBuffer = new D3D11.Buffer(_Renderer.Device, 
+
+            _VertexBuffer = new D3D11.Buffer(_Renderer.Device,
                 new D3D11.BufferDescription(Vertex.Size * 65536, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
@@ -45,9 +45,9 @@ namespace ZatsHackBase.UI
 
         #region Variables
 
-        private readonly Renderer           _Renderer;
-        private SharpDX.Direct3D11.Buffer   _VertexBuffer;
-        private SharpDX.Direct3D11.Buffer   _IndexBuffer;
+        private readonly Renderer _Renderer;
+        private SharpDX.Direct3D11.Buffer _VertexBuffer;
+        private SharpDX.Direct3D11.Buffer _IndexBuffer;
 
         //private RawMatrix _ViewMatrix = new RawMatrix();
         //private RawMatrix _ProjMatrix = new RawMatrix();
@@ -56,10 +56,10 @@ namespace ZatsHackBase.UI
         private bool _Synchronised = false;
 
         private List<Vertex> _Vertices = new List<Vertex>();
-        private List<short>  _Indices = new List<short>();  
-        private List<Batch>  _Batches = new List<Batch>(); 
+        private List<short> _Indices = new List<short>();
+        private List<Batch> _Batches = new List<Batch>();
 
-        private Batch        _Dummy = new Batch();
+        private Batch _Dummy = new Batch();
 
         private ClipBuffer _ClipBuffer;
         private TransformationBuffer _TransformationBuffer;
@@ -150,25 +150,17 @@ namespace ZatsHackBase.UI
         private void Synchronize()
         {
 
-           // if (1 > 0) todo check 4 size (mismatch?)
+            // if (1 > 0) todo check 4 size (mismatch?)
             {
 
                 DataStream vertexBuffer, indexBuffer;
-
-
                 _Renderer.DeviceContext.MapSubresource(_VertexBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out vertexBuffer);
-
-                _Vertices.ForEach(vertex => { vertexBuffer.Write(vertex); });
-
+                _Vertices.ForEach(index => { vertexBuffer.Write(index); });
                 _Renderer.DeviceContext.UnmapSubresource(_VertexBuffer, 0);
 
-
                 _Renderer.DeviceContext.MapSubresource(_IndexBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out indexBuffer);
-
                 _Indices.ForEach(index => { indexBuffer.Write(index); });
-
                 _Renderer.DeviceContext.UnmapSubresource(_IndexBuffer, 0);
-
             }
 
             _Synchronised = true;
@@ -234,9 +226,9 @@ namespace ZatsHackBase.UI
                     _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
                     last_res = batch.Texture;
                 }
-                
+
                 _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
-               
+
                 if (batch.UseIndices == true)
                 {
                     _Renderer.DeviceContext.DrawIndexed(batch.IndexCount, index_offset, vertex_offset);

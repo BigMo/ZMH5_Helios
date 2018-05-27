@@ -30,5 +30,20 @@ namespace _ZMH5__Helios.CSGO.BSP
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         private byte[] m_Pad;
+
+        public snode_t(int a)
+        {
+            m_Planenum = 0;
+            m_pPlane = 0;
+            m_Children = new int[2];
+            m_LeafChildren = 0;
+            m_NodeChildren = 0;
+            m_Mins = new short[3];
+            m_Maxs = new short[3];
+            m_Firstface = 0;
+            m_Numfaces = 0;
+            m_Area = 0;
+            m_Pad = new byte[2];
+        }
     }
 }

@@ -14,21 +14,26 @@ namespace _ZMH5__Helios.CSGO.BSP
     public class BSPFile
     {
         #region VARIABLES
-        private dheader_t m_BSPHeader;
-        private mvertex_t[] m_Vertexes;
+        public dheader_t m_BSPHeader;
+        public mvertex_t[] m_Vertexes;
         public cplane_t[] m_Planes;
-        private dedge_t[] m_Edges;
-        private int[] m_Surfedges;
+        public dedge_t[] m_Edges;
+        public int[] m_Surfedges;
         public dleaf_t[] m_Leaves;
         public snode_t[] m_Nodes;
-        private dface_t[] m_Surfaces;
-        private texinfo_t[] m_Texinfos;
+        public dface_t[] m_Surfaces;
+        public texinfo_t[] m_Texinfos;
         public dbrush_t[] m_Brushes;
         public dbrushside_t[] m_Brushsides;
         public ushort[] m_Leaffaces;
         public ushort[] m_Leafbrushes;
         public Polygon[] m_Polygons;
-        private long m_PlanesAddress;
+        public dface_t[] m_OriginalFaces;
+        public long m_PlanesAddress;
+        private string m_EntitiesASCII;
+        public string[] m_StaticPropsModelNames;
+        public StaticPropLump_t[] m_StaticProps;
+        public dgamelump_t[] m_GameLumps;
         #endregion
 
         public BSPFile(Stream str)
@@ -53,14 +58,54 @@ namespace _ZMH5__Helios.CSGO.BSP
             m_Leaves = ParseLumpData<dleaf_t>(str, eLumpIndex.LUMP_LEAFS);
             ParseNodes(str);
             m_Surfaces = ParseLumpData<dface_t>(str, eLumpIndex.LUMP_FACES);
+            m_OriginalFaces = ParseLumpData<dface_t>(str, eLumpIndex.LUMP_ORIGINALFACES);
             m_Texinfos = ParseLumpData<texinfo_t>(str, eLumpIndex.LUMP_TEXINFO);
             m_Brushes = ParseLumpData<dbrush_t>(str, eLumpIndex.LUMP_BRUSHES);
             m_Brushsides = ParseLumpData<dbrushside_t>(str, eLumpIndex.LUMP_BRUSHSIDES);
-            ParseAndCheckLumpData<ushort>(str, eLumpIndex.LUMP_LEAFFACES, out m_Leaffaces, BSPFlags.MAX_MAP_LEAFBRUSHES, "leaffaces");
+            //m_Leaffaces = ParseLumpData<ushort>(str, eLumpIndex.LUMP_LEAFFACES);
+            //m_Leafbrushes = ParseLumpData<ushort>(str, eLumpIndex.LUMP_LEAFBRUSHES);
+            ParseAndCheckLumpData<ushort>(str, eLumpIndex.LUMP_LEAFFACES, out m_Leaffaces, BSPFlags.MAX_MAP_LEAFFACES, "leaffaces");
             ParseAndCheckLumpData<ushort>(str, eLumpIndex.LUMP_LEAFBRUSHES, out m_Leafbrushes, BSPFlags.MAX_MAP_LEAFBRUSHES, "leafbrushes");
-            ParsePolygons();
+
+            //ParsePolygons();
+            ParseEntities(str);
+            ParseStaticProps(str);
 
             Program.Logger.Log("[BSP] Parsed successfully");
+        }
+
+        private void ParseStaticProps(Stream str)
+        {
+            var gameLump = m_BSPHeader.m_Lumps[(int)eLumpIndex.LUMP_GAME_LUMP];
+            var gameLumpHeader = str.Read<dgamelumpheader_t>(gameLump.m_Fileofs);
+            m_GameLumps = new dgamelump_t[gameLumpHeader.m_LumpCount];
+            for (int i = 0; i < m_GameLumps.Length; i++)
+                m_GameLumps[i] = str.Read<dgamelump_t>();
+
+            //if (m_GameLumps.Any(x=>x.m_Id == 1936749168))
+            //{
+            var staticPropsGameLump = str.Read<StaticPropDictLump_t>(m_GameLumps.First(x => x.m_Id == 1936749168).m_FileOfs);
+            //Read names
+            m_StaticPropsModelNames = str.ReadArray<StaticPropDictLumpName>(staticPropsGameLump.m_DictEntries).Select(x => x.m_Name).ToArray();
+            //Read leaves
+            var staticPropLeafLumps = str.Read<StaticPropLeafLump_t>();
+            var leaves = str.ReadArray<ushort>(staticPropLeafLumps.m_LeafEntries);
+            var numProps = str.Read<int>();
+            m_StaticProps = str.ReadArray<StaticPropLump_t>(numProps);
+
+            //}
+            //else { }
+
+        }
+
+        private void ParseEntities(Stream str)
+        {
+            var entitiesLump = m_BSPHeader.m_Lumps[(int)eLumpIndex.LUMP_ENTITIES];
+            var data = new byte[entitiesLump.m_Filelen];
+            str.Position = entitiesLump.m_Fileofs;
+            str.Read(data, 0, data.Length);
+            m_EntitiesASCII = Encoding.ASCII.GetString(data);
+            File.WriteAllText("map_entities.txt", m_EntitiesASCII);
         }
 
         private void ParsePolygons()
@@ -78,7 +123,7 @@ namespace _ZMH5__Helios.CSGO.BSP
                     continue;
 
                 Polygon poly = new Polygon();
-                for(int i = 0; i< num_edges; i++)
+                for (int i = 0; i < num_edges; i++)
                 {
                     var edge_index = m_Surfedges[first_edge + 1];
                     if (edge_index >= 0)
@@ -100,13 +145,13 @@ namespace _ZMH5__Helios.CSGO.BSP
             int plane_bits;
             m_Planes = new cplane_t[planes.Length];
 
-            for(int i = 0; i < planes.Length; i++)
+            for (int i = 0; i < planes.Length; i++)
             {
                 var op = new cplane_t();
                 var ip = planes[i];
 
                 plane_bits = 0;
-                for(int j = 0; j < 3; j++)
+                for (int j = 0; j < 3; j++)
                 {
                     op.m_Normal[j] = ip.m_Normal[j];
                     if (op.m_Normal[j] < 0f)
@@ -129,7 +174,7 @@ namespace _ZMH5__Helios.CSGO.BSP
 
             for (int i = 0; i < m_Nodes.Length; i++)
             {
-                var op = new snode_t();
+                var op = new snode_t(0);
                 var ip = nodes[i];
 
                 Array.Copy(ip.m_Mins, op.m_Mins, ip.m_Mins.Length);
@@ -139,16 +184,17 @@ namespace _ZMH5__Helios.CSGO.BSP
                 op.m_Firstface = ip.m_Firstface;
                 op.m_Numfaces = ip.m_Numfaces;
 
-                for(int j = 0; j < 2; j++)
+                for (int j = 0; j < 2; j++)
                 {
                     var child_index = ip.m_Children[j];
                     op.m_Children[j] = child_index;
 
-                    if(child_index >= 0)
+                    if (child_index >= 0)
                     {
                         op.m_LeafChildren = 0;
                         op.m_NodeChildren = child_index;
-                    } else
+                    }
+                    else
                     {
                         op.m_LeafChildren = -(child_index + 1);
                         op.m_NodeChildren = 0;
@@ -170,6 +216,8 @@ namespace _ZMH5__Helios.CSGO.BSP
         private T[] ParseLumpData<T>(Stream str, eLumpIndex index) where T : struct
         {
             var lump = m_BSPHeader.m_Lumps[(int)index];
+            if (lump.m_FourCC != 0)
+                throw new Exception("LZMA!");
             var count = lump.m_Filelen / Marshal.SizeOf(typeof(T));
             if (count <= 0)
                 return new T[0];
@@ -178,6 +226,59 @@ namespace _ZMH5__Helios.CSGO.BSP
         }
         #endregion
 
+        #region VISCHECK
+        private dleaf_t GetLeafForPoint(Vector3 point)
+        {
+            int node = 0;
+            snode_t pNode;
+            cplane_t pPlane;
+
+            float d = 0.0f;
+            while (node >= 0)
+            {
+                pNode = m_Nodes[node];
+                pPlane = m_Planes[pNode.m_Planenum];
+
+                d = point.Dot(pPlane.m_Normal) - pPlane.m_Distance;
+
+                if (d > 0)
+                    node = pNode.m_Children[0];
+                else
+                    node = pNode.m_Children[1];
+            }
+
+            return m_Leaves[-node - 1];
+        }
+
+        private static ContentsFlag LEAF_FLAGS = ContentsFlag.CONTENTS_SOLID | ContentsFlag.CONTENTS_DETAIL;
+
+        public bool IsVisible(Vector3 start, Vector3 end)
+        {
+            var direction = end - start;
+            var point = start;
+            int stepCount = (int)direction.Length;
+
+            direction *= 1f / (float)stepCount;
+
+            var leaf = new dleaf_t();
+
+            while (stepCount > 0)
+            {
+                point += direction;
+                leaf = GetLeafForPoint(point);
+
+                if (leaf.m_Area != -1)
+                {
+                    if ((leaf.m_Contents & LEAF_FLAGS) != 0)
+                        break;
+                }
+
+                stepCount--;
+            }
+
+            return (leaf.m_Contents & ContentsFlag.CONTENTS_SOLID) == 0;
+        }
+        #endregion
 
     }
 }

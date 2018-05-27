@@ -10,7 +10,7 @@ namespace _ZMH5__Helios.CSGO.BSP
     [StructLayout(LayoutKind.Sequential)]
     public struct dleaf_t
     {
-        public int m_Contents;
+        public ContentsFlag m_Contents;
         public short m_Cluster;
         public short m_Area;
         public area_flags m_AreaFlags;

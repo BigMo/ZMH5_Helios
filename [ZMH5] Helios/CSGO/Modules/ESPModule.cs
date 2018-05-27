@@ -1,4 +1,5 @@
-﻿using _ZMH5__Helios.CSGO.Entities;
+﻿using _ZMH5__Helios.CSGO.BSP;
+using _ZMH5__Helios.CSGO.Entities;
 using _ZMH5__Helios.CSGO.Misc;
 using _ZMH5__Helios.CSGO.Modules.SnapshotHelpers;
 using System;
@@ -40,7 +41,10 @@ namespace _ZMH5__Helios.CSGO.Modules
         private bool w2s(ref Vector2 screenPos, Vector3 worldPos)
         {
             screenPos = ZatsHackBase.Maths.Math.WorldToScreen(Program.Hack.StateMod.ViewMatrix, Program.Hack.Overlay.Size, worldPos);
-            return screenPos != Vector2.Zero;
+            return screenPos != Vector2.Zero && 
+                (screenPos.X < Program.Hack.Overlay.Size.X && screenPos.Y < Program.Hack.Overlay.Size.Y) &&
+                (screenPos.X >= 0 && screenPos.Y >= 0)
+                ;
         }
 
         private bool IsGrenade(BaseEntity x)
@@ -51,6 +55,11 @@ namespace _ZMH5__Helios.CSGO.Modules
         protected override void OnUpdate(TickEventArgs args)
         {
             base.OnUpdate(args);
+
+            if(Program.CurrentSettings.ESP.World.Enabled)
+                DrawWorld();
+
+            DrawModels();
 
             espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
             weaponFont = Program.Hack.Overlay.Renderer.Fonts[weaponFont];
@@ -92,6 +101,74 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (Program.CurrentSettings.DebugShowBones)
                 DrawBones();
+        }
+
+        private void DrawWorld()
+        {
+            if (Program.Hack.StateMod.Map != null)
+            {
+                var map = Program.Hack.StateMod.Map;
+                var lp = Program.Hack.StateMod.LocalPlayer.Value;
+                if (lp == null || !lp.IsValid)
+                    return;
+
+                var alivePlayers = Program.Hack.StateMod.GetPlayersSet(true, true, true).Where(x => x.Address != lp.Address);
+
+                var allPositions = alivePlayers.Select(x => x.m_vecOrigin.Value).ToArray(); //.Concat(new Vector3[] { lp.m_vecOrigin }).ToArray();
+
+                mvertex_t line3d1, line3d2;
+                foreach (var face in map.m_Surfaces)
+                {
+                    if (map.m_Texinfos.Length > face.m_Texinfo)
+                    {
+                        if (((map.m_Texinfos[face.m_Texinfo].m_Flags & BSPFlags.SURF_NODRAW) != 0))
+                            continue;
+                    }
+
+                    var plane = map.m_Planes[face.m_Planenum];
+                    if (!(plane.m_Normal.Z > plane.m_Normal.X && plane.m_Normal.Z > plane.m_Normal.Y))
+                        continue;
+
+                    for (int e = 0; e < face.m_Numedges; e++)
+                    {
+                        float dist = 1f;
+                        int surfedge = map.m_Surfedges[face.m_Firstedge + e];
+                        dedge_t edge = map.m_Edges[System.Math.Abs(surfedge)];
+                        if(surfedge > 0)
+                        {
+                            line3d1 = map.m_Vertexes[edge.m_V[0]];
+                            line3d2 = map.m_Vertexes[edge.m_V[1]];
+                        }
+                        else
+                        {
+                            line3d1 = map.m_Vertexes[edge.m_V[1]];
+                            line3d2 = map.m_Vertexes[edge.m_V[0]];
+                        }
+                        var p3d1 = new Vector3(line3d1.m_Position.X, line3d1.m_Position.Y, line3d1.m_Position.Z);
+                        var p3d2 = new Vector3(line3d2.m_Position.X, line3d2.m_Position.Y, line3d2.m_Position.Z);
+                        if (!allPositions.Any(x => 
+                        ((p3d1 - x).Length < 200f && (p3d2 - x).Length < 200f) && 
+                        (System.Math.Abs(p3d1.Z - x.Z) >= 0 && System.Math.Abs(p3d1.Z - x.Z)<=72)
+                        ))
+                            continue;
+
+                        Vector2 p1 = Vector2.Zero, p2 = Vector2.Zero;
+                        if (!w2s(ref p1, p3d1) ||
+                            !w2s(ref p2, p3d2))
+                            continue;
+
+                        Program.Hack.Overlay.Renderer.DrawLine(Program.CurrentSettings.ESP.World.Color, p1, p2);
+                    }
+                }
+            }
+        }
+
+        private void DrawModels()
+        {
+
+            if (Program.Hack.StateMod.Map != null)
+            {
+            }
         }
 
         private void DrawBones()
@@ -180,10 +257,19 @@ namespace _ZMH5__Helios.CSGO.Modules
 
         private void DrawPlayer(CSPlayer player, ESPEntry settings, Vector2 position, Vector2 size)
         {
+            var drawColor = settings.Color;
+            var map = Program.Hack.StateMod.Map;
+            if (map != null)
+            {
+                var from = Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin.Value + Program.Hack.StateMod.LocalPlayer.Value.m_vecViewOffset.Value;
+                var to = player.m_Skeleton.Value.m_Bones[8].ToVector();
+                if (map.IsVisible(from, to))
+                    drawColor = settings.ColorOccluded;
+            }
             if (settings.ShowBox)
             {
-                Program.Hack.Overlay.Renderer.DrawRectangle(settings.Color, position, size);
-                //DrawOutlinedRect(position, size, settings.Color, Color.Black);
+                Program.Hack.Overlay.Renderer.DrawRectangle(drawColor, position, size);
+                //DrawOutlinedRect(position, size, drawColor, Color.Black);
             }
             if (settings.ShowHealth)
             {
@@ -210,22 +296,25 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 var name = Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[player.m_iID.Value];
                 var nameSize = espFont.MeasureString(name);
-                Program.Hack.Overlay.Renderer.DrawString(settings.Color, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
+                Program.Hack.Overlay.Renderer.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
                 infoMiddle += Vector2.UnitY * nameSize.Y;
             }
             if (settings.ShowDist)
             {
                 var dist = System.Math.Ceiling(DistToMeters((player.m_vecOrigin.Value - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin.Value).Length)).ToString() + "m";
                 var distSize = espFont.MeasureString(dist);
-                Program.Hack.Overlay.Renderer.DrawString(settings.Color, espFont, infoMiddle + Vector2.UnitX * (distSize.X * -0.5f), dist);
+                Program.Hack.Overlay.Renderer.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (distSize.X * -0.5f), dist);
             }
-            var wep = player.m_ActiveWeapon.Value;
-            if (wep != null)
-                DrawWeaponIcon(
-                    wep.WeaponId.Value,
-                    position + Vector2.UnitX * size.X * 0.5f - Vector2.UnitY * 10f,
-                    DistToMeters((player.m_vecOrigin.Value - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin.Value).Length) * 0.5f, 
-                    settings.Color);
+            if (settings.ShowWeapon)
+            {
+                var wep = player.m_ActiveWeapon.Value;
+                if (wep != null)
+                    DrawWeaponIcon(
+                        wep.WeaponId.Value,
+                        position + Vector2.UnitX * size.X * 0.5f - Vector2.UnitY * 10f,
+                        DistToMeters((player.m_vecOrigin.Value - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin.Value).Length) * 0.5f,
+                        settings.Color);
+            }
         }
 
         private void DrawEsp<T>(

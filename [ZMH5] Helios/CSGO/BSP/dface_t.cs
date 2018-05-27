@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace _ZMH5__Helios.CSGO.BSP
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct dface_t
+    public struct dface_t
     {
         public ushort m_Planenum;
         public byte m_Side;

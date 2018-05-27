@@ -11,6 +11,7 @@ using _ZMH5__Helios.CSGO.Modules.SnapshotHelpers;
 using ZatsHackBase.Maths;
 using _ZMH5__Helios.CSGO.Enums;
 using _ZMH5__Helios.CSGO.BSP;
+using System.IO;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -24,7 +25,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int pGameRules;
         private int pPlayerResources;
         private int pRadarAddress;
-
+        private string lastMap;
         #endregion
 
         #region PROPERTIES
@@ -141,6 +142,28 @@ namespace _ZMH5__Helios.CSGO.Modules
             Weapons.Clear();
 
             //Load map
+            if(ClientState.Value != null && ClientState.Value.Map.Value != null)
+            {
+                if (ClientState.Value.Map.Value != lastMap)
+                {
+                    var path = Path.Combine(GameDirectory.Value, ClientState.Value.Map.Value);
+                    //try
+                    //{
+                        lastMap = ClientState.Value.Map.Value;
+                    if (File.Exists(path))
+                    {
+                        using (var str = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        {
+                            var bsp = new BSPFile(str);
+                            Map = bsp;
+                        }
+                        //}catch(Exception ex)
+                        //{
+                        //    Program.Logger.Error("Failed to parse map \"{0}\": {1}", path, ex.Message);
+                        //}
+                    }
+                }
+            }
         }
         public void WriteViewAngles(Vector3 angles)
         {

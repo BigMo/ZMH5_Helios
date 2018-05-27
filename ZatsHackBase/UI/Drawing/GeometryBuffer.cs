@@ -10,7 +10,6 @@ using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.UI.Drawing;
-using ZatsHackBase.UI.Drawing.Buffers;
 using D3D11 = SharpDX.Direct3D11;
 using Math = ZatsHackBase.Maths.Math;
 
@@ -31,9 +30,6 @@ namespace ZatsHackBase.UI
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
                 new D3D11.BufferDescription(sizeof(short) * 32768, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
-
-            _ClipBuffer = new ClipBuffer(renderer);
-            _TransformationBuffer = new TransformationBuffer(renderer);
         }
 
         ~GeometryBuffer()
@@ -46,8 +42,8 @@ namespace ZatsHackBase.UI
         #region Variables
 
         private readonly Renderer           _Renderer;
-        private SharpDX.Direct3D11.Buffer   _VertexBuffer;
-        private SharpDX.Direct3D11.Buffer   _IndexBuffer;
+        private D3D11.Buffer   _VertexBuffer;
+        private D3D11.Buffer _IndexBuffer;
 
         //private RawMatrix _ViewMatrix = new RawMatrix();
         //private RawMatrix _ProjMatrix = new RawMatrix();
@@ -60,10 +56,7 @@ namespace ZatsHackBase.UI
         private List<Batch>  _Batches = new List<Batch>(); 
 
         private Batch        _Dummy = new Batch();
-
-        private ClipBuffer _ClipBuffer;
-        private TransformationBuffer _TransformationBuffer;
-
+        
         #endregion
 
         #region Properties
@@ -95,8 +88,6 @@ namespace ZatsHackBase.UI
 
         public void Dispose()
         {
-            _TransformationBuffer.Dispose();
-
             _Vertices.Clear();
             _Indices.Clear();
             _Batches.Clear();
@@ -179,10 +170,7 @@ namespace ZatsHackBase.UI
         {
             _Batches.Add(_Dummy);
             _Dummy.IndexCount = _Dummy.VertexCount = 0;
-            _Dummy.UseIndices = true;
             _Dummy.Texture = null;
-            _Dummy.Sampler = null;
-
         }
 
         public void Draw()
@@ -197,38 +185,13 @@ namespace ZatsHackBase.UI
 
             int vertex_offset = 0;
             int index_offset = 0;
-
-            ShaderSet last_shader = null;
-            Drawing.Buffer last_buffer = null;
-            D3D11.SamplerState last_sampler = null;
+            
             D3D11.ShaderResourceView last_res = null;
 
             RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
-
-            _TransformationBuffer.Apply();
-            //_ClipBuffer.Apply();
-
+            
             foreach (var batch in _Batches)
             {
-
-                if (batch.TargetShader != null && batch.TargetShader != last_shader)
-                {
-                    batch.TargetShader.Apply();
-                    last_shader = batch.TargetShader;
-                }
-
-                if (batch.ShaderBuffer != null && batch.ShaderBuffer != last_buffer)
-                {
-                    batch.ShaderBuffer.Apply();
-                    last_shader = batch.TargetShader;
-                }
-
-                if (batch.Sampler != null && batch.Sampler != last_sampler)
-                {
-                    _Renderer.DeviceContext.PixelShader.SetSampler(0, batch.Sampler);
-                    last_sampler = batch.Sampler;
-                }
-
                 if (batch.Texture != null && batch.Texture != last_res)
                 {
                     _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
@@ -237,7 +200,7 @@ namespace ZatsHackBase.UI
                 
                 _Renderer.DeviceContext.InputAssembler.PrimitiveTopology = batch.DrawMode;
                
-                if (batch.UseIndices == true)
+                if (batch.IndexCount > 0)
                 {
                     _Renderer.DeviceContext.DrawIndexed(batch.IndexCount, index_offset, vertex_offset);
                     index_offset += batch.IndexCount;
@@ -252,27 +215,16 @@ namespace ZatsHackBase.UI
 
         }
 
-        public void SetupTexture(D3D11.ShaderResourceView texture, D3D11.SamplerState state)
+        public void SetupTexture(D3D11.ShaderResourceView texture)
         {
             _Dummy.Texture = texture;
-            _Dummy.Sampler = state;
         }
 
         public void SetPrimitiveType(PrimitiveTopology topology)
         {
             _Dummy.DrawMode = topology;
         }
-
-        public void DisableUseOfIndices()
-        {
-            _Dummy.UseIndices = false;
-        }
-
-        public void SetShader(ShaderSet shader)
-        {
-            _Dummy.TargetShader = shader;
-        }
-
+        
         #endregion
     }
 }

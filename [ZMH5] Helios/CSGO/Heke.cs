@@ -188,7 +188,6 @@ namespace _ZMH5__Helios.CSGO
 
             if (Process.IsInForeground)
             {
-
                 Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f,
                     Input.MousePos.ToString() + "\n" +
                     Input.MouseMoveDist.ToString() + "\n" +

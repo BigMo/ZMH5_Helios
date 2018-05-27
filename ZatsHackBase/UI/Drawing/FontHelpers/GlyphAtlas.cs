@@ -61,7 +61,6 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
         #endregion
 
         #region PROPERTIES
-        public SamplerState SamplerState { get; private set; }
         public ShaderResourceView Resource { get; private set; }
         public Texture2D Texture { get; private set; }
         public Bitmap Image { get; private set; }
@@ -79,8 +78,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
             chars = ranges.SelectMany(x => x.Chars).ToArray();
             locations = new Vector2[chars.Length];
             sizes = new SizeF[chars.Length];
-
-            SamplerState = null;
+            
             Resource = null;
             Texture = null;
             Image = null;
@@ -247,20 +245,6 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 Image.UnlockBits(data);
             }
             renderer.DeviceContext.UnmapSubresource(Texture, 0);
-
-            SamplerState = new SamplerState(renderer.Device, new SamplerStateDescription()
-            {
-                Filter = Filter.MinMagMipLinear,
-                AddressU = TextureAddressMode.Clamp,
-                AddressV = TextureAddressMode.Clamp,
-                AddressW = TextureAddressMode.Clamp,
-                BorderColor = new RawColor4(1f, 0f, 1f, 1f),
-                ComparisonFunction = Comparison.Never,
-                MaximumAnisotropy = 16,
-                MipLodBias = 0,
-                MinimumLod = 0,
-                MaximumLod = 16
-            });
         }
         public void Dispose()
         {
@@ -270,8 +254,7 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                 Texture?.Dispose();
                 Glyphs?.Clear();
                 Image?.Dispose();
-
-                SamplerState = null;
+                
                 Resource = null;
                 Texture = null;
                 Image = null;

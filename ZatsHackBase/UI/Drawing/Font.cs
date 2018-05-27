@@ -153,7 +153,7 @@ namespace ZatsHackBase.UI
             }
 
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
-            geometry_buffer.SetupTexture(atlas.Resource, atlas.SamplerState);
+            geometry_buffer.SetupTexture(atlas.Resource);
             geometry_buffer.Trim();
 
         }
@@ -318,7 +318,7 @@ namespace ZatsHackBase.UI
             }
 
             geometry_buffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
-            geometry_buffer.SetupTexture(atlas.Resource, atlas.SamplerState);
+            geometry_buffer.SetupTexture(atlas.Resource);
             geometry_buffer.Trim();
         }
 
@@ -331,7 +331,7 @@ namespace ZatsHackBase.UI
                 new Vertex(0f, 512, color, 0f, 1f),
                 new Vertex(1024, 512, color, 1f, 1f));
             buf.AppendIndices(0, 1, 2, 1, 2, 3);
-            buf.SetupTexture(atlas.Resource, atlas.SamplerState);
+            buf.SetupTexture(atlas.Resource);
             buf.Trim();
         }
 

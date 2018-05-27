@@ -1,4 +1,5 @@
 ﻿using D3D11 = SharpDX.Direct3D11;
+using DXGI = SharpDX.DXGI;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
@@ -21,24 +22,84 @@ namespace ZatsHackBase.UI
     //TODO: Implement
     public class Renderer : IDisposable
     {
+        static string pixelShaderCode =
+            @"
+                Texture2D    g_texture : register( t0 );           
+                SamplerState g_sampler : register ( s0 );
+
+                struct psinput
+                {
+                    float4 pos  : SV_POSITION;
+                    float4 col  : COLOR;
+                    float2 uv   : TEXCOORDS;
+                };
+
+                float4 main ( psinput input ) : SV_TARGET
+                {
+                    return input.col * g_texture.Sample ( g_sampler, input.uv );
+                }
+            ";
+
+        static string vertexShaderCode =
+                @"
+                cbuffer ShaderParams : register(b0) 
+                {
+                    float2 g_screenSize;
+                }
+
+                struct vsinput
+                {
+                    float4 pos  : POSITION;
+                    float4 col  : COLOR;
+                    float2 uv   : TEXCOORDS;
+                };
+
+                struct psoutput
+                {
+                    float4 pos  : SV_POSITION;
+                    float4 col  : COLOR;
+                    float2 uv   : TEXCOORDS;
+                };
+
+                float4 fix_pos ( float4 orig_origin )
+                {
+                    return float4 (
+                        -1.0f + ( orig_origin.x / g_screenSize.x ),
+                        1.0f - ( orig_origin.y / g_screenSize.y ),
+                        0.0f, 1.0f
+                    );
+                }
+
+                psoutput main ( vsinput vertex )
+                {
+                    psoutput output;
+                    output.pos      = fix_pos(vertex.pos);
+                    output.col      = vertex.col;
+                    output.uv       = vertex.uv;
+                    return output;
+                }
+                ";
+
         #region VARIABLES
         private D3D11.Device d3dDevice;
         private D3D11.DeviceContext d3dDeviceContext;
         private SwapChain swapChain;
         private D3D11.RenderTargetView renderTargetView;
         private D3D11.BlendState blendState;
-
-        // Shaders
-        private ShaderSet fontShader;
-        private ShaderSet primitiveShader;
-        private ShaderSet ellipseShader;
-        private ShaderSet bezierShader;
+        private D3D11.Buffer transfBuffer;
+        private D3D11.VertexShader vertexShader;
+        private D3D11.PixelShader pixelShader;
+        private D3D11.InputLayout inputLayout;
+        private D3D11.SamplerState samplerState;
         #endregion
 
         #region PROPERTIES
         public bool Initialized { get { return d3dDevice != null; } }
         public D3D11.Device Device => d3dDevice;
         public D3D11.DeviceContext DeviceContext => d3dDeviceContext;
+        public D3D11.Texture2D White;
+        public D3D11.ShaderResourceView WhiteView;
+        public D3D11.SamplerState Sampler;
         public GeometryBuffer GeometryBuffer { get; set; }
         public Size2F ViewportSize { get; set; }
         public Size2F hViewportSize { get; set; }
@@ -80,144 +141,75 @@ namespace ZatsHackBase.UI
             blendState = new D3D11.BlendState(d3dDevice, D3D11.BlendStateDescription.Default());
 
             GeometryBuffer = new GeometryBuffer(this);
-
-            InitializeShaders();
-
+            
             Fonts = new FontCache(this);
-        }
 
-        private void InitializeShaders()
-        {
-            var primitiveShaderCode =
-                @"
-                cbuffer ShaderParams : register(b0) 
-                {
-                    float2 g_screenSize;
-                }
+            var layout = new D3D11.InputElement[]
+            {
+                new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
+            };
 
-                struct Vertex
-                {
-                    float4 Origin : POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
+            var vertexShaderOutput = ShaderBytecode.Compile(vertexShaderCode, "main", "vs_4_0", ShaderFlags.Debug);
+            var pixelShaderOutput = ShaderBytecode.Compile(pixelShaderCode, "main", "ps_4_0", ShaderFlags.Debug);
 
-                struct Pixel
-                {
-                    float4 Origin : SV_POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
+            vertexShader = new D3D11.VertexShader(Device, vertexShaderOutput);
+            pixelShader = new D3D11.PixelShader(Device, pixelShaderOutput);
 
-                float4 fix_origin ( float4 orig_origin )
-                {
-                    return float4 (
-                        -1.0f + ( orig_origin.x / g_screenSize.x ),
-                        1.0f - ( orig_origin.y / g_screenSize.y ),
-                        0.0f, 1.0f
-                    );
-                }
+            var shaderSignature = ShaderSignature.GetInputSignature(vertexShaderOutput);
 
-                Pixel vertex_entry ( Vertex vertex )
-                {
-                    Pixel output;
-                    
-                    output.Origin   = fix_origin(vertex.Origin);
-                    output.Color    = vertex.Color;
-                    output.UV       = vertex.UV;
-                    
-                    return output;
-                }
+            inputLayout = new D3D11.InputLayout(Device, shaderSignature, layout);
+            
+            IntPtr data = System.Runtime.InteropServices.Marshal.AllocHGlobal(4 * 4 * 4);
+            for (int i = 0; i < 4 * 4 * 4; i++)
+            {
+                System.Runtime.InteropServices.Marshal.WriteByte(data, i, 0xFF);
+            }
+            
+            White = new D3D11.Texture2D(Device, new D3D11.Texture2DDescription
+            {
+                Width = 4,
+                Height = 4,
+                ArraySize = 1,
+                BindFlags = D3D11.BindFlags.ShaderResource,
+                Usage = D3D11.ResourceUsage.Dynamic,
+                CpuAccessFlags = D3D11.CpuAccessFlags.Write,
+                Format = Format.R32G32B32A32_Float,
+                MipLevels = 1,
+                OptionFlags = D3D11.ResourceOptionFlags.None,
+                SampleDescription = new DXGI.SampleDescription(1, 0),
+            }, new DataBox[] { new DataBox(data, 4 * 2, 4) });
 
-                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
-                {
-                    return pixel.Color;
-                }
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(data);
+            
+            WhiteView = new D3D11.ShaderResourceView(Device, White);
+            
+            samplerState = new D3D11.SamplerState(Device, new D3D11.SamplerStateDescription()
+            {
+                Filter = D3D11.Filter.MinMagMipLinear,
+                AddressU = D3D11.TextureAddressMode.Clamp,
+                AddressV = D3D11.TextureAddressMode.Clamp,
+                AddressW = D3D11.TextureAddressMode.Clamp,
+                BorderColor = new RawColor4(1f, 0f, 1f, 1f),
+                ComparisonFunction = D3D11.Comparison.Never,
+                MaximumAnisotropy = 16,
+                MipLodBias = 0,
+                MinimumLod = 0,
+                MaximumLod = 16
+            });
+            
+            transfBuffer = new SharpDX.Direct3D11.Buffer(Device,
+                new SharpDX.Direct3D11.BufferDescription(sizeof(float) * 4, SharpDX.Direct3D11.ResourceUsage.Dynamic, SharpDX.Direct3D11.BindFlags.ConstantBuffer,
+                    SharpDX.Direct3D11.CpuAccessFlags.Write, SharpDX.Direct3D11.ResourceOptionFlags.None, sizeof(float)));
 
-                ";
+            DataStream stream;
+            DeviceContext.MapSubresource(transfBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out stream);
 
-            //http://nielson.io/2016/04/2d-sprite-outlines-in-unity/
-            var fontShaderCode =
-                @"
-                cbuffer ShaderParams : register(b0) 
-                {
-                    float2 g_screenSize;
-                }
+            stream.Write(hViewportSize.Width);
+            stream.Write(hViewportSize.Height);
 
-                struct Vertex
-                {
-                    float4 Origin : POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
-
-                struct Pixel
-                {
-                    float4 Origin : SV_POSITION;
-                    float4 Color  : COLOR;
-                    float2 UV     : TEXCOORDS;
-                };
-
-                float4 fix_origin ( float4 orig_origin )
-                {
-                    return float4 (
-                        -1.0f + ( orig_origin.x / g_screenSize.x ),
-                        1.0f - ( orig_origin.y / g_screenSize.y ),
-                        0.0f, 1.0f
-                    );
-                }
-
-                Pixel vertex_entry ( Vertex vertex )
-                {
-                    Pixel output;
-                    
-                    output.Origin   = fix_origin(vertex.Origin);
-                    output.Color    = vertex.Color;
-                    output.UV       = vertex.UV;
-                    
-                    return output;
-                }
-
-                Texture2D    g_texture : register( t0 );           
-                SamplerState g_linearSampler : register ( s0 );
-
-                float4 pixel_entry ( Pixel pixel ) : SV_TARGET
-                {
-                    float4 input_color = pixel.Color;
-                    float4 texture_color = g_texture.Sample ( g_linearSampler, pixel.UV );
-
-                    if ( texture_color.w == 0.0f )
-                    {
-                        discard;
-                    }
-
-                    float4 combined = texture_color.x > 0.15f ? texture_color * input_color : texture_color;
-                    return combined;
-                }
-                ";
-
-            /*ellipseShader = new ShaderSet(this, ellipseShaderCode, "vertex_entry", "pixel_entry", new[]
-                {
-                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
-                });*/
-
-            primitiveShader = new ShaderSet(this,
-                primitiveShaderCode, "vertex_entry", "pixel_entry", new[]
-                {
-                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
-                });
-
-            fontShader = new ShaderSet(this,
-                fontShaderCode, "vertex_entry", "pixel_entry", new[]
-                {
-                    new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                    new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                    new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
-                });
+            DeviceContext.UnmapSubresource(transfBuffer, 0);
         }
         
         public void Clear(Color color)
@@ -235,6 +227,11 @@ namespace ZatsHackBase.UI
             if (!Initialized)
                 return;
 
+            DeviceContext.VertexShader.SetShader(vertexShader, null, 0);
+            DeviceContext.VertexShader.SetConstantBuffer(0, transfBuffer);
+            DeviceContext.PixelShader.SetShader(pixelShader, null, 0);
+            DeviceContext.PixelShader.SetSampler(0, samplerState);
+
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();
 
@@ -245,9 +242,9 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-
-            fontShader.Dispose();
-            primitiveShader.Dispose();
+            vertexShader.Dispose();
+            pixelShader.Dispose();
+            inputLayout.Dispose();
             renderTargetView.Dispose();
             swapChain.Dispose();
             d3dDevice.Dispose();
@@ -287,9 +284,6 @@ namespace ZatsHackBase.UI
             //    0,
             //    1
             //});
-            GeometryBuffer.SetShader(primitiveShader);
-
-            GeometryBuffer.DisableUseOfIndices();
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
 
             GeometryBuffer.Trim();
@@ -304,9 +298,7 @@ namespace ZatsHackBase.UI
 
             points.ToList().ForEach(el => { GeometryBuffer.AppendVertex(new Vertex { Origin = el, Color = col }); });
 
-            
-
-            GeometryBuffer.SetShader(primitiveShader);
+            GeometryBuffer.SetupTexture(WhiteView);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
@@ -337,7 +329,7 @@ namespace ZatsHackBase.UI
 
             );
 
-            GeometryBuffer.SetShader(primitiveShader);
+            GeometryBuffer.SetupTexture(WhiteView);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.TriangleStrip);
             GeometryBuffer.Trim();
         }
@@ -375,7 +367,7 @@ namespace ZatsHackBase.UI
                 0
             );
 
-            GeometryBuffer.SetShader(primitiveShader);
+            GeometryBuffer.SetupTexture(WhiteView);
             GeometryBuffer.SetPrimitiveType(PrimitiveTopology.LineList);
             GeometryBuffer.Trim();
         }
@@ -391,8 +383,7 @@ namespace ZatsHackBase.UI
                 if (font == null || font.IsDisposed)
                     return;
             }
-
-            GeometryBuffer.SetShader(fontShader);
+            
             font.DrawString(GeometryBuffer, location, (RawColor4)color, text);
         }
 
@@ -407,8 +398,7 @@ namespace ZatsHackBase.UI
                 if (font == null || font.IsDisposed)
                     return;
             }
-
-            GeometryBuffer.SetShader(fontShader);
+            
             font.DrawString(GeometryBuffer, location, (RawColor4)color, text, halign, valign);
         }
 
@@ -423,8 +413,6 @@ namespace ZatsHackBase.UI
                 if (font == null || font.IsDisposed)
                     return;
             }
-
-            GeometryBuffer.SetShader(fontShader);
             
             font.DrawString(GeometryBuffer, new Vector2(10f,10f), new RawColor4(1f,0f,1f,1f), 
                 String.Format("Number of Vertices: {0}\nNumber of Indices {1}\nMemory pushend onto GPU: {2}",

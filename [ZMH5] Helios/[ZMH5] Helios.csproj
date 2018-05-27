@@ -100,11 +100,14 @@
   <ItemGroup>
     <Compile Include="CSGO\BSP\BSPFile.cs" />
     <Compile Include="CSGO\BSP\BSPFlags.cs" />
+    <Compile Include="CSGO\BSP\ContentsFlag.cs" />
     <Compile Include="CSGO\BSP\cplane_t.cs" />
     <Compile Include="CSGO\BSP\dbrushside_t.cs" />
     <Compile Include="CSGO\BSP\dbrush_t.cs" />
     <Compile Include="CSGO\BSP\dedge_t.cs" />
     <Compile Include="CSGO\BSP\dface_t.cs" />
+    <Compile Include="CSGO\BSP\dgamelumpheader_t.cs" />
+    <Compile Include="CSGO\BSP\dgamelump_t.cs" />
     <Compile Include="CSGO\BSP\dheader_t.cs" />
     <Compile Include="CSGO\BSP\dleaf_t.cs" />
     <Compile Include="CSGO\BSP\dnode_t.cs" />
@@ -114,6 +117,9 @@
     <Compile Include="CSGO\BSP\mvertex_t.cs" />
     <Compile Include="CSGO\BSP\Polygon.cs" />
     <Compile Include="CSGO\BSP\snode_t.cs" />
+    <Compile Include="CSGO\BSP\StaticPropDictLump_t.cs" />
+    <Compile Include="CSGO\BSP\StaticPropLeafLump_t.cs" />
+    <Compile Include="CSGO\BSP\StaticPropLump_t.cs" />
     <Compile Include="CSGO\BSP\texinfo_t.cs" />
     <Compile Include="CSGO\BSP\TraceRay.cs" />
     <Compile Include="CSGO\BSP\trace_t.cs" />
@@ -188,6 +194,12 @@
     </Compile>
     <Compile Include="UI\Controls\AimSmoothingSettings.Designer.cs">
       <DependentUpon>AimSmoothingSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\BSPSettingsUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\BSPSettingsUI.Designer.cs">
+      <DependentUpon>BSPSettingsUI.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\ESPSettings.cs">
       <SubType>UserControl</SubType>
@@ -266,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\AimSmoothingSettings.resx">
       <DependentUpon>AimSmoothingSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\BSPSettingsUI.resx">
+      <DependentUpon>BSPSettingsUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\ESPSettings.resx">
       <DependentUpon>ESPSettings.cs</DependentUpon>

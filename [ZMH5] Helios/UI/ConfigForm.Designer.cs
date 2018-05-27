@@ -31,10 +31,15 @@
             this.components = new System.ComponentModel.Container();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.metroTabPage4 = new MetroFramework.Controls.MetroTabPage();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.cfgAll = new MetroFramework.Controls.MetroComboBox();
             this.cfgNewCreate = new MetroFramework.Controls.MetroButton();
             this.cfgRemove = new MetroFramework.Controls.MetroButton();
@@ -43,19 +48,16 @@
             this.cfgNewName = new MetroFramework.Controls.MetroTextBox();
             this.cfgSave = new MetroFramework.Controls.MetroButton();
             this.metroStyleManager1 = new MetroFramework.Components.MetroStyleManager(this.components);
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.aimGeneralSettings1 = new _ZMH5__Helios.UI.Controls.AimGeneralSettings();
             this.aimSmoothingSettings1 = new _ZMH5__Helios.UI.Controls.AimSmoothingSettings();
+            this.rcsSettings1 = new _ZMH5__Helios.UI.Controls.RCSSettings();
             this.espAllies = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.espEnemies = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.espWeapons = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.espC4 = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.espGrenades = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.espChickens = new _ZMH5__Helios.UI.Controls.ESPSettings();
+            this.espWorld = new _ZMH5__Helios.UI.Controls.ESPSettings();
             this.triggerSettingsUI1 = new _ZMH5__Helios.UI.Controls.TriggerSettingsUI();
             this.glowAllies = new _ZMH5__Helios.UI.Controls.GlowSettingsUI();
             this.glowEnemies = new _ZMH5__Helios.UI.Controls.GlowSettingsUI();
@@ -63,33 +65,34 @@
             this.glowC4 = new _ZMH5__Helios.UI.Controls.GlowSettingsUI();
             this.glowGrenades = new _ZMH5__Helios.UI.Controls.GlowSettingsUI();
             this.glowChickens = new _ZMH5__Helios.UI.Controls.GlowSettingsUI();
-            this.rcsSettings1 = new _ZMH5__Helios.UI.Controls.RCSSettings();
+            this.metroTabPage6 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.metroTabPage3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
-            this.metroTabPage4.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
-            this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.metroTabPage4.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.metroTabPage5.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
+            this.metroTabControl1.Controls.Add(this.metroTabPage5);
             this.metroTabControl1.Controls.Add(this.metroTabPage3);
             this.metroTabControl1.Controls.Add(this.metroTabPage2);
             this.metroTabControl1.Controls.Add(this.metroTabPage4);
-            this.metroTabControl1.Controls.Add(this.metroTabPage5);
+            this.metroTabControl1.Controls.Add(this.metroTabPage6);
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 153);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 4;
+            this.metroTabControl1.SelectedIndex = 5;
             this.metroTabControl1.Size = new System.Drawing.Size(531, 441);
             this.metroTabControl1.TabIndex = 1;
             // 
@@ -103,6 +106,19 @@
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Aim";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoScroll = true;
+            this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel2.Controls.Add(this.aimGeneralSettings1);
+            this.flowLayoutPanel2.Controls.Add(this.aimSmoothingSettings1);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(523, 402);
+            this.flowLayoutPanel2.TabIndex = 3;
             // 
             // metroTabPage3
             // 
@@ -129,6 +145,7 @@
             this.flowLayoutPanel1.Controls.Add(this.espC4);
             this.flowLayoutPanel1.Controls.Add(this.espGrenades);
             this.flowLayoutPanel1.Controls.Add(this.espChickens);
+            this.flowLayoutPanel1.Controls.Add(this.espWorld);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -146,6 +163,18 @@
             this.metroTabPage2.Text = "Trigger";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
             // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoScroll = true;
+            this.flowLayoutPanel3.AutoSize = true;
+            this.flowLayoutPanel3.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel3.Controls.Add(this.triggerSettingsUI1);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(523, 402);
+            this.flowLayoutPanel3.TabIndex = 4;
+            // 
             // metroTabPage4
             // 
             this.metroTabPage4.Controls.Add(this.flowLayoutPanel4);
@@ -156,6 +185,46 @@
             this.metroTabPage4.TabIndex = 3;
             this.metroTabPage4.Text = "Glow";
             this.metroTabPage4.VerticalScrollbarBarColor = true;
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.AutoScroll = true;
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel4.Controls.Add(this.glowAllies);
+            this.flowLayoutPanel4.Controls.Add(this.glowEnemies);
+            this.flowLayoutPanel4.Controls.Add(this.glowWeapons);
+            this.flowLayoutPanel4.Controls.Add(this.glowC4);
+            this.flowLayoutPanel4.Controls.Add(this.glowGrenades);
+            this.flowLayoutPanel4.Controls.Add(this.glowChickens);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(523, 402);
+            this.flowLayoutPanel4.TabIndex = 5;
+            // 
+            // metroTabPage5
+            // 
+            this.metroTabPage5.Controls.Add(this.flowLayoutPanel5);
+            this.metroTabPage5.HorizontalScrollbarBarColor = true;
+            this.metroTabPage5.Location = new System.Drawing.Point(4, 35);
+            this.metroTabPage5.Name = "metroTabPage5";
+            this.metroTabPage5.Size = new System.Drawing.Size(523, 402);
+            this.metroTabPage5.TabIndex = 4;
+            this.metroTabPage5.Text = "RCS";
+            this.metroTabPage5.VerticalScrollbarBarColor = true;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.AutoScroll = true;
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel5.Controls.Add(this.rcsSettings1);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(523, 402);
+            this.flowLayoutPanel5.TabIndex = 5;
             // 
             // cfgAll
             // 
@@ -245,88 +314,31 @@
             this.metroStyleManager1.Style = MetroFramework.MetroColorStyle.Orange;
             this.metroStyleManager1.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.AutoScroll = true;
-            this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.BackColor = System.Drawing.Color.Transparent;
-            this.flowLayoutPanel2.Controls.Add(this.aimGeneralSettings1);
-            this.flowLayoutPanel2.Controls.Add(this.aimSmoothingSettings1);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(523, 402);
-            this.flowLayoutPanel2.TabIndex = 3;
-            // 
-            // flowLayoutPanel3
-            // 
-            this.flowLayoutPanel3.AutoScroll = true;
-            this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.BackColor = System.Drawing.Color.Transparent;
-            this.flowLayoutPanel3.Controls.Add(this.triggerSettingsUI1);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(523, 402);
-            this.flowLayoutPanel3.TabIndex = 4;
-            // 
-            // flowLayoutPanel4
-            // 
-            this.flowLayoutPanel4.AutoScroll = true;
-            this.flowLayoutPanel4.AutoSize = true;
-            this.flowLayoutPanel4.BackColor = System.Drawing.Color.Transparent;
-            this.flowLayoutPanel4.Controls.Add(this.glowAllies);
-            this.flowLayoutPanel4.Controls.Add(this.glowEnemies);
-            this.flowLayoutPanel4.Controls.Add(this.glowWeapons);
-            this.flowLayoutPanel4.Controls.Add(this.glowC4);
-            this.flowLayoutPanel4.Controls.Add(this.glowGrenades);
-            this.flowLayoutPanel4.Controls.Add(this.glowChickens);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(523, 402);
-            this.flowLayoutPanel4.TabIndex = 5;
-            // 
-            // metroTabPage5
-            // 
-            this.metroTabPage5.Controls.Add(this.flowLayoutPanel5);
-            this.metroTabPage5.HorizontalScrollbarBarColor = true;
-            this.metroTabPage5.Location = new System.Drawing.Point(4, 35);
-            this.metroTabPage5.Name = "metroTabPage5";
-            this.metroTabPage5.Size = new System.Drawing.Size(523, 402);
-            this.metroTabPage5.TabIndex = 4;
-            this.metroTabPage5.Text = "RCS";
-            this.metroTabPage5.VerticalScrollbarBarColor = true;
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.AutoScroll = true;
-            this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.BackColor = System.Drawing.Color.Transparent;
-            this.flowLayoutPanel5.Controls.Add(this.rcsSettings1);
-            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(523, 402);
-            this.flowLayoutPanel5.TabIndex = 5;
-            // 
             // aimGeneralSettings1
             // 
             this.aimGeneralSettings1.AutoSize = true;
             this.aimGeneralSettings1.Location = new System.Drawing.Point(3, 3);
             this.aimGeneralSettings1.Name = "aimGeneralSettings1";
             this.aimGeneralSettings1.Settings = null;
-            this.aimGeneralSettings1.Size = new System.Drawing.Size(473, 206);
+            this.aimGeneralSettings1.Size = new System.Drawing.Size(473, 217);
             this.aimGeneralSettings1.TabIndex = 0;
             // 
             // aimSmoothingSettings1
             // 
             this.aimSmoothingSettings1.AutoSize = true;
-            this.aimSmoothingSettings1.Location = new System.Drawing.Point(3, 215);
+            this.aimSmoothingSettings1.Location = new System.Drawing.Point(3, 226);
             this.aimSmoothingSettings1.Name = "aimSmoothingSettings1";
             this.aimSmoothingSettings1.Settings = null;
             this.aimSmoothingSettings1.Size = new System.Drawing.Size(473, 175);
             this.aimSmoothingSettings1.TabIndex = 1;
+            // 
+            // rcsSettings1
+            // 
+            this.rcsSettings1.Location = new System.Drawing.Point(3, 3);
+            this.rcsSettings1.Name = "rcsSettings1";
+            this.rcsSettings1.Settings = null;
+            this.rcsSettings1.Size = new System.Drawing.Size(477, 85);
+            this.rcsSettings1.TabIndex = 0;
             // 
             // espAllies
             // 
@@ -335,7 +347,7 @@
             this.espAllies.Label = "Allies";
             this.espAllies.Location = new System.Drawing.Point(3, 3);
             this.espAllies.Name = "espAllies";
-            this.espAllies.Size = new System.Drawing.Size(479, 233);
+            this.espAllies.Size = new System.Drawing.Size(479, 346);
             this.espAllies.TabIndex = 6;
             // 
             // espEnemies
@@ -343,9 +355,9 @@
             this.espEnemies.AutoSize = true;
             this.espEnemies.Entry = null;
             this.espEnemies.Label = "Enemies";
-            this.espEnemies.Location = new System.Drawing.Point(3, 242);
+            this.espEnemies.Location = new System.Drawing.Point(3, 355);
             this.espEnemies.Name = "espEnemies";
-            this.espEnemies.Size = new System.Drawing.Size(479, 233);
+            this.espEnemies.Size = new System.Drawing.Size(479, 346);
             this.espEnemies.TabIndex = 4;
             // 
             // espWeapons
@@ -353,9 +365,9 @@
             this.espWeapons.AutoSize = true;
             this.espWeapons.Entry = null;
             this.espWeapons.Label = "Weapons";
-            this.espWeapons.Location = new System.Drawing.Point(3, 481);
+            this.espWeapons.Location = new System.Drawing.Point(3, 707);
             this.espWeapons.Name = "espWeapons";
-            this.espWeapons.Size = new System.Drawing.Size(479, 233);
+            this.espWeapons.Size = new System.Drawing.Size(479, 346);
             this.espWeapons.TabIndex = 5;
             // 
             // espC4
@@ -363,9 +375,9 @@
             this.espC4.AutoSize = true;
             this.espC4.Entry = null;
             this.espC4.Label = "C4";
-            this.espC4.Location = new System.Drawing.Point(3, 720);
+            this.espC4.Location = new System.Drawing.Point(3, 1059);
             this.espC4.Name = "espC4";
-            this.espC4.Size = new System.Drawing.Size(479, 233);
+            this.espC4.Size = new System.Drawing.Size(479, 346);
             this.espC4.TabIndex = 7;
             // 
             // espGrenades
@@ -373,9 +385,9 @@
             this.espGrenades.AutoSize = true;
             this.espGrenades.Entry = null;
             this.espGrenades.Label = "Grenades";
-            this.espGrenades.Location = new System.Drawing.Point(3, 959);
+            this.espGrenades.Location = new System.Drawing.Point(3, 1411);
             this.espGrenades.Name = "espGrenades";
-            this.espGrenades.Size = new System.Drawing.Size(479, 233);
+            this.espGrenades.Size = new System.Drawing.Size(479, 346);
             this.espGrenades.TabIndex = 8;
             // 
             // espChickens
@@ -383,10 +395,20 @@
             this.espChickens.AutoSize = true;
             this.espChickens.Entry = null;
             this.espChickens.Label = "Chickens";
-            this.espChickens.Location = new System.Drawing.Point(3, 1198);
+            this.espChickens.Location = new System.Drawing.Point(3, 1763);
             this.espChickens.Name = "espChickens";
-            this.espChickens.Size = new System.Drawing.Size(479, 233);
+            this.espChickens.Size = new System.Drawing.Size(479, 346);
             this.espChickens.TabIndex = 3;
+            // 
+            // espWorld
+            // 
+            this.espWorld.AutoSize = true;
+            this.espWorld.Entry = null;
+            this.espWorld.Label = "World";
+            this.espWorld.Location = new System.Drawing.Point(3, 2115);
+            this.espWorld.Name = "espWorld";
+            this.espWorld.Size = new System.Drawing.Size(479, 346);
+            this.espWorld.TabIndex = 9;
             // 
             // triggerSettingsUI1
             // 
@@ -450,13 +472,15 @@
             this.glowChickens.Size = new System.Drawing.Size(478, 176);
             this.glowChickens.TabIndex = 4;
             // 
-            // rcsSettings1
+            // metroTabPage6
             // 
-            this.rcsSettings1.Location = new System.Drawing.Point(3, 3);
-            this.rcsSettings1.Name = "rcsSettings1";
-            this.rcsSettings1.Settings = null;
-            this.rcsSettings1.Size = new System.Drawing.Size(477, 85);
-            this.rcsSettings1.TabIndex = 0;
+            this.metroTabPage6.HorizontalScrollbarBarColor = true;
+            this.metroTabPage6.Location = new System.Drawing.Point(4, 35);
+            this.metroTabPage6.Name = "metroTabPage6";
+            this.metroTabPage6.Size = new System.Drawing.Size(523, 402);
+            this.metroTabPage6.TabIndex = 5;
+            this.metroTabPage6.Text = "BSP";
+            this.metroTabPage6.VerticalScrollbarBarColor = true;
             // 
             // ConfigForm
             // 
@@ -471,24 +495,24 @@
             this.metroTabControl1.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);
             this.metroTabPage1.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.metroTabPage3.ResumeLayout(false);
             this.metroTabPage3.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage2.PerformLayout();
+            this.flowLayoutPanel3.ResumeLayout(false);
             this.metroTabPage4.ResumeLayout(false);
             this.metroTabPage4.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).EndInit();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.metroTabPage5.ResumeLayout(false);
             this.metroTabPage5.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -530,5 +554,7 @@
         private MetroFramework.Controls.MetroTabPage metroTabPage5;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private Controls.RCSSettings rcsSettings1;
+        private Controls.ESPSettings espWorld;
+        private MetroFramework.Controls.MetroTabPage metroTabPage6;
     }
 }

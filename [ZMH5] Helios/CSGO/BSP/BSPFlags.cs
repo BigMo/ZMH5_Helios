@@ -17,7 +17,7 @@ namespace _ZMH5__Helios.CSGO.BSP
 
         public const float DIST_EPSILON = 0.03125f;
         public const int MAX_SURFINFO_VERTS = 32;
-        public const uint BSPVERSION = 19;
+        public const uint BSPVERSION = 21;
         public const int HEADER_LUMPS = 64;
         public const int MAX_POLYGONS = 50120;
         public const int MAX_MOD_KNOWN = 512;
@@ -28,6 +28,7 @@ namespace _ZMH5__Helios.CSGO.BSP
         public const int MAX_MAP_NODES = 65536;
         public const int MAX_MAP_TEXINFO = 12288;
         public const int MAX_MAP_TEXDATA = 2048;
+        public const int MAX_MAP_LEAFFACES = 65536;
         public const int MAX_MAP_LEAFBRUSHES = 65536;
         public const int MIN_MAP_DISP_POWER = 2;
         public const int MAX_MAP_DISP_POWER = 4;

@@ -36,12 +36,18 @@ namespace _ZMH5__Helios.CSGO.Modules.SnapshotHelpers
         public ClientState(int address)
         {
             this.address = address;
+            data = new byte[MAX_SIZE];
             Program.Hack.Memory.Position = address;
             Program.Hack.Memory.Read(data, 0, data.Length);
             stream = new MemoryStream(data);
 
             ViewAngles = new LazyCache<Vector3>(() => ReadAt<Vector3>(Program.Offsets.ClientStateSetViewAngles));
-            Map = new LazyCache<string>(() => Encoding.UTF8.GetString(data, Program.Offsets.ClientStateMapDirectory, 256));
+            Map = new LazyCache<string>(() => {
+                var str = Encoding.UTF8.GetString(data, Program.Offsets.ClientStateMapDirectory, 256);
+                if (str.Contains("\0"))
+                    str = str.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                return str;
+                });
             State = new LazyCache<SignOnState>(() => ReadAt<SignOnState>(Program.Offsets.ClientStateState));
         }
 

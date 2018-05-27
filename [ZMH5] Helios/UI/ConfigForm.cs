@@ -35,6 +35,7 @@ namespace _ZMH5__Helios.UI
                         espEnemies.Entry = settings.ESP.Enemies;
                         espGrenades.Entry = settings.ESP.Grenades;
                         espC4.Entry = settings.ESP.C4;
+                        espWorld.Entry = settings.ESP.World;
                         espWeapons.Entry = settings.ESP.Weapons;
                         glowChickens.Entry = settings.Glow.Chickens;
                         glowAllies.Entry = settings.Glow.Allies;

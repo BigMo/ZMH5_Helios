@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace _ZMH5__Helios.CSGO.BSP
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct texinfo_t
+    public struct texinfo_t
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public Vector4[] m_TextureVecs;
@@ -20,7 +20,7 @@ namespace _ZMH5__Helios.CSGO.BSP
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct Vector4
+    public struct Vector4
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public float[] m_Elements;

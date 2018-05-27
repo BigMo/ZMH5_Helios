@@ -9,7 +9,7 @@ using ZatsHackBase.Maths;
 namespace _ZMH5__Helios.CSGO.BSP
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct mvertex_t
+    public struct mvertex_t
     {
         public Vector3 m_Position;
     }

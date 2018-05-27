@@ -233,7 +233,7 @@
             this.cfgFov.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel2.SetColumnSpan(this.cfgFov, 2);
             this.cfgFov.Location = new System.Drawing.Point(114, 173);
-            this.cfgFov.Maximum = 9000;
+            this.cfgFov.Maximum = 18000;
             this.cfgFov.Name = "cfgFov";
             this.cfgFov.Size = new System.Drawing.Size(215, 14);
             this.cfgFov.TabIndex = 4;

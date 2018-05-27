@@ -174,11 +174,19 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 Vector3 closest = Vector3.Zero;
                 float closestFov = float.MaxValue;
-                foreach (var enemy in enemies)
+                foreach (var enemy in enemies.OrderBy(x => (lp.m_vecOrigin.Value - x.m_vecOrigin).LengthSqrt))
                 {
-                    if (Program.CurrentSettings.Aim.VisibleOnly && (!enemy.SeenBy(lp) && !lp.SeenBy(enemy)))
-                        continue;
-                    var newAngles = CalcAngle(src, enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector()) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
+                    var dest = enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector() + Vector3.UnitZ * ESPModule.MetersToUnits(Program.CurrentSettings.Aim.HeightOffset / 100f);
+                    if (Program.CurrentSettings.Aim.VisibleOnly)
+                    {
+                        var map = Program.Hack.StateMod.Map;
+                        if (map == null)
+                            if (!enemy.SeenBy(lp))
+                                continue;
+                        if (!map.IsVisible(src, dest))
+                            continue;
+                    }
+                    var newAngles = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
                     newAngles = ViewModule.ClampAngle(newAngles);
                     float fov = newAngles.Length;
                     if (fov < closestFov && fov < Program.CurrentSettings.Aim.FOV)

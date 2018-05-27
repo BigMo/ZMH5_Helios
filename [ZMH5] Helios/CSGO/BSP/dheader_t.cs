@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace _ZMH5__Helios.CSGO.BSP
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct dheader_t
+    public struct dheader_t
     {
         public int m_Ident;
         public int m_Version;

@@ -44,6 +44,8 @@
             this.espAlliesWeapon = new _ZMH5__Helios.UI.Controls.SynchToggle();
             this.metroLabel15 = new MetroFramework.Controls.MetroLabel();
             this.espAlliesColor = new _ZMH5__Helios.UI.Controls.SynchColorPicker();
+            this.espAlliesColorOccluded = new _ZMH5__Helios.UI.Controls.SynchColorPicker();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,16 +72,19 @@
             this.tableLayoutPanel2.Controls.Add(this.espAlliesWeapon, 3, 3);
             this.tableLayoutPanel2.Controls.Add(this.metroLabel15, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.espAlliesColor, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.espAlliesColorOccluded, 1, 5);
+            this.tableLayoutPanel2.Controls.Add(this.metroLabel1, 0, 5);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowCount = 6;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(476, 230);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(476, 343);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // lblName
@@ -99,7 +104,7 @@
             // 
             this.metroLabel3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel3.AutoSize = true;
-            this.metroLabel3.Location = new System.Drawing.Point(15, 56);
+            this.metroLabel3.Location = new System.Drawing.Point(28, 56);
             this.metroLabel3.Name = "metroLabel3";
             this.metroLabel3.Size = new System.Drawing.Size(45, 19);
             this.metroLabel3.TabIndex = 0;
@@ -109,7 +114,7 @@
             // 
             this.metroLabel7.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel7.AutoSize = true;
-            this.metroLabel7.Location = new System.Drawing.Point(4, 29);
+            this.metroLabel7.Location = new System.Drawing.Point(17, 29);
             this.metroLabel7.Name = "metroLabel7";
             this.metroLabel7.Size = new System.Drawing.Size(56, 19);
             this.metroLabel7.TabIndex = 0;
@@ -119,7 +124,7 @@
             // 
             this.espAlliesEnabled.AutoSize = true;
             this.espAlliesEnabled.Checked = false;
-            this.espAlliesEnabled.Location = new System.Drawing.Point(66, 28);
+            this.espAlliesEnabled.Location = new System.Drawing.Point(79, 28);
             this.espAlliesEnabled.Name = "espAlliesEnabled";
             this.espAlliesEnabled.Observable = null;
             this.espAlliesEnabled.PropertyName = "Enabled";
@@ -130,7 +135,7 @@
             // 
             this.espAlliesName.AutoSize = true;
             this.espAlliesName.Checked = false;
-            this.espAlliesName.Location = new System.Drawing.Point(66, 55);
+            this.espAlliesName.Location = new System.Drawing.Point(79, 55);
             this.espAlliesName.Name = "espAlliesName";
             this.espAlliesName.Observable = null;
             this.espAlliesName.PropertyName = "ShowName";
@@ -141,7 +146,7 @@
             // 
             this.metroLabel4.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel4.AutoSize = true;
-            this.metroLabel4.Location = new System.Drawing.Point(267, 29);
+            this.metroLabel4.Location = new System.Drawing.Point(274, 29);
             this.metroLabel4.Name = "metroLabel4";
             this.metroLabel4.Size = new System.Drawing.Size(31, 19);
             this.metroLabel4.TabIndex = 0;
@@ -151,7 +156,7 @@
             // 
             this.espAlliesBox.AutoSize = true;
             this.espAlliesBox.Checked = false;
-            this.espAlliesBox.Location = new System.Drawing.Point(304, 28);
+            this.espAlliesBox.Location = new System.Drawing.Point(311, 28);
             this.espAlliesBox.Name = "espAlliesBox";
             this.espAlliesBox.Observable = null;
             this.espAlliesBox.PropertyName = "ShowBox";
@@ -162,7 +167,7 @@
             // 
             this.metroLabel5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel5.AutoSize = true;
-            this.metroLabel5.Location = new System.Drawing.Point(3, 83);
+            this.metroLabel5.Location = new System.Drawing.Point(16, 83);
             this.metroLabel5.Name = "metroLabel5";
             this.metroLabel5.Size = new System.Drawing.Size(57, 19);
             this.metroLabel5.TabIndex = 0;
@@ -172,7 +177,7 @@
             // 
             this.espAlliesDistance.AutoSize = true;
             this.espAlliesDistance.Checked = false;
-            this.espAlliesDistance.Location = new System.Drawing.Point(66, 82);
+            this.espAlliesDistance.Location = new System.Drawing.Point(79, 82);
             this.espAlliesDistance.Name = "espAlliesDistance";
             this.espAlliesDistance.Observable = null;
             this.espAlliesDistance.PropertyName = "ShowDistance";
@@ -183,7 +188,7 @@
             // 
             this.metroLabel6.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel6.AutoSize = true;
-            this.metroLabel6.Location = new System.Drawing.Point(252, 56);
+            this.metroLabel6.Location = new System.Drawing.Point(259, 56);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(46, 19);
             this.metroLabel6.TabIndex = 0;
@@ -193,7 +198,7 @@
             // 
             this.espAlliesHealth.AutoSize = true;
             this.espAlliesHealth.Checked = false;
-            this.espAlliesHealth.Location = new System.Drawing.Point(304, 55);
+            this.espAlliesHealth.Location = new System.Drawing.Point(311, 55);
             this.espAlliesHealth.Name = "espAlliesHealth";
             this.espAlliesHealth.Observable = null;
             this.espAlliesHealth.PropertyName = "ShowDistance";
@@ -204,7 +209,7 @@
             // 
             this.metroLabel14.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel14.AutoSize = true;
-            this.metroLabel14.Location = new System.Drawing.Point(240, 83);
+            this.metroLabel14.Location = new System.Drawing.Point(247, 83);
             this.metroLabel14.Name = "metroLabel14";
             this.metroLabel14.Size = new System.Drawing.Size(58, 19);
             this.metroLabel14.TabIndex = 0;
@@ -214,7 +219,7 @@
             // 
             this.espAlliesWeapon.AutoSize = true;
             this.espAlliesWeapon.Checked = false;
-            this.espAlliesWeapon.Location = new System.Drawing.Point(304, 82);
+            this.espAlliesWeapon.Location = new System.Drawing.Point(311, 82);
             this.espAlliesWeapon.Name = "espAlliesWeapon";
             this.espAlliesWeapon.Observable = null;
             this.espAlliesWeapon.PropertyName = "ShowDistance";
@@ -225,7 +230,7 @@
             // 
             this.metroLabel15.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel15.AutoSize = true;
-            this.metroLabel15.Location = new System.Drawing.Point(18, 158);
+            this.metroLabel15.Location = new System.Drawing.Point(31, 157);
             this.metroLabel15.Name = "metroLabel15";
             this.metroLabel15.Size = new System.Drawing.Size(42, 19);
             this.metroLabel15.TabIndex = 0;
@@ -238,12 +243,37 @@
             this.espAlliesColor.BackColor = System.Drawing.Color.Transparent;
             this.espAlliesColor.ColorSystem = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.tableLayoutPanel2.SetColumnSpan(this.espAlliesColor, 3);
-            this.espAlliesColor.Location = new System.Drawing.Point(66, 110);
+            this.espAlliesColor.Location = new System.Drawing.Point(79, 109);
             this.espAlliesColor.Name = "espAlliesColor";
             this.espAlliesColor.Observable = null;
             this.espAlliesColor.PropertyName = "Color";
-            this.espAlliesColor.Size = new System.Drawing.Size(407, 116);
+            this.espAlliesColor.Size = new System.Drawing.Size(394, 116);
             this.espAlliesColor.TabIndex = 2;
+            // 
+            // espAlliesColorOccluded
+            // 
+            this.espAlliesColorOccluded.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.espAlliesColorOccluded.AutoSize = true;
+            this.espAlliesColorOccluded.BackColor = System.Drawing.Color.Transparent;
+            this.espAlliesColorOccluded.ColorSystem = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.tableLayoutPanel2.SetColumnSpan(this.espAlliesColorOccluded, 3);
+            this.espAlliesColorOccluded.Location = new System.Drawing.Point(79, 231);
+            this.espAlliesColorOccluded.Name = "espAlliesColorOccluded";
+            this.espAlliesColorOccluded.Observable = null;
+            this.espAlliesColorOccluded.PropertyName = "Color";
+            this.espAlliesColorOccluded.Size = new System.Drawing.Size(394, 109);
+            this.espAlliesColorOccluded.TabIndex = 4;
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(3, 266);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(70, 38);
+            this.metroLabel1.TabIndex = 0;
+            this.metroLabel1.Text = "Color\r\n(occluded)";
+            this.metroLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ESPSettings
             // 
@@ -252,7 +282,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "ESPSettings";
-            this.Size = new System.Drawing.Size(497, 244);
+            this.Size = new System.Drawing.Size(497, 385);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
@@ -277,5 +307,7 @@
         private SynchToggle espAlliesWeapon;
         private MetroFramework.Controls.MetroLabel metroLabel15;
         private SynchColorPicker espAlliesColor;
+        private SynchColorPicker espAlliesColorOccluded;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
     }
 }

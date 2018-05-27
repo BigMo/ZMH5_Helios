@@ -15,7 +15,8 @@ namespace _ZMH5__Helios.CSGO.Misc
             Weapons,
             C4,
             Grenades,
-            Chickens;
+            Chickens,
+            World;
     }
     public class ESPEntry
     {
@@ -26,5 +27,6 @@ namespace _ZMH5__Helios.CSGO.Misc
         public bool ShowDist;
         public bool ShowWeapon;
         public Color Color;
+        public Color ColorOccluded;
     }
 }

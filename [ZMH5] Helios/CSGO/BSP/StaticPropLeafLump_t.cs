@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace _ZMH5__Helios.CSGO.BSP
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct dedge_t
+    public struct StaticPropLeafLump_t
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-        public ushort[] m_V;
+        public int m_LeafEntries;
     }
 }

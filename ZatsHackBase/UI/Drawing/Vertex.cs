@@ -29,9 +29,9 @@ namespace ZatsHackBase.UI
         }
         
         [FieldOffset(0)] public Vector2 Origin;
-        [FieldOffset(16)] public RawColor4 Color;
-        [FieldOffset(32)] public Vector2 UV;
+        [FieldOffset(8)] public RawColor4 Color;
+        [FieldOffset(24)] public Vector2 UV;
 
-        public static int Size = 40;
+        public static int Size = sizeof(float)*8;
     }
 }

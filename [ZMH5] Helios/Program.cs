@@ -48,7 +48,7 @@ namespace _ZMH5__Helios
             //}
             //return;
 
-            //new Test();
+            //new Test().Run();
             //return;
             //Setup
             Animation = new ConsoleAnimation();

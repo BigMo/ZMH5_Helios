@@ -19,7 +19,7 @@ namespace ZatsHackBase.UI
         #region PROPERTIES
         public Renderer Renderer { get; private set; }
         public EUCProcess Process { get; private set; }
-        public Form Form { get; private set; }
+        public Form Form { get;private set; }
         public Color BackColor { get; set; }
         public Thread FormThread { get; private set; }
         public Vector2 Size { get; private set; }

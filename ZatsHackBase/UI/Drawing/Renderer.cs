@@ -24,17 +24,17 @@ namespace ZatsHackBase.UI
     {
         static string pixelShaderCode =
             @"
-                Texture2D    g_texture : register( t0 );           
-                SamplerState g_sampler : register ( s0 );
+                Texture2D    g_texture : register(t0);           
+                SamplerState g_sampler : register(s0);
 
-                struct psinput
+                struct pselement
                 {
                     float4 pos  : SV_POSITION;
                     float4 col  : COLOR;
                     float2 uv   : TEXCOORDS;
                 };
 
-                float4 main ( psinput input ) : SV_TARGET
+                float4 main(pselement input) : SV_TARGET
                 {
                     return input.col * g_texture.Sample ( g_sampler, input.uv );
                 }
@@ -49,30 +49,29 @@ namespace ZatsHackBase.UI
 
                 struct vsinput
                 {
-                    float4 pos  : POSITION;
+                    float2 pos  : POSITION;
                     float4 col  : COLOR;
                     float2 uv   : TEXCOORDS;
                 };
 
-                struct psoutput
+                struct pselement
                 {
                     float4 pos  : SV_POSITION;
                     float4 col  : COLOR;
                     float2 uv   : TEXCOORDS;
                 };
 
-                float4 fix_pos ( float4 orig_origin )
+                float4 fix_pos(float2 orig_origin)
                 {
-                    return float4 (
-                        -1.0f + ( orig_origin.x / g_screenSize.x ),
-                        1.0f - ( orig_origin.y / g_screenSize.y ),
-                        0.0f, 1.0f
-                    );
+                    return float4(
+                        -1.0f + (orig_origin.x / g_screenSize.x),
+                        1.0f - (orig_origin.y / g_screenSize.y),
+                        0.0f, 1.0f);
                 }
 
-                psoutput main ( vsinput vertex )
+                pselement main(vsinput vertex)
                 {
-                    psoutput output;
+                    pselement output;
                     output.pos      = fix_pos(vertex.pos);
                     output.col      = vertex.col;
                     output.uv       = vertex.uv;
@@ -146,9 +145,9 @@ namespace ZatsHackBase.UI
 
             var layout = new D3D11.InputElement[]
             {
-                new D3D11.InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 32, 0),
+                new D3D11.InputElement("POSITION", 0, Format.R32G32_Float, 0, 0),
+                new D3D11.InputElement("COLOR", 0, Format.R32G32B32A32_Float, 8, 0),
+                new D3D11.InputElement("TEXCOORDS", 0, Format.R32G32_Float, 24, 0),
             };
 
             var vertexShaderOutput = ShaderBytecode.Compile(vertexShaderCode, "main", "vs_4_0", ShaderFlags.Debug);
@@ -210,6 +209,12 @@ namespace ZatsHackBase.UI
             stream.Write(hViewportSize.Height);
 
             DeviceContext.UnmapSubresource(transfBuffer, 0);
+
+            DeviceContext.VertexShader.SetShader(vertexShader, null, 0);
+            DeviceContext.VertexShader.SetConstantBuffer(0, transfBuffer);
+            DeviceContext.PixelShader.SetShader(pixelShader, null, 0);
+            DeviceContext.PixelShader.SetSampler(0, samplerState);
+            DeviceContext.InputAssembler.InputLayout = inputLayout;
         }
         
         public void Clear(Color color)
@@ -226,11 +231,6 @@ namespace ZatsHackBase.UI
         {
             if (!Initialized)
                 return;
-
-            DeviceContext.VertexShader.SetShader(vertexShader, null, 0);
-            DeviceContext.VertexShader.SetConstantBuffer(0, transfBuffer);
-            DeviceContext.PixelShader.SetShader(pixelShader, null, 0);
-            DeviceContext.PixelShader.SetSampler(0, samplerState);
 
             GeometryBuffer.Draw();
             GeometryBuffer.Reset();

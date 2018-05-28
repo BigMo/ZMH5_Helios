@@ -13,39 +13,56 @@ namespace _ZMH5__Helios
 {
     public class Test : Hack
     {
-        private Font font = Font.CreateDummy("Verdana", 14f);
-
-        public Test() : base("notepad", 60, true)
+        #region VARIABLES
+        private Font dbg = Font.CreateDummy("Segoe UI", 14);
+        #endregion
+        
+        #region CONSTRUCTORS
+        public Test() : base("notepad", 999, true, false)
         {
-            this.Run();
-            Overlay.BackColor = Color.Red;
+            
+        }
+        #endregion
+
+        #region METHODS
+        protected override void OnFirstTick(TickEventArgs args)
+        {
+            base.OnFirstTick(args);
+            //Overlay.Renderer.Init(Overlay.Form);
+        }
+        
+        protected override bool ProcessInput()
+        {
+            return Process.IsInForeground;
         }
 
-        protected override void BeforePluginsTick(TickEventArgs args)
+        protected override void AfterRun()
         {
-            base.BeforePluginsTick(args);
+            base.AfterRun();
 
-            Overlay.Renderer.DrawString(Color.Red, font, new Vector2(400f, 10f), DateTime.Now.ToLongTimeString() + @"
-                ABCDEFGHIJKLMNOPQRSTUVWXYZ
-                abcdefghijklmnopqrstuvwxyz
-                0123456789 eee");
-
-            Overlay.Renderer.Debug(font);
+            Program.Logger.Info("Terminating.");
         }
-        static bool once = false;
+        
         protected override void AfterPluginsTick(TickEventArgs args)
         {
-            base.AfterPluginsTick(args);
-
-            if (once)
+            if (!Overlay.Renderer.Initialized)
                 return;
+            dbg = Overlay.Renderer.Fonts[dbg];
 
-            once = true;
+            //if (Process.IsInForeground)
+            {
+                Overlay.Renderer.DrawString(Color.Red, dbg, new Vector2(400f, 10f), DateTime.Now.ToLongTimeString() + @"
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                    abcdefghijklmnopqrstuvwxyz
+                    0123456789 eee");
+
+            }
+            base.AfterPluginsTick(args);
         }
 
         protected override void SetupModules()
         {
-
         }
+        #endregion
     }
 }

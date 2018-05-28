@@ -114,7 +114,7 @@ namespace ZatsHackBase.Core
         }
         protected virtual void BeforePluginsTick(TickEventArgs args)
         {
-            if (Overlay != null)
+            if (Overlay != null && Overlay.Form != null)
             {
                 Overlay.Update(args.Time, Input.MousePos - new Vector2(Overlay.Form.Location.X, Overlay.Form.Location.Y));
                 Overlay.Renderer.Clear(Overlay.BackColor);

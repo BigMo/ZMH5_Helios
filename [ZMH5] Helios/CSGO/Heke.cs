@@ -25,7 +25,7 @@ namespace _ZMH5__Helios.CSGO
     public class Heke : Hack
     {
         #region VARIABLES
-        private Font dbg = Font.CreateDummy("Segoe UI", 14);
+        private Font dbg = Font.CreateDummy("Segoe UI", 14, true);
         #endregion
 
         #region PROPERTIES

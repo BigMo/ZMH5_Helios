@@ -68,11 +68,13 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
         public Vector2 Padding { get; private set; }
 
         public bool IsDisposed { get; private set; }
+        public bool Outline { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public GlyphAtlas(CharRange[] ranges, Vector2 padding)
+        public GlyphAtlas(CharRange[] ranges, Vector2 padding, bool outlined = false)
         {
+            Outline = outlined;
             Padding = padding;
             Glyphs = new Dictionary<char, Glyph>();
             chars = ranges.SelectMany(x => x.Chars).ToArray();
@@ -170,11 +172,14 @@ namespace ZatsHackBase.UI.Drawing.FontHelpers
                     var size = sizes[i];
 
                     var c = chars[i].ToString();
-                    
-                    g.DrawString(c, font, brOutline, x - 1, y, StringFormat.GenericTypographic);
-                    g.DrawString(c, font, brOutline, x + 1, y, StringFormat.GenericTypographic);
-                    g.DrawString(c, font, brOutline, x, y - 1, StringFormat.GenericTypographic);
-                    g.DrawString(c, font, brOutline, x, y + 1, StringFormat.GenericTypographic);
+
+                    if (Outline)
+                    {
+                        g.DrawString(c, font, brOutline, x - 1, y, StringFormat.GenericTypographic);
+                        g.DrawString(c, font, brOutline, x + 1, y, StringFormat.GenericTypographic);
+                        g.DrawString(c, font, brOutline, x, y - 1, StringFormat.GenericTypographic);
+                        g.DrawString(c, font, brOutline, x, y + 1, StringFormat.GenericTypographic);
+                    }
                     g.DrawString(c, font, brString, x, y, StringFormat.GenericTypographic);
                     
                     var glyph = new Glyph

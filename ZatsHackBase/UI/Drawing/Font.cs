@@ -23,11 +23,11 @@ namespace ZatsHackBase.UI
         public char AdditionalRangeTo { get; private set; }
 
         #region Constructor
-        public static Font CreateDummy(string family, float height, bool bold = false, bool italic = false, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
+        public static Font CreateDummy(string family, float height, bool outlined = false, bool bold = false, bool italic = false, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
-            return new Font(null, family, height, bold, italic, additionRangeFrom, additionalRangeTo);
+            return new Font(null, family, height, outlined, bold, italic, additionRangeFrom, additionalRangeTo);
         }
-        internal Font(Renderer renderer, string family, float height, bool bold, bool italy, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
+        internal Font(Renderer renderer, string family, float height, bool outlined, bool bold, bool italy, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
             AdditionalRangeFrom = additionRangeFrom;
             AdditionalRangeTo = additionalRangeTo;
@@ -49,7 +49,7 @@ namespace ZatsHackBase.UI
             IsDisposed = true;
             atlas = new GlyphAtlas(
                 ranges.ToArray(), 
-                new Vector2(height * 0.75f, height * 0.33333333333333333333333333333333f));
+                new Vector2(height * 0.75f, height * (1f / 3f)), outlined);
 
             //Make this a dummy font in case renderer isn't ready yet
             if (renderer == null || !renderer.Initialized)
@@ -77,11 +77,7 @@ namespace ZatsHackBase.UI
         public bool IsDisposed { get; private set; }
         public bool IsInitialized { get { return _Renderer != null; } }
         #endregion
-
-        #region PROPERTIES
         
-        #endregion
-
         #region Method
         private void Init()
         {

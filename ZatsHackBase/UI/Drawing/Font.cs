@@ -19,18 +19,21 @@ namespace ZatsHackBase.UI
 {
     public class Font : IDisposable
     {
-        public char AdditionalRangeFrom { get; private set; }
-        public char AdditionalRangeTo { get; private set; }
 
         #region Constructor
         public static Font CreateDummy(string family, float height, bool outlined = false, bool bold = false, bool italic = false, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
             return new Font(null, family, height, outlined, bold, italic, additionRangeFrom, additionalRangeTo);
         }
-        internal Font(Renderer renderer, string family, float height, bool outlined, bool bold, bool italy, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
+        internal Font(Renderer renderer, Font other) : this(renderer, other.Family, other.Height, other.Outlined, other.Bold, other.Italic, other.AdditionalRangeFrom, other.AdditionalRangeTo) { }
+        internal Font(Renderer renderer, string family, float height, bool outlined, bool bold, bool italic, char additionRangeFrom = (char)0, char additionalRangeTo = (char)0)
         {
             AdditionalRangeFrom = additionRangeFrom;
             AdditionalRangeTo = additionalRangeTo;
+            Outlined = outlined;
+            Bold = bold;
+            Italic = italic;
+
             var ranges = new List<GlyphAtlas.CharRange>(new GlyphAtlas.CharRange[]{
                     new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
                     new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
@@ -76,8 +79,13 @@ namespace ZatsHackBase.UI
         public int ID { get; private set; }
         public bool IsDisposed { get; private set; }
         public bool IsInitialized { get { return _Renderer != null; } }
+        public char AdditionalRangeFrom { get; private set; }
+        public char AdditionalRangeTo { get; private set; }
+        public bool Outlined { get; private set; }
+        public bool Bold { get; private set; }
+        public bool Italic { get; private set; }
         #endregion
-        
+
         #region Method
         private void Init()
         {

@@ -24,11 +24,11 @@ namespace ZatsHackBase.UI
             _Renderer = renderer;
             
             _VertexBuffer = new D3D11.Buffer(_Renderer.Device, 
-                new D3D11.BufferDescription(1024 * 1024 * 10, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
+                new D3D11.BufferDescription(1024 * 1024 * 32, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(1024 * 1024 * 10, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
+                new D3D11.BufferDescription(1024 * 1024 * 32, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
         }
 

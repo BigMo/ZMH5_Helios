@@ -161,9 +161,11 @@ namespace ZatsHackBase.UI
             inputLayout = new D3D11.InputLayout(Device, shaderSignature, layout);
             
             IntPtr data = System.Runtime.InteropServices.Marshal.AllocHGlobal(4 * 4 * 4);
-            for (int i = 0; i < 4 * 4 * 4; i++)
+            var white = BitConverter.GetBytes(1f);
+            for (int i = 0; i < 4 * 4; i++)
             {
-                System.Runtime.InteropServices.Marshal.WriteByte(data, i, 0xFF);
+                for (int j = 0; j < white.Length; j++) 
+                    System.Runtime.InteropServices.Marshal.WriteByte(data, i*sizeof(float)+j, white[j]);
             }
             
             White = new D3D11.Texture2D(Device, new D3D11.Texture2DDescription
@@ -254,10 +256,10 @@ namespace ZatsHackBase.UI
         #endregion
 
         #region RENDER FEATURES
-        public Font CreateFont(string family, float height, char additonalRangeFrom, char additionalRangeTo)
+        public Font CreateFont(string family, float height, char additonalRangeFrom, char additionalRangeTo, bool outline = false)
         {
             if (!Initialized) //Return dummy-font
-                return new Font(null, family, height, false, false, additonalRangeFrom, additionalRangeTo);
+                return new Font(null, family, height, false, false, outline, additonalRangeFrom, additionalRangeTo);
 
             //Return cached font
             var fnt = Fonts.GetFont(family, height);
@@ -265,7 +267,7 @@ namespace ZatsHackBase.UI
                 return fnt;
 
             //... or else create a new one
-            return new Font(this, family, height, false, false, additonalRangeFrom, additionalRangeTo);
+            return new Font(this, family, height, false, false, outline, additonalRangeFrom, additionalRangeTo);
         }
 
         public void DrawLine(Color color, Vector2 from, Vector2 to)
@@ -340,6 +342,7 @@ namespace ZatsHackBase.UI
                 return;
 
             var col = (RawColor4)color;
+
             GeometryBuffer.AppendVertices(
                 new Vertex(location.X,          location.Y, col),
 

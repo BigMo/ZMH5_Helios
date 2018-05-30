@@ -137,7 +137,18 @@ namespace ZatsHackBase.UI
             {
                 renderTargetView = new D3D11.RenderTargetView(d3dDevice, backBuffer);
             }
-            blendState = new D3D11.BlendState(d3dDevice, D3D11.BlendStateDescription.Default());
+
+            D3D11.BlendStateDescription blendStateDesc = D3D11.BlendStateDescription.Default();
+            blendStateDesc.AlphaToCoverageEnable = false;
+            blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
+            blendStateDesc.RenderTarget[0].SourceBlend = D3D11.BlendOption.SourceAlpha;
+            blendStateDesc.RenderTarget[0].DestinationBlend = D3D11.BlendOption.One; //
+            blendStateDesc.RenderTarget[0].BlendOperation = D3D11.BlendOperation.Maximum;
+            blendStateDesc.RenderTarget[0].SourceAlphaBlend = D3D11.BlendOption.SourceAlpha; //Zero
+            blendStateDesc.RenderTarget[0].DestinationAlphaBlend = D3D11.BlendOption.DestinationAlpha;
+            blendStateDesc.RenderTarget[0].AlphaBlendOperation = D3D11.BlendOperation.Maximum;
+            blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11.ColorWriteMaskFlags.All;
+            blendState = new D3D11.BlendState(d3dDevice, blendStateDesc);
 
             GeometryBuffer = new GeometryBuffer(this);
             
@@ -217,6 +228,7 @@ namespace ZatsHackBase.UI
             DeviceContext.PixelShader.SetShader(pixelShader, null, 0);
             DeviceContext.PixelShader.SetSampler(0, samplerState);
             DeviceContext.InputAssembler.InputLayout = inputLayout;
+            DeviceContext.OutputMerger.BlendState = blendState;
         }
         
         public void Clear(Color color)

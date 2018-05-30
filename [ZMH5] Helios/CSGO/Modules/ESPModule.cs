@@ -20,8 +20,10 @@ namespace _ZMH5__Helios.CSGO.Modules
         #region CONSTANTS
         private static Vector3 MARGINS_Z = new Vector3(0, 0, 10);
         private Font espFont = Font.CreateDummy("Segoe UI", 14);
-        private Font weaponFont = Font.CreateDummy("csgo_icons", 40, false, false, false, (char)0xE001, (char)0xE203);
+        private Font weaponFont = Font.CreateDummy("csgo_icons", 40, true, false, false, (char)0xE001, (char)0xE203);
         private Font[] weaponFonts = new Font[4];
+
+
         #endregion
 
         #region CONSTRUCTORS
@@ -32,7 +34,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             var stepSize = (max - min) / weaponFonts.Length;
             for (int i = 0; i < weaponFonts.Length; i++)
             {
-                weaponFonts[i] = Font.CreateDummy("csgo_icons", max - stepSize * i, false, false, false, (char)0xE001, (char)0xE203);
+                weaponFonts[i] = Font.CreateDummy("csgo_icons", max - stepSize * i, false, false, true, (char)0xE001, (char)0xE203);
             }
         }
         #endregion

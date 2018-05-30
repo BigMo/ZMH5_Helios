@@ -24,11 +24,11 @@ namespace ZatsHackBase.UI
             _Renderer = renderer;
             
             _VertexBuffer = new D3D11.Buffer(_Renderer.Device, 
-                new D3D11.BufferDescription(1024 * 1024 * 32, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
+                new D3D11.BufferDescription(1024 * 1024 * 10, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
 
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
-                new D3D11.BufferDescription(1024 * 1024 * 32, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
+                new D3D11.BufferDescription(1024 * 1024 * 10, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
         }
 
@@ -51,10 +51,48 @@ namespace ZatsHackBase.UI
 
         private bool _Synchronised = false;
 
-        private List<Vertex> _Vertices = new List<Vertex>();
-        private List<short>  _Indices = new List<short>();  
-        private List<Batch>  _Batches = new List<Batch>(); 
+        struct Buf<T>
+        {
+            public T[] Elements;
+            public uint Count;
+            public uint MaxCount;
 
+            public Buf(uint maxElements = 1000)
+            {
+                MaxCount = maxElements;
+                Count = 0;
+                Elements = new T[MaxCount];
+            }
+
+            public void Add(T val)
+            {
+                Elements[Count] = val;
+                Count++;
+                if(Count > MaxCount)
+                {
+                    MaxCount += 200;
+                    T[] newElements = new T[MaxCount];
+                    for (int i = 0; i < Count; i++)
+                        newElements[i] = Elements[i];
+                    Elements = newElements;
+                }
+            }
+
+            public void AddRange(IEnumerable<T> d)
+            {
+
+            }
+
+            public void Clear()
+            {
+                Count = 0;
+            }
+        }
+
+        private Buf<Vertex> _Vertices = new Buf<Vertex>();
+        private Buf<short>  _Indices = new Buf<short>();  
+        private Buf<Batch>  _Batches = new Buf<Batch>(); 
+        
         private Batch        _Dummy = new Batch();
         
         #endregion
@@ -145,18 +183,24 @@ namespace ZatsHackBase.UI
             {
 
                 DataStream vertexBuffer, indexBuffer;
-
+                int i;
 
                 _Renderer.DeviceContext.MapSubresource(_VertexBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out vertexBuffer);
-
-                _Vertices.ForEach(vertex => { vertexBuffer.Write(vertex); });
+                
+                for (i = 0; i < _Vertices.Count; i++)
+                {
+                    vertexBuffer.Write(_Vertices.Elements[i]);
+                }
 
                 _Renderer.DeviceContext.UnmapSubresource(_VertexBuffer, 0);
-
+                
 
                 _Renderer.DeviceContext.MapSubresource(_IndexBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out indexBuffer);
-
-                _Indices.ForEach(index => { indexBuffer.Write(index); });
+                
+                for (i = 0; i < _Vertices.Count; i++)
+                {
+                    indexBuffer.Write(_Indices.Elements[i]);
+                }
 
                 _Renderer.DeviceContext.UnmapSubresource(_IndexBuffer, 0);
 
@@ -190,9 +234,9 @@ namespace ZatsHackBase.UI
 
             RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
             
-            foreach (var batch in _Batches)
+            foreach (var batch in _Batches.Elements)
             {
-                if (batch.Texture != null && batch.Texture != last_res)
+                if (batch.Texture != last_res)
                 {
                     _Renderer.DeviceContext.PixelShader.SetShaderResource(0, batch.Texture);
                     last_res = batch.Texture;

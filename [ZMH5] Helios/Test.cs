@@ -52,7 +52,7 @@ namespace _ZMH5__Helios
             //if (Process.IsInForeground)
             {
                 Overlay.Renderer.DrawRectangle(Color.Green, new Vector2(100f, 10f), new Vector2(100f, 100f));
-                Overlay.Renderer.DrawString(Color.Red, dbg, new Vector2(90f, 10f), DateTime.Now.ToLongTimeString());
+                Overlay.Renderer.DrawString(Color.Red, dbg, new Vector2(95f, 10f), DateTime.Now.ToLongTimeString());
 
             }
             base.AfterPluginsTick(args);

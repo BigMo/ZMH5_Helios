@@ -94,7 +94,7 @@ namespace _ZMH5__Helios.CSGO
             ClientClassParser.DumpCppClasses("clientclasses.cpp");
 #endif
             Program.Logger.Info("Helios is ready.");
-            Program.Logger.Info("sizeof(RadarEntry): {0}", System.Runtime.InteropServices.Marshal.SizeOf(typeof(Modules.SnapshotHelpers.RadarEntry)));
+            Program.Logger.Info("sizeof(RadarEntry): {0}", SizeCache<Modules.SnapshotHelpers.RadarEntry>.Size);
 
             //Window window = null;
             //using (var frm = new UI.TestForm())
@@ -120,15 +120,20 @@ namespace _ZMH5__Helios.CSGO
             Program.Logger.Info("Terminating.");
         }
         
-        public T GetEntityByAddress<T>(int address, bool addToSnapshot = true) where T : EntityPrototype, new()
+        public T GetEntityByAddress<T>(IntPtr address, bool addToSnapshot = true) where T : EntityPrototype, new()
         {
             /*if (address <= 0)
                 return null;*/
 
             //try
             //{
-                T entity = new T();
-                entity.Init(address, entity.MemSize);
+
+
+
+
+
+            T entity = new T();
+                entity.Init(Memory, address);
 
                 if (addToSnapshot && entity != null && entity.IsValid)
                 {
@@ -147,8 +152,8 @@ namespace _ZMH5__Helios.CSGO
 
         public T GetEntityByID<T>(int id, bool addToSnapshot = true) where T : EntityPrototype, new()
         {
-            int address = Program.Hack.Memory.Read<int>(ClientDll.BaseAddress.ToInt32() + Program.Offsets.EntityList + 16 * (id - 1));
-            if (address == 0)
+            var address = Program.Hack.Memory.Read<IntPtr>(ClientDll.BaseAddress.ToInt32() + Program.Offsets.EntityList + 16 * (id - 1));
+            if ((int)address == 0)
                 return null;
 
             var ent = GetEntityByAddress<T>(address);
@@ -188,24 +193,41 @@ namespace _ZMH5__Helios.CSGO
 
             if (Process.IsInForeground)
             {
+                //Input
                 Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f,
                     Input.MousePos.ToString() + "\n" +
                     Input.MouseMoveDist.ToString() + "\n" +
                     string.Join(", ", Input.KeysDown.Select(x => x.ToString())));
 
+                //Mem
+                var str = string.Format(
+                    "=============================\n" +
+                    "RPM: {0} calls\n" +
+                    "     {1} total\n" +
+                    "     {2}/s\n"+
+                    "WPM: {3} calls\n" +
+                    "     {4} total\n" +
+                    "     {5}/s\n" +
+                    "=============================",
+                    Memory.RPMCalls.ToString("N0"), SizeFormatter.GetUnitFromSize(Memory.BytesIn, true), SizeFormatter.GetUnitFromSize(Memory.BytesIn / args.Time.TotalTime.TotalSeconds, true),
+                    Memory.WPMCalls.ToString("N0"), SizeFormatter.GetUnitFromSize(Memory.BytesOut, true), SizeFormatter.GetUnitFromSize(Memory.BytesOut / args.Time.TotalTime.TotalSeconds, true));
+                var size = dbg.MeasureString(str);
+                Overlay.Renderer.DrawString(Color.White, dbg, Vector2.UnitY * (Overlay.Size.Y * 0.75f - size.Y * 0.5f), str);
+
+                //Specs
                 var lp = StateMod.LocalPlayer.Value;
                 Color drawColor = Color.White;
                 if (CSLocalPlayer.IsProcessable(lp) && !lp.IsDormant)
                 {
                     var players = StateMod.GetPlayersSet(true, false, true);
                     Func<CSPlayer, bool> filter = null;
-                    filter = (x) => x.m_iID.Value != lp.m_iID.Value && x.m_hObserverTarget.Value == lp.m_iID.Value;
+                    filter = (x) => x.m_iID != lp.m_iID && x.m_hObserverTarget == lp.m_iID;
                     if (players.Any(filter))
                     {
                         var specs = players.Where(filter);
-                        if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.Ego))
+                        if (specs.Any(x => x.m_iObserverMode == ObserverMode.Ego))
                             drawColor = Color.Red;
-                        else if (specs.Any(x => x.m_iObserverMode.Value == ObserverMode.ThirdPerson))
+                        else if (specs.Any(x => x.m_iObserverMode == ObserverMode.ThirdPerson))
                             drawColor = Color.Orange;
 
                         if (StateMod.RadarEntries.Value != null)
@@ -213,8 +235,8 @@ namespace _ZMH5__Helios.CSGO
                             string text = string.Join("\n",
                                 specs.Select(x =>
                                     string.Format("▻ {0} ({1})",
-                                    Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[x.m_iID.Value],
-                                    x.m_iObserverMode.Value.ToString())
+                                    Program.Hack.StateMod.PlayerResources.Value.m_sNames[x.m_iID],
+                                    x.m_iObserverMode.ToString())
                                 )
                             );
                             Overlay.Renderer.DrawString(

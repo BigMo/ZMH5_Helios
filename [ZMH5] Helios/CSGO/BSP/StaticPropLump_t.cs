@@ -26,8 +26,8 @@ namespace _ZMH5__Helios.CSGO.BSP
                                         // since v5
         public float ForcedFadeScale; // fade distance scale
                                       // v6 and v7 only
-        public ushort MinDXLevel;      // minimum DirectX version to be visible
-        public ushort MaxDXLevel;      // maximum DirectX version to be visible
+        //public ushort MinDXLevel;      // minimum DirectX version to be visible
+        //public ushort MaxDXLevel;      // maximum DirectX version to be visible
                                        // since v8
         public byte MinCPULevel;
         public byte MaxCPULevel;

@@ -1,4 +1,5 @@
-﻿using _ZMH5__Helios.CSGO.Misc;
+﻿using _ZMH5__Helios.CSGO.Entities.NetVars;
+using _ZMH5__Helios.CSGO.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,43 +14,44 @@ namespace _ZMH5__Helios.CSGO.Entities
     {
         #region VARIABLES
         public static LazyCache<int> CLASSID = new LazyCache<int>(() => ClassIDs.ClientClassParser.ClientClasses.First(x => x.NetworkName == "CCSPlayerResource").ClassID);
-        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable("DT_CSPlayerResource", "DT_PlayerResource"));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable(DT_CSPlayerResource.Instance), Program.Offsets.PlayerResourcesNames + 32 * 64));
         #endregion
 
         #region PROPERTIES
-        public override int MemSize { get { return memSize.Value; } }
-        public override bool IsValid { get { return base.IsValid && m_ClientClass.Value.ClassID == CLASSID; } }
+        public override bool IsValid { get { return base.IsValid && m_ClientClass.ClassID == CLASSID; } }
 
-        public LazyCache<Vector3> m_bombsiteCenterA { get; private set; }
-        public LazyCache<Vector3> m_bombsiteCenterB { get; private set; }
-        public LazyCache<byte[]> m_iScore { get; private set; } //TODO: Irgendwie gescheit implementieren... LazyArray wäre Blödsinn, am besten fixed struct.
-        public LazyCache<string[]> m_sNames { get; private set; }
+        public Vector3 m_bombsiteCenterA { get; private set; }
+        public Vector3 m_bombsiteCenterB { get; private set; }
+        public int[] m_iScore { get; private set; } //TODO: Irgendwie gescheit implementieren... LazyArray wäre Blödsinn, am besten fixed struct.
+        public string[] m_sNames { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public CSPlayerResource()
-        { }
+        public CSPlayerResource(IntPtr address, int size) : base(Program.Hack.Memory, address, size) { }
+        public CSPlayerResource(IntPtr address) : this(address, memSize) { }
+        public CSPlayerResource() : this(memSize) { }
+        public CSPlayerResource(int size) : base(size) { }
         #endregion
 
         #region METHODS
-        protected override void SetupFields()
+        protected override unsafe void ReadFields(byte* d)
         {
-            base.SetupFields();
+            base.ReadFields(d);
 
-            m_bombsiteCenterA = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("DT_CSPlayerResource", "m_bombsiteCenterA"));
-            m_bombsiteCenterB = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("DT_CSPlayerResource", "m_bombsiteCenterB"));
-            m_iScore = new LazyCache<byte[]>(() => new byte[65 * sizeof(int)]);
-            m_sNames = new LazyCache<string[]>(() =>
+            m_bombsiteCenterA = *(Vector3*)(d + DT_CSPlayerResource.Instance.m_bombsiteCenterA);
+            m_bombsiteCenterA = *(Vector3*)(d + DT_CSPlayerResource.Instance.m_bombsiteCenterA);
+            m_iScore = new int[65];
+            
+            for (int i = 0; i < m_iScore.Length; i++)
+                m_iScore[i] = *(int*)(d + DT_CSPlayerResource.Instance.m_iScore + SizeCache<int>.Size * i);
+
+            m_sNames = new string[64];
+            for(int i=0; i < m_sNames.Length; i++)
             {
-                var names = new string[64];
-                for (int i = 0; i < names.Length; i++)
-                {
-                    var address = BitConverter.ToInt32(this.Data, Program.Offsets.PlayerResourcesNames + 4 * i);
-                    if (address != 0)
-                        names[i] = Program.Hack.Memory.ReadString(address, 32, Encoding.ASCII);
-                }
-                return names;
-            });
+                var address = *(IntPtr*)(d + Program.Offsets.PlayerResourcesNames + SizeCache<IntPtr>.Size * i);
+                if ((int)address != 0)
+                    m_sNames[i] = Program.Hack.Memory.ReadString(address, 32, Encoding.ASCII);
+            }
         }
         #endregion
     }

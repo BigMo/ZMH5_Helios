@@ -10,95 +10,68 @@ using _ZMH5__Helios.CSGO.ClassIDs;
 using _ZMH5__Helios.CSGO.Misc;
 using _ZMH5__Helios.CSGO.Entities.EntityHelpers;
 using _ZMH5__Helios.CSGO.Enums;
+using _ZMH5__Helios.CSGO.Entities.NetVars;
 
 namespace _ZMH5__Helios.CSGO.Entities
 {
     public class BaseEntity : EntityPrototype
     {
         #region VARIABLES
-        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(Program.Offsets.m_iGlowIndex, LargestDataTable("DT_BaseEntity", "DT_AnimTimeMustBeFirst")));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(Program.Offsets.m_iGlowIndex + SizeCache<int>.Size, LargestDataTable(DT_BaseEntity.Instance, DT_AnimTimeMustBeFirst.Instance)));
         #endregion
 
         #region PROPERTIES
-        public int Size { get { return Data.Length; } }
-        public LazyCache<float> m_flAnimTime { get; private set; }
-        public LazyCache<Team> m_iTeamNum { get; private set; }
-        public LazyCache<int> m_iID { get; private set; }
-        public LazyCache<Vector3> m_vecOrigin { get; private set; }
-        public LazyCache<Vector3> m_angRotation { get; private set; }
-        public LazyCache<int> m_bSpotted { get; private set; }
-        public LazyCache<long> m_bSpottedBy { get; private set; }
-        public LazyCache<long> m_bSpottedByMask { get; private set; }
-        public LazyCache<int> m_iGlowIndex { get; private set; }
-        public LazyCache<float> m_flSimulationTime { get; private set; }
-        public LazyCache<int> m_pBoneMatrix { get; private set; }
-        public LazyCache<Skeleton> m_Skeleton { get; private set; }
-        public LazyCache<byte> m_bDormant { get; private set; }
+        public float m_flAnimTime { get; private set; }
+        public Team m_iTeamNum { get; private set; }
+        public int m_iID { get; private set; }
+        public Vector3 m_vecOrigin { get; private set; }
+        public Vector3 m_angRotation { get; private set; }
+        public int m_bSpotted { get; private set; }
+        public long m_bSpottedBy { get; private set; }
+        public long m_bSpottedByMask { get; private set; }
+        public int m_iGlowIndex { get; private set; }
+        public float m_flSimulationTime { get; private set; }
+        public IntPtr m_pBoneMatrix { get; private set; }
+        public Skeleton m_Skeleton { get; private set; }
+        public byte m_bDormant { get; private set; }
 
-        public override int MemSize { get { return memSize.Value; } }
-        public bool IsDormant { get { return m_bDormant.Value == 1; } }
-        public override bool IsValid { get { return base.IsValid && m_iID.Value > 0 && m_ClientClass.Value.ClassID > 0; } }
+        public bool IsDormant { get { return m_bDormant == 1; } }
+        public override bool IsValid { get { return base.IsValid && m_iID > 0 && m_ClientClass.ClassID > 0; } }
         #endregion
 
 
         #region CONSTRUCTORS
-        public BaseEntity() : base()
-        { }
-        public BaseEntity(BaseEntity other, int newSize) : base()
-        {
-            if (other.Size < newSize)
-            {
-                int size = newSize - other.Size + 64;
-                byte[] plusData = new byte[size];
-                Program.Hack.Memory.Position = other.Address + other.Size;
-                Program.Hack.Memory.Read(plusData, 0, size);
-                this.Data = other.Data.Concat(plusData).ToArray();
-            }
-            else
-            {
-                this.Data = new byte[other.Data.Length];
-                Array.Copy(other.Data, this.Data, this.Data.Length);
-            }
-            this.stream = new System.IO.MemoryStream(Data);
+        public BaseEntity(IntPtr address, int size) : base(Program.Hack.Memory, address, System.Math.Max(size, memSize)) { }
+        public BaseEntity(IntPtr address) : this(address, memSize) { }
+        public BaseEntity() : this(memSize) { }
+        public BaseEntity(int size) : base(System.Math.Max(size, memSize)) { }
 
-        }
-
-        public BaseEntity(int address) : this(address, memSize.Value) { }
-        public BaseEntity(int address, int size) : base()
+        protected override unsafe void ReadFields(byte* d)
         {
-            Init(address, size);
+            base.ReadFields(d);
+
+            m_bDormant = *(byte*)(d + 0xE9);
+            m_iGlowIndex = *(int*)(d + Program.Offsets.m_iGlowIndex);
+            m_iID = *(int*)(d + Program.Offsets.m_iID);
+            m_pBoneMatrix = *(IntPtr*)(d + Program.Offsets.m_pBoneMatrix);
+            m_Skeleton = Program.Hack.Memory.Read<Skeleton>(m_pBoneMatrix);
+
+            m_flAnimTime = *(float*)(d + DT_AnimTimeMustBeFirst.Instance.m_flAnimTime);
+            m_iTeamNum = *(Team*)(d + DT_BaseEntity.Instance.m_iTeamNum);
+            m_flSimulationTime = *(float*)(d + DT_BaseEntity.Instance.m_flSimulationTime);
+            m_vecOrigin = *(Vector3*)(d + DT_BaseEntity.Instance.m_vecOrigin);
+            m_angRotation = *(Vector3*)(d + DT_BaseEntity.Instance.m_angRotation);
+            m_bSpotted = *(int*)(d + DT_BaseEntity.Instance.m_bSpotted);
+            m_bSpottedBy = *(long*)(d + DT_BaseEntity.Instance.m_bSpottedBy);
+            m_bSpottedByMask = *(long*)(d + DT_BaseEntity.Instance.m_bSpottedByMask);
         }
         #endregion
 
         #region METHODS
-        protected override void SetupFields()
-        {
-            base.SetupFields();
-
-            m_flAnimTime = new LazyCache<float>(() => ReadNetVar<float>("DT_AnimTimeMustBeFirst", "m_flAnimTime"));
-            m_bDormant = new LazyCache<byte>(() => this.ReadAt<byte>(0xE9));
-            m_iGlowIndex = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iGlowIndex));
-            m_iTeamNum = new LazyCache<Team>(() => (Team)ReadNetVar<int>("m_iTeamNum"));
-            m_flSimulationTime = new LazyCache<float>(() => ReadNetVar<float>("m_flSimulationTime"));
-            m_iID = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iID));
-            m_vecOrigin = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("m_vecOrigin"));
-            m_angRotation = new LazyCache<Vector3>(() => ReadNetVar<Vector3>("m_angRotation"));
-            m_bSpotted = new LazyCache<int>(() => ReadNetVar<int>("m_bSpotted"));
-            m_bSpottedBy = new LazyCache<long>(() => ReadNetVar<long>("m_bSpottedBy"));
-            m_bSpottedByMask = new LazyCache<long>(() => ReadNetVar<long>("m_bSpottedByMask"));
-            m_pBoneMatrix = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_pBoneMatrix));
-            m_Skeleton = new LazyCache<Skeleton>(() => {
-                try
-                {
-                    return Program.Hack.Memory.Read<Skeleton>(m_pBoneMatrix.Value);
-                } catch { return new Skeleton(); }
-                }
-            );
-        }
 
         public bool SeenById(int id)
         {
-            return (m_bSpottedByMask.Value & (0x1 << (id - 1))) != 0;
+            return (m_bSpottedByMask & (0x1 << (id - 1))) != 0;
         }
         public bool SeenBy(BaseEntity other)
         {
@@ -106,14 +79,14 @@ namespace _ZMH5__Helios.CSGO.Entities
         }
         public CSPlayer[] GetPlayersSeeingMe()
         {
-            var mask = m_bSpottedByMask.Value;
+            var mask = m_bSpottedByMask;
             List<CSPlayer> players = new List<CSPlayer>();
             for (int i = 0; i < 64; i++)
             {
                 if ((mask & (1 << i)) != 0)
                 {
                     var player = Program.Hack.StateMod.Players[i + 1];
-                    if (player == null || !player.IsValid || player.m_lifeState.Value != Enums.LifeState.Alive)
+                    if (player == null || !player.IsValid || player.m_lifeState != Enums.LifeState.Alive)
                         continue;
 
                     players.Add(player);
@@ -127,7 +100,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             for (int i = 0; i < 64; i++)
             {
                 var player = Program.Hack.StateMod.Players[i + 1];
-                if (player == null || !player.IsValid || player.m_lifeState.Value != Enums.LifeState.Alive || !player.SeenBy(this))
+                if (player == null || !player.IsValid || player.m_lifeState != Enums.LifeState.Alive || !player.SeenBy(this))
                     continue;
 
                 players.Add(player);
@@ -139,7 +112,7 @@ namespace _ZMH5__Helios.CSGO.Entities
             if (other == null)
                 return 0f;
 
-            return (other.m_vecOrigin.Value - this.m_vecOrigin.Value).Length;
+            return (other.m_vecOrigin - m_vecOrigin).Length;
         }
         #endregion
     }

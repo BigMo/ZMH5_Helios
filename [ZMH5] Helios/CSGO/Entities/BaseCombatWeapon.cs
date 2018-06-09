@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _ZMH5__Helios.CSGO.Entities.NetVars;
 
 namespace _ZMH5__Helios.CSGO.Entities
 {
     public class BaseCombatWeapon : BaseEntity
     {
         #region VARIABLES
-        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable("DT_BaseCombatWeapon", "DT_WeaponCSBase", "DT_LocalActiveWeaponData"), Program.Offsets.m_iItemDefinitionIndex + 4));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => System.Math.Max(LargestDataTable(DT_BaseCombatWeapon.Instance, DT_WeaponCSBase.Instance, DT_LocalActiveWeaponData.Instance), Program.Offsets.m_iItemDefinitionIndex + 4));
         private static LazyCache<int[]> idsPistol = new LazyCache<int[]>(() => {
             return ClassIDs.ClientClassParser.ClientClasses.Where(x => clsPistol.Contains(x.NetworkName)).Select(x => x.ClassID).ToArray();
         });
@@ -135,23 +136,22 @@ namespace _ZMH5__Helios.CSGO.Entities
         #endregion
 
         #region PROPERTIES
-        public LazyCache<int> m_hOwner { get; private set; }
-        public LazyCache<int> m_iClip1 { get; private set; }
-        public LazyCache<int> m_iClip2 { get; private set; }
-        public LazyCache<float> m_fAccuracyPenalty { get; private set; }
-        public LazyCache<float> m_flNextPrimaryAttack { get; private set; }
-        public override int MemSize { get { return memSize.Value; } }
-        public LazyCache<bool> IsPistol { get; private set; }
-        public LazyCache<bool> IsSniper { get; private set; }
-        public LazyCache<bool> IsRifle { get; private set; }
-        public LazyCache<bool> IsMP { get; private set; }
-        public LazyCache<bool> IsMG { get; private set; }
-        public LazyCache<bool> IsGrenade { get; private set; }
-        public LazyCache<bool> IsGrenadeProjectile { get; private set; }
-        public LazyCache<bool> IsC4 { get; private set; }
-        public LazyCache<bool> IsKnife { get; private set; }
-        public LazyCache<bool> IsPumpgun { get; private set; }
-        public LazyCache<int> WeaponId { get; private set; }
+        public int m_hOwner { get; private set; }
+        public int m_iClip1 { get; private set; }
+        public int m_iClip2 { get; private set; }
+        public float m_fAccuracyPenalty { get; private set; }
+        public float m_flNextPrimaryAttack { get; private set; }
+        public bool IsPistol { get; private set; }
+        public bool IsSniper { get; private set; }
+        public bool IsRifle { get; private set; }
+        public bool IsMP { get; private set; }
+        public bool IsMG { get; private set; }
+        public bool IsGrenade { get; private set; }
+        public bool IsGrenadeProjectile { get; private set; }
+        public bool IsC4 { get; private set; }
+        public bool IsKnife { get; private set; }
+        public bool IsPumpgun { get; private set; }
+        public int WeaponId { get; private set; }
         public override bool IsValid
         {
             get
@@ -163,42 +163,41 @@ namespace _ZMH5__Helios.CSGO.Entities
         #endregion
 
         #region CONSTRUCTORS
-        public BaseCombatWeapon() : base() { }
-        public BaseCombatWeapon(BaseEntity other) : this(other, memSize.Value) { }
-        public BaseCombatWeapon(BaseEntity other, int newSize) : base(other, newSize) { }
-
-        public BaseCombatWeapon(int address, int size) : base(address, size) { }
-        public BaseCombatWeapon(int address) : base(address, memSize.Value) { }
+        public BaseCombatWeapon(IntPtr address) : base(address, memSize.Value) { }
+        public BaseCombatWeapon() : this(memSize) { }
+        public BaseCombatWeapon(int size) : base(System.Math.Max(size, memSize)) { }
         #endregion
 
         #region METHODS
+        protected override unsafe void ReadFields(byte* d)
+        {
+            base.ReadFields(d);
+
+            m_hOwner = *(int*)(d + DT_BaseCombatWeapon.Instance.m_hOwner);
+            m_iClip1 = *(int*)(d + DT_BaseCombatWeapon.Instance.m_iClip1);
+            m_iClip2 = *(int*)(d + DT_BaseCombatWeapon.Instance.m_iClip2);
+            m_fAccuracyPenalty = *(float*)(d + DT_WeaponCSBase.Instance.m_fAccuracyPenalty);
+            m_flNextPrimaryAttack = *(float*)(d + DT_LocalActiveWeaponData.Instance.m_flNextPrimaryAttack);
+            WeaponId = *(int*)(d + Program.Offsets.m_iItemDefinitionIndex);
+
+            IsPistol = idsPistol.Value.Contains(m_ClientClass.ClassID);
+            IsSniper = idsSniper.Value.Contains(m_ClientClass.ClassID);
+            IsRifle = idsRifle.Value.Contains(m_ClientClass.ClassID);
+            IsMP = idsMP.Value.Contains(m_ClientClass.ClassID);
+            IsMG = idsMG.Value.Contains(m_ClientClass.ClassID);
+            IsGrenade = idsGrenade.Value.Contains(m_ClientClass.ClassID);
+            IsGrenadeProjectile = idsGrenadeProjectile.Value.Contains(m_ClientClass.ClassID);
+            IsC4 = idsC4.Value.Contains(m_ClientClass.ClassID);
+            IsKnife = idsKnife.Value.Contains(m_ClientClass.ClassID);
+            IsPumpgun = idsPumpgun.Value.Contains(m_ClientClass.ClassID);
+        }
+
         public static bool IsWeapon(EntityPrototype other)
         {
             if (other == null || !other.IsValid)
                 return false;
 
-            return idsAll.Value.Any(x => x == other.m_ClientClass.Value.ClassID);
-        }
-        protected override void SetupFields()
-        {
-            base.SetupFields();
-
-            m_hOwner = new LazyCache<int>(() => ReadNetVar<int>("DT_BaseCombatWeapon", "m_hOwner"));
-            m_iClip1 = new LazyCache<int>(() => ReadNetVar<int>("DT_BaseCombatWeapon", "m_iClip1"));
-            m_iClip2 = new LazyCache<int>(() => ReadNetVar<int>("DT_BaseCombatWeapon", "m_iClip2"));
-            m_fAccuracyPenalty = new LazyCache<float>(() => ReadNetVar<float>("DT_WeaponCSBase", "m_fAccuracyPenalty"));
-            m_flNextPrimaryAttack = new LazyCache<float>(() => ReadNetVar<float>("DT_LocalActiveWeaponData", "m_flNextPrimaryAttack"));
-            IsPistol = new LazyCache<bool>(() => m_ClientClass != null && idsPistol.Value.Contains(m_ClientClass.Value.ClassID));
-            IsSniper = new LazyCache<bool>(() => m_ClientClass != null && idsSniper.Value.Contains(m_ClientClass.Value.ClassID));
-            IsRifle = new LazyCache<bool>(() => m_ClientClass != null && idsRifle.Value.Contains(m_ClientClass.Value.ClassID));
-            IsMP = new LazyCache<bool>(() => m_ClientClass != null && idsMP.Value.Contains(m_ClientClass.Value.ClassID));
-            IsMG = new LazyCache<bool>(() => m_ClientClass != null && idsMG.Value.Contains(m_ClientClass.Value.ClassID));
-            IsGrenade = new LazyCache<bool>(() => m_ClientClass != null && idsGrenade.Value.Contains(m_ClientClass.Value.ClassID));
-            IsGrenadeProjectile = new LazyCache<bool>(() => m_ClientClass != null && idsGrenadeProjectile.Value.Contains(m_ClientClass.Value.ClassID));
-            IsC4 = new LazyCache<bool>(() => m_ClientClass != null && idsC4.Value.Contains(m_ClientClass.Value.ClassID));
-            IsKnife = new LazyCache<bool>(() => m_ClientClass != null && idsKnife.Value.Contains(m_ClientClass.Value.ClassID));
-            IsPumpgun = new LazyCache<bool>(() => m_ClientClass != null && idsPumpgun.Value.Contains(m_ClientClass.Value.ClassID));
-            WeaponId = new LazyCache<int>(() => ReadAt<int>(Program.Offsets.m_iItemDefinitionIndex));
+            return idsAll.Value.Any(x => x == other.m_ClientClass.ClassID);
         }
         #endregion
     }

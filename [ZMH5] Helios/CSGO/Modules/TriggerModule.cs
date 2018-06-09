@@ -60,7 +60,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             //Take care of any burst-shots before doing anything else
             if (shotsLeft > 0)
             {
-                if (wep.Value.m_iClip1.Value > 0)
+                if (wep.Value.m_iClip1 > 0)
                 {
                     if ((wep.Value.m_flNextPrimaryAttack - lp.m_flSimulationTime) <= 0f)
                     {
@@ -94,8 +94,8 @@ namespace _ZMH5__Helios.CSGO.Modules
             //New enemy? Check entity and set variables
             else if (lp.m_iCrosshairIdx != lastEnemyId)
             {
-                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx.Value];
-                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
+                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx];
+                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum == lp.m_iTeamNum)
                 {
                     //Program.Logger.Log("TRG: No (valid) enemy");
                     lastEnemyId = 0;
@@ -115,12 +115,12 @@ namespace _ZMH5__Helios.CSGO.Modules
                 if ((DateTime.Now - lastEnemyDetection).TotalMilliseconds < Program.CurrentSettings.Trigger.Delay)
                     return;
 
-                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx.Value];
-                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
+                var enemy = Program.Hack.StateMod.Players[lp.m_iCrosshairIdx];
+                if (enemy == null || !enemy.IsValid || enemy.m_iTeamNum == lp.m_iTeamNum)
                     return;
 
                 //Program.Logger.Log("TRG: ALRIGHT");
-                if (wep.Value.m_iClip1.Value > 0)// && wep.Value.m_fAccuracyPenalty < 0.01f)
+                if (wep.Value.m_iClip1 > 0)// && wep.Value.m_fAccuracyPenalty < 0.01f)
                 {
                     if (Program.CurrentSettings.Trigger.Burst.Enabled)
                     {

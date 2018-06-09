@@ -87,6 +87,8 @@
     <Compile Include="Core\eKeyMode.cs" />
     <Compile Include="Core\Hack.cs" />
     <Compile Include="Core\HotkeyModule.cs" />
+    <Compile Include="Core\RemoteObject.cs" />
+    <Compile Include="Core\SizeCache.cs" />
     <Compile Include="Input\Button.cs" />
     <Compile Include="Input\HackInput.cs" />
     <Compile Include="Core\LazyArray.cs" />
@@ -108,12 +110,15 @@
     <Compile Include="Core\Timing\Time.cs" />
     <Compile Include="Core\StreamExtension.cs" />
     <Compile Include="IO\Logging.cs" />
+    <Compile Include="Maths\Box.cs" />
+    <Compile Include="Maths\QuadFace.cs" />
     <Compile Include="Maths\Margins.cs" />
     <Compile Include="Maths\Math.cs" />
     <Compile Include="Maths\Matrix.cs" />
     <Compile Include="Maths\Point.cs" />
     <Compile Include="Maths\Rectangle.cs" />
     <Compile Include="Maths\Size.cs" />
+    <Compile Include="Maths\Triangle.cs" />
     <Compile Include="Maths\Vector2.cs" />
     <Compile Include="Maths\Vector3.cs" />
     <Compile Include="Misc\BiGenericEventArgs.cs" />

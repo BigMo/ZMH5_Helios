@@ -39,22 +39,22 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (Program.Hack.AimBot.CurrentTarget == 0)
             {
-                var vecPunch = lp.m_aimPunchAngle.Value;
+                var vecPunch = lp.m_aimPunchAngle;
                 var delta = (vecPunch - lastPunch) * -2f * Program.CurrentSettings.NoRecoil.Force;
                 if (wep.m_iClip1 != lastClip || lp.m_iShotsFired > 0)
                 {
                     lastClip = wep.m_iClip1;
                     Program.Hack.View.ApplyChange(delta);
-                    Program.Logger.Log("PunchY: {0}, punchY: {1}, lastPunchY: {2}",
-                        System.Math.Round(vecPunch.Y, 2),
-                        System.Math.Round(delta.Y, 2),
-                        System.Math.Round(lastPunch.Y, 2));
+                    //Program.Logger.Log("PunchY: {0}, punchY: {1}, lastPunchY: {2}",
+                    //    System.Math.Round(vecPunch.Y, 2),
+                    //    System.Math.Round(delta.Y, 2),
+                    //    System.Math.Round(lastPunch.Y, 2));
                 }
                 lastPunch = vecPunch;
             }
             else
             {
-                Program.Hack.View.ApplyChange(lp.m_aimPunchAngle.Value * -2f * Program.CurrentSettings.NoRecoil.Force);
+                Program.Hack.View.ApplyChange(lp.m_aimPunchAngle * -2f * Program.CurrentSettings.NoRecoil.Force);
             }
         }
         #endregion

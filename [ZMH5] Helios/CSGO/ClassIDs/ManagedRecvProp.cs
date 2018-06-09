@@ -79,7 +79,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
                 var props = new ManagedRecvProp[this.ElementCount];
                 for (int i = 0; i < props.Length; i++)
                 {
-                    int a = this.RecvProp.Value.m_pArrayProp + Marshal.SizeOf(typeof(RecvProp_t)) * i;
+                    int a = this.RecvProp.Value.m_pArrayProp + SizeCache<RecvProp_t>.Size * i;
                     if (address == a)
                         props[i] = this;
                     else

@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,6 +69,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="geometry3Sharp, Version=1.0.144.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\geometry3Sharp.1.0.144\lib\net45\geometry3Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Grapevine, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Grapevine.4.1.1.0\lib\net40\Grapevine.dll</HintPath>
     </Reference>
@@ -114,6 +118,13 @@
     <Compile Include="CSGO\BSP\dplane_t.cs" />
     <Compile Include="CSGO\BSP\eLumpIndex.cs" />
     <Compile Include="CSGO\BSP\lump_t.cs" />
+    <Compile Include="CSGO\BSP\MDL\BoundingBox.cs" />
+    <Compile Include="CSGO\BSP\MDL\HitboxSet.cs" />
+    <Compile Include="CSGO\BSP\MDL\MDLFile.cs" />
+    <Compile Include="CSGO\BSP\MDL\mstudiobbox_t.cs" />
+    <Compile Include="CSGO\BSP\MDL\mstudiobone_t.cs" />
+    <Compile Include="CSGO\BSP\MDL\mstudiohitboxset_t.cs" />
+    <Compile Include="CSGO\BSP\MDL\studiohdr_t.cs" />
     <Compile Include="CSGO\BSP\mvertex_t.cs" />
     <Compile Include="CSGO\BSP\Polygon.cs" />
     <Compile Include="CSGO\BSP\snode_t.cs" />
@@ -133,13 +144,16 @@
     <Compile Include="CSGO\Entities\BaseCombatWeapon.cs" />
     <Compile Include="CSGO\Entities\BaseEntity.cs" />
     <Compile Include="CSGO\Entities\BasePlayer.cs" />
-    <Compile Include="CSGO\Entities\CSGameRulesProxy.cs" />
     <Compile Include="CSGO\Entities\CSLocalPlayer.cs" />
     <Compile Include="CSGO\Entities\CSPlayer.cs" />
     <Compile Include="CSGO\Entities\CSPlayerResource.cs" />
     <Compile Include="CSGO\Entities\EntityHelpers\Bone.cs" />
     <Compile Include="CSGO\Entities\EntityHelpers\Skeleton.cs" />
+    <Compile Include="CSGO\Entities\EntityHelpers\VMTtoClassId.cs" />
     <Compile Include="CSGO\Entities\EntityPrototype.cs" />
+    <Compile Include="CSGO\Entities\NetVars\Classes.cs" />
+    <Compile Include="CSGO\Entities\NetVars\NetVarAttribute.cs" />
+    <Compile Include="CSGO\Entities\NetVars\NetVarResolver.cs" />
     <Compile Include="CSGO\Enums\Flags.cs" />
     <Compile Include="CSGO\Enums\LifeState.cs" />
     <Compile Include="CSGO\Enums\MoveState.cs" />

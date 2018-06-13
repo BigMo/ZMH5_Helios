@@ -12,7 +12,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
     {
         #region PROPERTIES
         [JsonIgnore]
-        public int Address { get; private set; }
+        public IntPtr Address { get; private set; }
         [JsonIgnore]
         public LazyCache<ClientClass> ClientClass { get; private set; }
         public LazyCache<string> NetworkName { get; private set; }
@@ -21,7 +21,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
         #endregion
 
         #region CONSTRUCTORS
-        public ManagedClientClass(int address)
+        public ManagedClientClass(IntPtr address)
         {
             Address = address;
 
@@ -37,7 +37,10 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
         #endregion
 
         #region METHODS
-        
+        public override string ToString()
+        {
+            return NetworkName;
+        }
         #endregion
     }
 }

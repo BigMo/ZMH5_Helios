@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _ZMH5__Helios.CSGO.Entities.NetVars;
 
 namespace _ZMH5__Helios.CSGO.Entities
 {
@@ -12,24 +13,22 @@ namespace _ZMH5__Helios.CSGO.Entities
     {
         #region VARIABLES
         public static LazyCache<int> CLASSID = new LazyCache<int>(() => ClassIDs.ClientClassParser.ClientClasses.First(x => x.NetworkName == "CCSPlayer").ClassID);
-        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable("DT_CSPlayer"));
+        private static LazyCache<int> memSize = new LazyCache<int>(() => LargestDataTable(DT_CSPlayer.Instance));
         #endregion
 
         #region PROPERTIES
-        public LazyCache<MoveState> m_iMoveState { get; private set; }
-        public LazyCache<PlayerState> m_iPlayerState { get; private set; }
-        public LazyCache<int> m_bIsScoped { get; private set; }
-        public LazyCache<int> m_ArmorValue { get; private set; }
-        public override bool IsValid { get { return base.IsValid && CLASSID == this.m_ClientClass.Value.ClassID; } }
-        public override int MemSize { get { return memSize.Value; } }
+        public MoveState m_iMoveState { get; private set; }
+        public PlayerState m_iPlayerState { get; private set; }
+        public int m_bIsScoped { get; private set; }
+        public int m_ArmorValue { get; private set; }
+        public override bool IsValid { get { return base.IsValid && CLASSID == this.m_ClientClass.ClassID; } }
         #endregion
 
         #region CONSTRUCTORS
-        public CSPlayer() : base() { }
-        public CSPlayer(BaseEntity other) : base(other, memSize.Value) { }
-
-        public CSPlayer(int address) : this(address, memSize.Value) { }
-        public CSPlayer(int address, int size) : base(address, size) { }
+        public CSPlayer(IntPtr address, int size) : base(address, size) { }
+        public CSPlayer(IntPtr address) : this(address, memSize) { }
+        public CSPlayer() : this(memSize) { }
+        public CSPlayer(int size) : base(System.Math.Max(size, memSize)) { }
         #endregion
 
         #region METHODS
@@ -38,16 +37,17 @@ namespace _ZMH5__Helios.CSGO.Entities
             if (other == null || !other.IsValid)
                 return false;
 
-            return other.m_ClientClass.Value.ClassID == CLASSID.Value;
+            return other.m_ClientClass.ClassID == CLASSID.Value;
         }
-        protected override void SetupFields()
+
+        protected override unsafe void ReadFields(byte* d)
         {
-            base.SetupFields();
-            
-            m_iMoveState = new LazyCache<MoveState>(() => (MoveState)this.ReadNetVar<int>("DT_CSPlayer", "m_iMoveState"));
-            m_iPlayerState = new LazyCache<PlayerState>(() => (PlayerState)this.ReadNetVar<int>("DT_CSPlayer", "m_iPlayerState"));
-            m_bIsScoped = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSPlayer", "m_bIsScoped"));
-            m_ArmorValue = new LazyCache<int>(() => this.ReadNetVar<int>("DT_CSPlayer", "m_ArmorValue"));
+            base.ReadFields(d);
+
+            m_iMoveState = *(MoveState*)(d + DT_CSPlayer.Instance.m_iMoveState);
+            m_iPlayerState = *(PlayerState*)(d + DT_CSPlayer.Instance.m_iPlayerState);
+            m_bIsScoped = *(int*)(d + DT_CSPlayer.Instance.m_bIsScoped);
+            m_ArmorValue = *(int*)(d + DT_CSPlayer.Instance.m_ArmorValue);
         }
         #endregion
     }

@@ -38,6 +38,11 @@ namespace ZatsHackBase.Core
             str.Write(wrData, 0, length);
         }
 
+        public static T Read<T>(this Stream str, IntPtr position) where T : struct
+        {
+            str.Position = (long)position;
+            return str.Read<T>();
+        }
         public static T Read<T>(this Stream str, long position) where T : struct
         {
             str.Position = position;
@@ -45,7 +50,7 @@ namespace ZatsHackBase.Core
         }
         public static T Read<T>(this Stream str) where T : struct
         {
-            byte[] data = new byte[Marshal.SizeOf(typeof(T))];
+            byte[] data = new byte[SizeCache<T>.Size];
             int cnt = str.Read(data, 0, data.Length);
             if (cnt != data.Length)
                 throw new Exception(string.Format("Failed to read a \"{0}\" from stream: Read {1} of {2} bytes.",
@@ -61,7 +66,7 @@ namespace ZatsHackBase.Core
         }
         public static T[] ReadArray<T>(this Stream str, int count) where T : struct
         {
-            int sz = Marshal.SizeOf(typeof(T));
+            int sz = SizeCache<T>.Size;
             byte[] data = new byte[sz * count];
             int cnt = str.Read(data, 0, data.Length);
             if (cnt != data.Length)
@@ -80,6 +85,11 @@ namespace ZatsHackBase.Core
             return res;
         }
 
+        public static string ReadString(this Stream str, IntPtr position, int length, Encoding encoding)
+        {
+            str.Position = (long)position;
+            return ReadString(str, length, encoding);
+        }
         public static string ReadString(this Stream str, long position, int length, Encoding encoding)
         {
             str.Position = position;
@@ -96,7 +106,7 @@ namespace ZatsHackBase.Core
         #region MARSHALLING
         private unsafe static byte[] TToBytes<T>(T value) where T : struct
         {
-            byte[] data = new byte[Marshal.SizeOf(typeof(T))];
+            byte[] data = new byte[SizeCache<T>.Size];
 
             fixed (byte* b = data)
             Marshal.StructureToPtr(value, (IntPtr)b, true);

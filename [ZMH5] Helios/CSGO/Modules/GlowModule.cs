@@ -76,10 +76,10 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
                 else if (player != null && player.IsValid)
                 {
-                    if (lp == null || !lp.IsValid || ((Heke)Hack).AimBot.CurrentTarget == player.m_iID.Value)
+                    if (lp == null || !lp.IsValid || ((Heke)Hack).AimBot.CurrentTarget == player.m_iID)
                         continue;
 
-                    bool friend = lp.m_iTeamNum.Value == player.m_iTeamNum.Value;
+                    bool friend = lp.m_iTeamNum == player.m_iTeamNum;
                     if (Program.CurrentSettings.Glow.Allies.Enabled && friend)
                         EncolorObject(obj, Program.CurrentSettings.Glow.Allies.Color, i);
                     if (Program.CurrentSettings.Glow.Enemies.Enabled && !friend)
@@ -87,7 +87,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
                 else
                 {
-                    if (proto.m_ClientClass.Value.NetworkName.Value == "CChicken")
+                    if (proto.m_ClientClass.NetworkName.Value == "CChicken")
                         EncolorObject(obj, Color.Orange, i);
 
                     var baseEnt = Program.Hack.GetEntityByAddress<BaseEntity>(proto.Address);

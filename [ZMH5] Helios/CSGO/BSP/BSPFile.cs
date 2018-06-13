@@ -218,7 +218,7 @@ namespace _ZMH5__Helios.CSGO.BSP
             var lump = m_BSPHeader.m_Lumps[(int)index];
             if (lump.m_FourCC != 0)
                 throw new Exception("LZMA!");
-            var count = lump.m_Filelen / Marshal.SizeOf(typeof(T));
+            var count = lump.m_Filelen / SizeCache<T>.Size;
             if (count <= 0)
                 return new T[0];
 

@@ -36,7 +36,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         public EntityCache<BaseEntity> BaseEntitites { get; private set; }
         //public LazyCache<Vector3> ViewAngles { get; private set; }
         public LazyCache<Matrix> ViewMatrix { get; private set; }
-        public LazyCache<CSGameRulesProxy> GameRules { get; private set; }
+        //public LazyCache<CSGameRulesProxy> GameRules { get; private set; }
         public LazyCache<CSPlayerResource> PlayerResources { get; private set; }
         public string[] Names { get; private set; }
         public LazyCache<RadarEntry[]> RadarEntries { get; private set; }
@@ -50,11 +50,12 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             LocalPlayer = new LazyCache<CSLocalPlayer>(() =>
             {
-                var address = Program.Hack.Memory.Read<int>(pLocalPlayer);
-                if (address == 0 || address == -1)
+                var address = Program.Hack.Memory.Read<IntPtr>(pLocalPlayer);
+                if ((long)address == 0)
                     return null;
 
-                return new CSLocalPlayer(address);
+                var lp = new CSLocalPlayer(address);
+                return lp;
             });
             ClientState = new LazyCache<ClientState>(() =>
             {
@@ -68,20 +69,20 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 return Program.Hack.Memory.ReadString(Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.GameDirectory, 256, Encoding.UTF8);
             });
-            GameRules = new LazyCache<CSGameRulesProxy>(() =>
-            {
-                var address = Program.Hack.Memory.Read<int>(pGameRules);
-                if (address == 0 || address == -1)
-                    return null;
+            //GameRules = new LazyCache<CSGameRulesProxy>(() =>
+            //{
+            //    var address = Program.Hack.Memory.Read<int>(pGameRules);
+            //    if (address == 0 || address == -1)
+            //        return null;
 
-                //var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(address);
-                var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(pGameRules);
-                return grp;
-            });
+            //    //var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(address);
+            //    var grp = Program.Hack.GetEntityByAddress<CSGameRulesProxy>(pGameRules);
+            //    return grp;
+            //});
             PlayerResources = new LazyCache<CSPlayerResource>(() =>
             {
-                var address = Program.Hack.Memory.Read<int>(pPlayerResources);
-                if (address == 0 || address == -1)
+                var address = Program.Hack.Memory.Read<IntPtr>(pPlayerResources);
+                if ((int)address == 0)
                     return null;
 
                 return Program.Hack.GetEntityByAddress<CSPlayerResource>(address);
@@ -129,7 +130,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             //Grab local player
             LocalPlayer.Reset();
             ViewMatrix.Reset();
-            GameRules.Reset();
+            //GameRules.Reset();
             PlayerResources.Reset();
             RadarEntries.Reset();
             ClientState.Reset();
@@ -191,11 +192,11 @@ namespace _ZMH5__Helios.CSGO.Modules
             if (isValid)
                 players = players.Where(x => x.IsValid);
             if (isAlive)
-                players = players.Where(x => x.m_lifeState.Value == LifeState.Alive);
+                players = players.Where(x => x.m_lifeState == LifeState.Alive);
             if(isActive)
                 players = players.Where(x => !x.IsDormant);
             if (team != Team.None)
-                players = players.Where(x => x.m_iTeamNum.Value == team);
+                players = players.Where(x => x.m_iTeamNum == team);
 
             return players.ToArray();
         }

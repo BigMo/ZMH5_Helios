@@ -50,6 +50,15 @@ namespace ZatsHackBase.Maths
         {
             return (X * other.X) + (Y * other.Y) + (Z * other.Z);
         }
+        public Vector3 Cross(Vector3 other)
+        {
+            var vec = new Vector3(
+                Y * other.Z - other.Y * Z,
+                (X * other.Z - other.X * Z) * -1f,
+                X * other.Y - other.X * Y);
+            vec.Normalize();
+            return vec;
+        }
         public override string ToString()
         {
             return string.Format("[Vec3 X={0}, Y={1}, Z={2}", X, Y, Z);

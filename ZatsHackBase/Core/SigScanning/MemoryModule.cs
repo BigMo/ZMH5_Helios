@@ -35,7 +35,7 @@ namespace ZatsHackBase.Core.SigScanning
             var file = mem.Read<IMAGE_FILE_HEADER>();
             bool is32bit = file.Characteristics.HasFlag(FileCharacteristics.IMAGE_FILE_32BIT_MACHINE);
 
-            long offset = module.BaseAddress.ToInt64() + dos.e_lfanew + 4 + Marshal.SizeOf(typeof(IMAGE_FILE_HEADER));
+            long offset = module.BaseAddress.ToInt64() + dos.e_lfanew + 4 + SizeCache<IMAGE_FILE_HEADER>.Size;
 
             if (is32bit)
             {

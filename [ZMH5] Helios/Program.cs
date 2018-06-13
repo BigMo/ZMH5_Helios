@@ -14,6 +14,7 @@ using Grapevine.Server;
 using System.Windows.Forms;
 using _ZMH5__Helios.UI;
 using System.IO;
+using ZatsHackBase.Maths;
 
 namespace _ZMH5__Helios
 {
@@ -50,6 +51,14 @@ namespace _ZMH5__Helios
             //new Test().Run();
             //return;
             //Setup
+            //var path = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\models" +
+            //    @"\props\de_dust\hr_dust\dust_awnings\dust_awning_commercial_01_256_frame.mdl";
+            //using (var str = new FileStream(path, FileMode.Open, FileAccess.Read))
+            //{
+            //    var mdl = new CSGO.BSP.MDL.MDLFile(str);
+            //    Console.WriteLine(mdl.HitBoxSets.Length);
+            //}
+
             Animation = new ConsoleAnimation();
             Animation.Text = Name = string.Format("[ZMH5] Helios v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
             Animation.Delimiter = "          //          ";

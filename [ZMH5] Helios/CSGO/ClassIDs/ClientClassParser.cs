@@ -32,7 +32,7 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
             for (int i = 0; i < pManager.m_iCount; i++)
             {
                 int dwAddress = BitConverter.ToInt32(pData, i * 0x10);
-                classes.Add(new ManagedClientClass(dwAddress));
+                classes.Add(new ManagedClientClass((IntPtr)dwAddress));
             }
 
             ClientClasses = classes.OrderBy(x => x.ClassID).ToArray();

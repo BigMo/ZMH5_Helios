@@ -28,6 +28,8 @@ namespace ZatsHackBase.Core
         public override long Length { get { return IntPtr.Size == 4 ? (long)int.MaxValue : long.MaxValue; } }
 
         public override long Position { get; set; }
+
+        public IntPtr pPosition { get { return (IntPtr)Position; } set { Position = (long)value; } }
         #endregion
 
         #region CONSTRUCTORS
@@ -117,27 +119,38 @@ namespace ZatsHackBase.Core
 
         public override void Flush() { }
 
+        public int Read(IntPtr address, byte[] buffer, int offset, int count)
+        {
+            pPosition = address;
+            return Read(buffer, offset, count);
+        }
         public override int Read(byte[] buffer, int offset, int count)
         {
             IntPtr numBytes = IntPtr.Zero;
             try
             {
               RPMCalls++;
-              bool succ = WinAPI.ReadProcessMemory(Process.Handle, (IntPtr)Position, buffer, count, out numBytes) && numBytes.ToInt32() == count;
+              bool succ = WinAPI.ReadProcessMemory(Process.Handle, pPosition, buffer, count, out numBytes) && numBytes.ToInt32() == count;
               BytesIn += numBytes.ToInt32();
             }
-            catch(Exception ex)
+            catch
             {
-                //throw new Win32Exception(Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error());
             }
             return count;
         }
 
+        public void Write(IntPtr address, byte[] buffer, int offset, int count)
+        {
+            pPosition = address;
+            Write(buffer, offset, count);
+
+        }
         public override void Write(byte[] buffer, int offset, int count)
         {
             IntPtr numBytes = IntPtr.Zero;
             WPMCalls++;
-            WinAPI.WriteProcessMemory(Process.Handle, (IntPtr)Position, buffer, count, out numBytes);
+            WinAPI.WriteProcessMemory(Process.Handle, pPosition, buffer, count, out numBytes);
             BytesOut += numBytes.ToInt32();
             if (numBytes.ToInt32() != count)
                 throw new Win32Exception(Marshal.GetLastWin32Error());

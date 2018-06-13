@@ -11,7 +11,7 @@ namespace _ZMH5__Helios.CSGO.Modules.GlowHelpers
     public struct GlowObjectDefinition
     {
         [FieldOffset(0x00)]
-        public int pEntity;
+        public IntPtr pEntity;
         [FieldOffset(0x04)]
         public float r;
         [FieldOffset(0x08)]

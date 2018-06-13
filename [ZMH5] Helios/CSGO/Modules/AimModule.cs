@@ -46,18 +46,17 @@ namespace _ZMH5__Helios.CSGO.Modules
                 CurrentTarget = 0;
                 return;
             }
-
-            var src = lp.m_vecOrigin.Value + lp.m_vecViewOffset.Value;// + lp.m_vecVelocity.Value * (float)args.Time.ElapsedTime.TotalSeconds;
+            var src = lp.m_vecOrigin + lp.m_vecViewOffset;// + lp.m_vecVelocity * (float)args.Time.ElapsedTime.TotalSeconds;
             if (Program.CurrentSettings.Aim.Predict)
             {
-                var oldLp = Program.Hack.StateMod.PlayersOld[lp.m_iID.Value];
-                src += lp.m_vecOrigin.Value - oldLp.m_vecOrigin.Value;
+                var oldLp = Program.Hack.StateMod.PlayersOld[lp.m_iID];
+                src += lp.m_vecOrigin - oldLp.m_vecOrigin;
             }
 
             if (Program.CurrentSettings.Aim.Lock && CurrentTarget != 0)
             {
                 var enemy = Program.Hack.StateMod.Players[CurrentTarget];
-                if (enemy == null || !enemy.IsValid || enemy.m_lifeState.Value != Enums.LifeState.Alive || enemy.m_bDormant == 1)
+                if (enemy == null || !enemy.IsValid || enemy.m_lifeState != Enums.LifeState.Alive || enemy.m_bDormant == 1)
                 {
                     CurrentTarget = 0;
                     Reset();
@@ -81,20 +80,20 @@ namespace _ZMH5__Helios.CSGO.Modules
                 //    a)
                 //    , enemy.m_iGlowIndex);
 
-                var dest = enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
+                var dest = enemy.m_Skeleton.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
                 if (Program.CurrentSettings.Aim.Predict)
                 {
                     var oldEnemy = Program.Hack.StateMod.PlayersOld[CurrentTarget];
                     if (oldEnemy != null && oldEnemy.IsValid)
                     {
-                        var oldDest = oldEnemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
+                        var oldDest = oldEnemy.m_Skeleton.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector();
                         dest = dest + (dest - oldDest);
                     }
                 }
 
                 dest += Vector3.UnitZ * ESPModule.MetersToUnits(Program.CurrentSettings.Aim.HeightOffset / 100f);
 
-                var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
+                var angle = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles;
                 angle = ViewModule.ClampAngle(angle);
                 if (Program.CurrentSettings.Aim.Smoothing.Enabled)
                 {
@@ -132,7 +131,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             if(CurrentTarget != lastId)
             {
                 var enemy = Program.Hack.StateMod.Players[CurrentTarget];
-                Program.Logger.Log("[Aim] Aiming at {0}: {1}", enemy != null ? enemy.m_iID.Value : -1, enemy != null ? enemy.m_ClientClass.Value.NetworkName : "null");
+                //Program.Logger.Log("[Aim] Aiming at {0}: {1}", enemy != null ? enemy.m_iID : -1, enemy != null ? enemy.m_ClientClass.NetworkName : "null");
                 lastId = CurrentTarget;
             }
         }
@@ -155,18 +154,18 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int GetTarget(Vector3 src)
         {
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, true,lp.m_iTeamNum.Value == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
-                OrderBy(x => (x.m_vecOrigin.Value - lp.m_vecOrigin.Value).Length).ToArray();
+            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, true,lp.m_iTeamNum == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
+                OrderBy(x => (x.m_vecOrigin - lp.m_vecOrigin).Length).ToArray();
 
             var newEnemyId = 0;
 
             if (Program.CurrentSettings.Aim.Sticky)
             {
-                var inc = lp.m_iCrosshairIdx.Value;
+                var inc = lp.m_iCrosshairIdx;
                 if (inc == 0)
                     return 0;
                 var enemy = Program.Hack.StateMod.Players[inc];
-                if (enemy == null || !enemy.IsValid || inc == lp.m_iID.Value || enemy.m_iTeamNum.Value == lp.m_iTeamNum.Value)
+                if (enemy == null || !enemy.IsValid || inc == lp.m_iID || enemy.m_iTeamNum == lp.m_iTeamNum)
                     return 0;
                 newEnemyId = enemy.m_iID;
             }
@@ -174,9 +173,9 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 Vector3 closest = Vector3.Zero;
                 float closestFov = float.MaxValue;
-                foreach (var enemy in enemies.OrderBy(x => (lp.m_vecOrigin.Value - x.m_vecOrigin).LengthSqrt))
+                foreach (var enemy in enemies.OrderBy(x => (lp.m_vecOrigin - x.m_vecOrigin).LengthSqrt))
                 {
-                    var dest = enemy.m_Skeleton.Value.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector() + Vector3.UnitZ * ESPModule.MetersToUnits(Program.CurrentSettings.Aim.HeightOffset / 100f);
+                    var dest = enemy.m_Skeleton.m_Bones[Program.CurrentSettings.Aim.Bone].ToVector() + Vector3.UnitZ * ESPModule.MetersToUnits(Program.CurrentSettings.Aim.HeightOffset / 100f);
                     if (Program.CurrentSettings.Aim.VisibleOnly)
                     {
                         var map = Program.Hack.StateMod.Map;
@@ -186,20 +185,20 @@ namespace _ZMH5__Helios.CSGO.Modules
                         if (!map.IsVisible(src, dest))
                             continue;
                     }
-                    var newAngles = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles.Value;
+                    var newAngles = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles;
                     newAngles = ViewModule.ClampAngle(newAngles);
                     float fov = newAngles.Length;
                     if (fov < closestFov && fov < Program.CurrentSettings.Aim.FOV)
                     {
                         closestFov = fov;
                         closest = newAngles;
-                        newEnemyId = enemy.m_iID.Value;
+                        newEnemyId = enemy.m_iID;
                     }
                 }
             }
-            var v = Program.Hack.StateMod.PlayerResources.Value;
-            if (newEnemyId != 0)
-                Program.Logger.Log("[Aim] Aiming at {0} [{1}]", Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[newEnemyId], newEnemyId);
+            var v = Program.Hack.StateMod.PlayerResources;
+            //if (newEnemyId != 0)
+            //    Program.Logger.Log("[Aim] Aiming at {0} [{1}]", Program.Hack.StateMod.PlayerResources.Value.m_sNames[newEnemyId], newEnemyId);
 
             return newEnemyId;
         }

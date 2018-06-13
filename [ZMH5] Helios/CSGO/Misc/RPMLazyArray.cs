@@ -12,7 +12,7 @@ namespace _ZMH5__Helios.CSGO.Misc
     public class RPMLazyArray<T> : LazyArray<T> where T : struct
     {
         #region VARIABLES
-        public static int Size = Marshal.SizeOf(typeof(T));
+        public static int Size = SizeCache<T>.Size;
         private byte[] data;
         private MemoryStream stream;
         #endregion

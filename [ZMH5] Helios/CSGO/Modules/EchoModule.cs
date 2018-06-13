@@ -35,7 +35,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         {
             base.OnTimer(args, sinceLastTimer);
 
-            Program.Logger.PrintLine("ECHO", "{5}T\t ↓{1} ({4}) ↑{0} ({3}),\t {2}t/s", new object[]
+            Program.Logger.PrintLine("ECHO", "{5}T\t | ▼{1} ({4})\t | ▲{0} ({3})\t | {2}t/s", new object[]
             {
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesOut, true),
                     SizeFormatter.GetUnitFromSize(Program.Hack.Memory.BytesIn, true),

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using ZatsHackBase.Maths;
 using Size = System.Drawing.Size;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class LayoutEngine
     {

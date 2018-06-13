@@ -8,7 +8,7 @@ using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
 using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class Control
     {

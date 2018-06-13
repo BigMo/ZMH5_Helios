@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public enum ControlState
     {
-        Default,
-        Focused,
-        Entered,
+        Active,
+        Inactive,
+        Highlight,
         Pressed,
-        Disabled
     }
 }

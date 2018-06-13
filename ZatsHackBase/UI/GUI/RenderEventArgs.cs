@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class RenderEventArgs : EventArgs
     {

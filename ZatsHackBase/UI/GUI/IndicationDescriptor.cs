@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Mathematics.Interop;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace ZatsHackBase.GUI
 {

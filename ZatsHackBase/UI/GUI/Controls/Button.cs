@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using SharpDX.Direct3D11;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace ZatsHackBase.GUI.Controls
 {
@@ -30,12 +30,12 @@ namespace ZatsHackBase.GUI.Controls
             graphics.FillRectangle ( m_idColors.Array [ m_iControlState ], m_rctAbsBounds );
 	        graphics.DrawString ( m_pFont, m_colForeColor, m_szCaption, m_rctAbsBounds, Drawing::Center | Drawing::VCenter );
 	        */
-            e.Renderer.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
+            e.Graphics.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
 
             var center = AbsoluteBounds.Location;
             center.X += AbsoluteBounds.Width/2;
             center.Y += AbsoluteBounds.Height/2;
-            e.Renderer.DrawString(Color.Black, Font, center, Caption, TextAlignment.Center, TextAlignment.Center);
+            e.Graphics.DrawString(Color.Black, Font, center, Caption, TextAlignment.Center, TextAlignment.Center);
 
 
             base.Render(e);

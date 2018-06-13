@@ -10,7 +10,7 @@ using ZatsHackBase.Core.Timing;
 using ZatsHackBase.GUI.Controls;
 using ZatsHackBase.Input;
 using ZatsHackBase.Maths;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace ZatsHackBase.UI
 {
@@ -19,13 +19,28 @@ namespace ZatsHackBase.UI
         #region PROPERTIES
         public Renderer Renderer { get; private set; }
         public EUCProcess Process { get; private set; }
-        public Form Form { get;private set; }
+        public Form Form { get; private set; }
         public Color BackColor { get; set; }
         public Thread FormThread { get; private set; }
         public Vector2 Size { get; private set; }
         public Frame BaseContainer { get; private set; }
         public HackInput Input { get; private set; }
         public List<Controls.Control> Controls { get; private set; }
+
+        // A scene instance for drawing the world
+        public Scene SceneWorld { get; private set; }
+
+        // A scene for drawing for example 3d boxes, skeletons and that stufff
+        public Scene SceneOverlay { get; private set; }
+
+        // A geometry buffer for drawing 2d visual things, beside the menu
+        public GeometryBuffer GeomVisuals { get; private set; }
+        public Graphics Visuals { get; private set; } // and its graphics instance
+
+        // A geometry buffer explictly for the menu
+        public GeometryBuffer GeomMenu { get; private set; }
+        public Graphics Menu { get; private set; } // and its graphics instance
+       
         #endregion
 
         #region CONSTRUCTORS
@@ -43,6 +58,14 @@ namespace ZatsHackBase.UI
                 {
                     Renderer.Dispose();
                     Renderer.Init(Form);
+
+                    SceneWorld = Renderer.MakeScene(); // size = 10mb
+                    SceneOverlay = Renderer.MakeScene(1024 * 1024 * 2); // size = 2mb
+                    GeomVisuals = Renderer.MakeGeometryBuffer(); // size = 2mb
+                    GeomMenu = Renderer.MakeGeometryBuffer(1024 * 1024); // size = 1mb
+
+                    Visuals = new Graphics(GeomVisuals);
+                    Menu = new Graphics(GeomMenu);
                 };
                 Application.Run(Form);
             });
@@ -67,7 +90,7 @@ namespace ZatsHackBase.UI
             foreach (var c in Controls)
             {
                 c.Update(time, Input, cursorPos);
-                c.Draw(Renderer);
+                c.Draw(Menu);
             }
         }
 

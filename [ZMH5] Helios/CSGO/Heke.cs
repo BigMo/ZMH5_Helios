@@ -15,7 +15,7 @@ using ZatsHackBase.Misc;
 using System.IO;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 using _ZMH5__Helios.CSGO.Modules;
 using _ZMH5__Helios.CSGO.BSP;
 using ZatsHackBase.UI.Controls;
@@ -188,7 +188,7 @@ namespace _ZMH5__Helios.CSGO
 
             if (Process.IsInForeground)
             {
-                Overlay.Renderer.DrawString(Color.White, dbg, Vector2.Unit * 20f,
+                Overlay.Menu.DrawString(Color.White, dbg, Vector2.Unit * 20f,
                     Input.MousePos.ToString() + "\n" +
                     Input.MouseMoveDist.ToString() + "\n" +
                     string.Join(", ", Input.KeysDown.Select(x => x.ToString())));
@@ -217,7 +217,7 @@ namespace _ZMH5__Helios.CSGO
                                     x.m_iObserverMode.Value.ToString())
                                 )
                             );
-                            Overlay.Renderer.DrawString(
+                            Overlay.Menu.DrawString(
                                 drawColor,
                                 dbg,
                                 Vector2.UnitY * (Overlay.Size.Y / 2f),
@@ -225,11 +225,11 @@ namespace _ZMH5__Helios.CSGO
                         }
                     }
                     else
-                        Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");
+                        Overlay.Menu.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");
                 }
                 else
                 {
-                    Overlay.Renderer.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<not ingame>");
+                    Overlay.Menu.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<not ingame>");
                 }
             }
             base.AfterPluginsTick(args);

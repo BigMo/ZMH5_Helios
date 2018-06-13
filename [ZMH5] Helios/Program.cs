@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZatsHackBase.UI;
-using ZatsHackBase.UI.Drawing.FontHelpers;
 using Grapevine.Server;
 using System.Windows.Forms;
 using _ZMH5__Helios.UI;
@@ -36,7 +35,7 @@ namespace _ZMH5__Helios
         {
             //for (int i = 0; i < 20; i++)
             //{
-            //    GlyphAtlas t = new ZatsHackBase.UI.Drawing.FontHelpers.GlyphAtlas(new GlyphAtlas.CharRange[] {
+            //    GlyphAtlas t = new ZatsHackBase.Drawing.FontHelpers.GlyphAtlas(new GlyphAtlas.CharRange[] {
             //        new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
             //        new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
             //        new GlyphAtlas.CharRange((char)0x0500, (char)0x052f), //Cyrillic Supplementary

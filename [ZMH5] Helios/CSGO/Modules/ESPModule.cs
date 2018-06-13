@@ -11,7 +11,7 @@ using ZatsHackBase.Core;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -63,10 +63,10 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             DrawModels();
 
-            espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
-            weaponFont = Program.Hack.Overlay.Renderer.Fonts[weaponFont];
+            espFont = Program.Hack.Overlay.Visuals.FindFont(espFont);
+            weaponFont = Program.Hack.Overlay.Visuals.FindFont(weaponFont);
             for (int i = 0; i < weaponFonts.Length; i++)
-                weaponFonts[i] = Program.Hack.Overlay.Renderer.Fonts[weaponFonts[i]];
+                weaponFonts[i] = Program.Hack.Overlay.Visuals.FindFont(weaponFonts[i]);
 
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
             if (lp == null || !lp.IsValid)
@@ -159,7 +159,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                             !w2s(ref p2, p3d2))
                             continue;
 
-                        Program.Hack.Overlay.Renderer.DrawLine(Program.CurrentSettings.ESP.World.Color, p1, p2);
+                        Program.Hack.Overlay.Visuals.DrawLine(Program.CurrentSettings.ESP.World.Color, p1, p2);
                     }
                 }
             }
@@ -193,8 +193,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                 {
                     var meters = DistToMeters((lp.m_vecOrigin.Value - bone).Length);
                     var size = new Vector2(4);
-                    Program.Hack.Overlay.Renderer.DrawRectangle(Color.Green, pos - size*0.5f, size);
-                    Program.Hack.Overlay.Renderer.DrawString(Color.White, espFont, new Vector2(pos.X - espFont.Height / 2f, pos.Y - espFont.Height / 2f), i.ToString());
+                    Program.Hack.Overlay.Visuals.DrawRectangle(Color.Green, pos - size*0.5f, size);
+                    Program.Hack.Overlay.Visuals.DrawString(Color.White, espFont, new Vector2(pos.X - espFont.Height / 2f, pos.Y - espFont.Height / 2f), i.ToString());
                 }
                 i++;
             }
@@ -226,9 +226,9 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (!string.IsNullOrEmpty(text))
             {
-                espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
+                espFont = Program.Hack.Overlay.Visuals.FindFont(espFont);
                 var textPos = upperLeft + Vector2.UnitX * size.X;
-                Program.Hack.Overlay.Renderer.DrawString(settings.Color, espFont, textPos, text);
+                Program.Hack.Overlay.Visuals.DrawString(settings.Color, espFont, textPos, text);
             }
         }
 
@@ -270,7 +270,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             }
             if (settings.ShowBox)
             {
-                Program.Hack.Overlay.Renderer.DrawRectangle(drawColor, position, size);
+                Program.Hack.Overlay.Visuals.DrawRectangle(drawColor, position, size);
                 //DrawOutlinedRect(position, size, drawColor, Color.Black);
             }
             if (settings.ShowHealth)
@@ -278,34 +278,34 @@ namespace _ZMH5__Helios.CSGO.Modules
                 var lifePerc = System.Math.Max(System.Math.Min(player.m_iHealth.Value, 100), 0) / 100f;
                 var lifeFrom = position - Vector2.UnitX * 2f;
                 var lifeTo = lifeFrom + Vector2.UnitY * size.Y * lifePerc;
-                Program.Hack.Overlay.Renderer.DrawLine(Color.Green, lifeFrom, lifeTo);
+                Program.Hack.Overlay.Visuals.DrawLine(Color.Green, lifeFrom, lifeTo);
 
                 //var lifeSize = espFont.MeasureString(player.m_iHealth.Value.ToString());
                 //var lifeText = lifeFrom - Vector2.UnitY * lifeSize.Y - Vector2.UnitX * lifeSize.X * 0.5f;
-                //Program.Hack.Overlay.Renderer.DrawString(Color.White, espFont, lifeText, player.m_iHealth.Value.ToString());
+                //Program.Hack.Overlay.Visuals.DrawString(Color.White, espFont, lifeText, player.m_iHealth.Value.ToString());
 
                 var armorPerc = System.Math.Max(System.Math.Min(player.m_ArmorValue.Value, 100), 0) / 100f;
                 var armorFrom = position  + Vector2.UnitX * size.X + Vector2.UnitX * 2f;
                 var armorTo = armorFrom + Vector2.UnitY * size.Y * armorPerc;
-                Program.Hack.Overlay.Renderer.DrawLine(Color.Blue, armorFrom, armorTo);
+                Program.Hack.Overlay.Visuals.DrawLine(Color.Blue, armorFrom, armorTo);
 
                 //var armorSize = espFont.MeasureString(player.m_ArmorValue.Value.ToString());
                 //var armorText = armorFrom - Vector2.UnitY * armorSize.Y - Vector2.UnitX * armorSize.X * 0.5f;
-                //Program.Hack.Overlay.Renderer.DrawString(Color.White, espFont, armorText, player.m_ArmorValue.Value.ToString());
+                //Program.Hack.Overlay.Visuals.DrawString(Color.White, espFont, armorText, player.m_ArmorValue.Value.ToString());
             }
             var infoMiddle = position + Vector2.UnitY * size.Y + Vector2.UnitX * size.X * 0.5f + Vector2.UnitY * 2f;
             if (settings.ShowName && Program.Hack.StateMod.PlayerResources.Value != null)
             {
                 var name = Program.Hack.StateMod.PlayerResources.Value.m_sNames.Value[player.m_iID.Value];
                 var nameSize = espFont.MeasureString(name);
-                Program.Hack.Overlay.Renderer.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
+                Program.Hack.Overlay.Visuals.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
                 infoMiddle += Vector2.UnitY * nameSize.Y;
             }
             if (settings.ShowDist)
             {
                 var dist = System.Math.Ceiling(DistToMeters((player.m_vecOrigin.Value - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin.Value).Length)).ToString() + "m";
                 var distSize = espFont.MeasureString(dist);
-                Program.Hack.Overlay.Renderer.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (distSize.X * -0.5f), dist);
+                Program.Hack.Overlay.Visuals.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (distSize.X * -0.5f), dist);
             }
             if (settings.ShowWeapon)
             {
@@ -358,9 +358,9 @@ namespace _ZMH5__Helios.CSGO.Modules
 
             if (!string.IsNullOrEmpty(text))
             {
-                espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
+                espFont = Program.Hack.Overlay.Visuals.FindFont(espFont);
                 var textPos = upperLeft + Vector2.UnitX * size.X;
-                Program.Hack.Overlay.Renderer.DrawString(settings.Color, espFont, textPos, text);
+                Program.Hack.Overlay.Visuals.DrawString(settings.Color, espFont, textPos, text);
             }
         }
 
@@ -390,7 +390,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 Vector2 origin = Vector2.Zero, vel = Vector2.Zero;
                 if (w2s(ref origin, enemy.m_vecOrigin.Value) && w2s(ref vel, enemy.m_vecOrigin.Value + velocity))
                 {
-                    Program.Hack.Overlay.Renderer.DrawLine(Color.White, origin, vel);
+                    Program.Hack.Overlay.Visuals.DrawLine(Color.White, origin, vel);
                 }
             }
 
@@ -489,7 +489,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                     text+= DistToMeters(lp.DistanceTo(weapon)).ToString("0.00") +"m";
                 }
                 var nameSize = espFont.MeasureString(text);
-                Program.Hack.Overlay.Renderer.DrawString(settings.Color, espFont, mid + Vector2.UnitY * size.Y - nameSize * 0.5f, text);
+                Program.Hack.Overlay.Visuals.DrawString(settings.Color, espFont, mid + Vector2.UnitY * size.Y - nameSize * 0.5f, text);
             }
             DrawWeaponIcon(weapon.WeaponId.Value, mid, lp.DistanceTo(weapon), settings.Color);
         }
@@ -501,7 +501,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             var index = (int)System.Math.Ceiling(weaponFonts.Length * meters / 20) - 1;
             var fnt = weaponFonts[index];
             var textSize = fnt.MeasureString(((char)(0xE000 + weaponIndex)).ToString());
-            Program.Hack.Overlay.Renderer.DrawString(color, fnt, position - textSize * 0.5f, ((char)(0xE000 + weaponIndex)).ToString());
+            Program.Hack.Overlay.Visuals.DrawString(color, fnt, position - textSize * 0.5f, ((char)(0xE000 + weaponIndex)).ToString());
         }
 
         private void DrawBaseEntitySet(CSLocalPlayer lp, IEnumerable<BaseEntity> ents, ESPEntry settings)
@@ -535,49 +535,49 @@ namespace _ZMH5__Helios.CSGO.Modules
 
         private void DrawOutlinedRect(Vector2 upperLeft, Vector2 size, Color border, Color outline)
         {
-            Program.Hack.Overlay.Renderer.DrawRectangle(
+            Program.Hack.Overlay.Visuals.DrawRectangle(
                     outline,
                     upperLeft - Vector2.Unit,
                     size + Vector2.Unit * 2f);
-            Program.Hack.Overlay.Renderer.DrawRectangle(
+            Program.Hack.Overlay.Visuals.DrawRectangle(
                 outline,
                 upperLeft + Vector2.Unit,
                 size - Vector2.Unit * 2f);
-            Program.Hack.Overlay.Renderer.DrawRectangle(
+            Program.Hack.Overlay.Visuals.DrawRectangle(
                 border,
                 upperLeft,
                 size);
         }
         private void DrawVBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill, Color outline)
         {
-            Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
+            Program.Hack.Overlay.Visuals.FillRectangle(bg, upperLeft, size);
 
             float percHeight = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
             DrawOutlinedRect(
                 new Vector2(upperLeft.X, upperLeft.Y + size.Y - size.Y * percHeight),
                 new Vector2(size.X, size.Y * percHeight),
                 fill, outline);
-            Program.Hack.Overlay.Renderer.FillRectangle(fill,
+            Program.Hack.Overlay.Visuals.FillRectangle(fill,
                 new Vector2(upperLeft.X, upperLeft.Y + size.Y - size.Y * percHeight),
                 new Vector2(size.X, size.Y * percHeight));
 
-            Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
+            Program.Hack.Overlay.Visuals.DrawRectangle(border, upperLeft, size);
             //DrawOutlinedRect(upperLeft, size, border, outline);
         }
         private void DrawHBar(Vector2 upperLeft, Vector2 size, float fillPerc, Color border, Color bg, Color fill, Color outline)
         {
-            Program.Hack.Overlay.Renderer.FillRectangle(bg, upperLeft, size);
+            Program.Hack.Overlay.Visuals.FillRectangle(bg, upperLeft, size);
 
             float percWidth = System.Math.Min(1f, System.Math.Max(0f, fillPerc));
             DrawOutlinedRect(
                 new Vector2(upperLeft.X, upperLeft.Y),
                 new Vector2(size.X * percWidth, size.Y),
                 fill, outline);
-            Program.Hack.Overlay.Renderer.FillRectangle(fill,
+            Program.Hack.Overlay.Visuals.FillRectangle(fill,
                 new Vector2(upperLeft.X, upperLeft.Y),
                 new Vector2(size.X * percWidth, size.Y));
 
-            Program.Hack.Overlay.Renderer.DrawRectangle(border, upperLeft, size);
+            Program.Hack.Overlay.Visuals.DrawRectangle(border, upperLeft, size);
             //DrawOutlinedRect(upperLeft, size, border, outline);
         }
         #endregion

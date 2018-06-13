@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZatsHackBase.Drawing;
 using ZatsHackBase.UI.Controls.Layouts;
 
 namespace ZatsHackBase.UI.Controls
@@ -16,14 +17,14 @@ namespace ZatsHackBase.UI.Controls
             //Layout = LinearLayout.Instance;
         }
 
-        public override void Draw(Renderer renderer)
+        public override void Draw(Graphics g)
         {
             if (DrawBackground)
-                renderer.FillRectangle(BackColor, AbsolutePosition, Size);
+                g.FillRectangle(BackColor, AbsolutePosition, Size);
             if (DrawBorder)
-                renderer.DrawRectangle(BorderColor, AbsolutePosition, Size);
+                g.DrawRectangle(BorderColor, AbsolutePosition, Size);
 
-            base.Draw(renderer);
+            base.Draw(g);
         }
     }
 }

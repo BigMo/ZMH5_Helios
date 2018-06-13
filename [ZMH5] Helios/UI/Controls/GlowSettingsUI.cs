@@ -43,7 +43,7 @@ namespace _ZMH5__Helios.UI.Controls
             InitializeComponent();
 
             this.espAlliesEnabled.CheckedChanged += (s, e) => { if (entry != null) entry.Enabled = espAlliesEnabled.Checked; };
-            this.espAlliesColor.ColorChanged += (s, e) => { if (entry != null) entry.Color = new ZatsHackBase.UI.Drawing.Color(espAlliesColor.ColorSystem); };
+            this.espAlliesColor.ColorChanged += (s, e) => { if (entry != null) entry.Color = new ZatsHackBase.Drawing.Color(espAlliesColor.ColorSystem); };
         }
     }
 }

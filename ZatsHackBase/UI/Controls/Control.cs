@@ -8,7 +8,7 @@ using ZatsHackBase.Input;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI.Controls.Events;
 using ZatsHackBase.UI.Controls.Layouts;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace ZatsHackBase.UI.Controls
 {
@@ -461,14 +461,14 @@ namespace ZatsHackBase.UI.Controls
             OnChildRemoved(new ControlArgs(child));
         }
 
-        public virtual void Draw(Renderer renderer)
+        public virtual void Draw(Graphics g)
         {
             if (font != null)
-                font = renderer.Fonts[font];
+                font = g.FindFont(font);
 
             foreach (var c in children)
                 if (c.Visible)
-                    c.Draw(renderer);
+                    c.Draw(g);
         }
 
         public virtual void Update(Time time, HackInput input, Vector2 cursorPos)

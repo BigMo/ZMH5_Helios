@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.Drawing
 {
-    public class RenderEventArgs : EventArgs
+
+    public enum TextAlignment
     {
-        public Graphics Graphics;
+        Near,
+        Center,
+        Far
+
     }
 }

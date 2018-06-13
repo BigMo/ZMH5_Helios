@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZatsHackBase.Core;
 using ZatsHackBase.Maths;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace _ZMH5__Helios.CSGO
 {

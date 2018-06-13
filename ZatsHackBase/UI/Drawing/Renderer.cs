@@ -416,23 +416,7 @@ namespace ZatsHackBase.UI
             
             font.DrawString(GeometryBuffer, location, (RawColor4)color, text, halign, valign);
         }
-
-        public void Debug(Font font)
-        {
-            if (!Initialized || font == null)
-                return;
-            
-            if (font.IsDisposed)
-            {
-                font = Fonts[font];
-                if (font == null || font.IsDisposed)
-                    return;
-            }
-            
-            font.DrawString(GeometryBuffer, new Vector2(10f,10f), new RawColor4(1f,0f,1f,1f), 
-                String.Format("Number of Vertices: {0}\nNumber of Indices {1}\nMemory pushend onto GPU: {2}",
-                GeometryBuffer.Vertices, GeometryBuffer.Indices, GeometryBuffer.CopiedMemory));
-        }
+        
         #endregion
         #endregion
     }

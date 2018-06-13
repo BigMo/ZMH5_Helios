@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZatsHackBase.Drawing;
 using ZatsHackBase.Maths;
 
 namespace ZatsHackBase.UI.Controls
@@ -20,7 +21,7 @@ namespace ZatsHackBase.UI.Controls
                 recalcSize = true;
         }
 
-        public override void Draw(Renderer renderer)
+        public override void Draw(Graphics g)
         {
             if (Font != null && Font.IsInitialized && !string.IsNullOrEmpty(Text))
             {
@@ -42,10 +43,10 @@ namespace ZatsHackBase.UI.Controls
                         break;
                 }
 
-                renderer.DrawString(ForeColor, Font, pos, Text);
+                g.DrawString(ForeColor, Font, pos, Text);
             }
 
-            base.Draw(renderer);
+            base.Draw(g);
         }
     }
 }

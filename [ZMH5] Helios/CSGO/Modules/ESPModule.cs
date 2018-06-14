@@ -323,10 +323,10 @@ namespace _ZMH5__Helios.CSGO.Modules
             }
             if (settings.ShowWeapon)
             {
-                var wep = player.m_ActiveWeapon;
+                var wep = player.m_ActiveWeapon.Value;
                 if (wep != null)
                     DrawWeaponIcon(
-                        wep.Value.WeaponId,
+                        wep.WeaponId,
                         position + Vector2.UnitX * size.X * 0.5f - Vector2.UnitY * 10f,
                         DistToMeters((player.m_vecOrigin - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin).Length) * 0.5f,
                         settings.Color);

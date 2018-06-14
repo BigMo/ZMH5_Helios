@@ -99,11 +99,11 @@ namespace ZatsHackBase.UI
 
         #region Properties
 
-        public int Vertices => _Vertices.Count;
-        public int Indices => _Indices.Count;
-        public int VertexDataSize => _Vertices.Count * Vertex.Size;
-        public int IndexDataSize => _Indices.Count * sizeof(short);
-        public int CopiedMemory => VertexDataSize + IndexDataSize;
+        public uint Vertices => _Vertices.Count;
+        public uint Indices => _Indices.Count;
+        public long VertexDataSize => _Vertices.Count * Vertex.Size;
+        public uint IndexDataSize => _Indices.Count * sizeof(short);
+        public long CopiedMemory => VertexDataSize + IndexDataSize;
 
         public RectangleF ClipRegion
         {

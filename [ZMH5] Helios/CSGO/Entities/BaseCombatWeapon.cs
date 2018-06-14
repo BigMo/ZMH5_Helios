@@ -173,6 +173,9 @@ namespace _ZMH5__Helios.CSGO.Entities
         {
             base.ReadFields(d);
 
+            if (m_ClientClass == null)
+                return;
+
             m_hOwner = *(int*)(d + DT_BaseCombatWeapon.Instance.m_hOwner);
             m_iClip1 = *(int*)(d + DT_BaseCombatWeapon.Instance.m_iClip1);
             m_iClip2 = *(int*)(d + DT_BaseCombatWeapon.Instance.m_iClip2);

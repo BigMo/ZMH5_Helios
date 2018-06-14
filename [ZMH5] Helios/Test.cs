@@ -7,7 +7,7 @@ using ZatsHackBase.Core;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace _ZMH5__Helios
 {
@@ -51,9 +51,8 @@ namespace _ZMH5__Helios
 
             //if (Process.IsInForeground)
             {
-                Overlay.Renderer.DrawRectangle(Color.Green, new Vector2(100f, 10f), new Vector2(100f, 100f));
-                Overlay.Renderer.DrawString(Color.Red, dbg, new Vector2(95f, 10f), DateTime.Now.ToLongTimeString());
-
+                Overlay.Visuals.DrawRectangle(Color.Green, new Vector2(100f, 10f), new Vector2(100f, 100f));
+                Overlay.Visuals.DrawString(Color.Red, dbg, new Vector2(95f, 10f), DateTime.Now.ToLongTimeString());
             }
             base.AfterPluginsTick(args);
         }

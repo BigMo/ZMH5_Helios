@@ -9,7 +9,7 @@ using _ZMH5__Helios.CSGO.Modules.GlowHelpers;
 using _ZMH5__Helios.CSGO.Entities;
 using ZatsHackBase;
 using _ZMH5__Helios.CSGO.Misc;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {

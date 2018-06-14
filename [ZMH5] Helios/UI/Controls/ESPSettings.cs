@@ -55,8 +55,8 @@ namespace _ZMH5__Helios.UI.Controls
             this.espAlliesEnabled.CheckedChanged += (s, e) => { if (entry != null) entry.Enabled = espAlliesEnabled.Checked; };
             this.espAlliesHealth.CheckedChanged += (s, e) => { if (entry != null) entry.ShowHealth = espAlliesHealth.Checked; };
             this.espAlliesWeapon.CheckedChanged += (s, e) => { if (entry != null) entry.ShowWeapon = espAlliesWeapon.Checked; };
-            this.espAlliesColor.ColorChanged += (s, e) => { if (entry != null) entry.Color = new ZatsHackBase.UI.Drawing.Color(espAlliesColor.ColorSystem); };
-            this.espAlliesColorOccluded.ColorChanged += (s, e) => { if (entry != null) entry.ColorOccluded = new ZatsHackBase.UI.Drawing.Color(espAlliesColorOccluded.ColorSystem); };
+            this.espAlliesColor.ColorChanged += (s, e) => { if (entry != null) entry.Color = new ZatsHackBase.Drawing.Color(espAlliesColor.ColorSystem); };
+            this.espAlliesColorOccluded.ColorChanged += (s, e) => { if (entry != null) entry.ColorOccluded = new ZatsHackBase.Drawing.Color(espAlliesColorOccluded.ColorSystem); };
         }
     }
 }

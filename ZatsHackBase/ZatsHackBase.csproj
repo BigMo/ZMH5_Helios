@@ -89,6 +89,21 @@
     <Compile Include="Core\HotkeyModule.cs" />
     <Compile Include="Core\RemoteObject.cs" />
     <Compile Include="Core\SizeCache.cs" />
+    <Compile Include="Drawing\Camera.cs" />
+    <Compile Include="Drawing\Color.cs" />
+    <Compile Include="Drawing\Detail\Batch.cs" />
+    <Compile Include="Drawing\Detail\FontCache.cs" />
+    <Compile Include="Drawing\Detail\Glyph.cs" />
+    <Compile Include="Drawing\Detail\GlyphAtlas.cs" />
+    <Compile Include="Drawing\Detail\Vertex2D.cs" />
+    <Compile Include="Drawing\Detail\Shaders.cs" />
+    <Compile Include="Drawing\Detail\Vertex3D.cs" />
+    <Compile Include="Drawing\Font.cs" />
+    <Compile Include="Drawing\GeometryBuffer.cs" />
+    <Compile Include="Drawing\Graphics.cs" />
+    <Compile Include="Drawing\Renderer.cs" />
+    <Compile Include="Drawing\Scene.cs" />
+    <Compile Include="Drawing\TextAlignment.cs" />
     <Compile Include="Input\Button.cs" />
     <Compile Include="Input\HackInput.cs" />
     <Compile Include="Core\LazyArray.cs" />
@@ -143,16 +158,7 @@
     <Compile Include="UI\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Drawing\FontCache.cs" />
-    <Compile Include="UI\Drawing\FontHelpers\GlyphAtlas.cs" />
-    <Compile Include="UI\Drawing\TextAlignment.cs" />
-    <Compile Include="UI\Drawing\Batch.cs" />
-    <Compile Include="UI\Drawing\Color.cs" />
-    <Compile Include="UI\Drawing\Font.cs" />
-    <Compile Include="UI\Drawing\GeometryBuffer.cs" />
-    <Compile Include="UI\Drawing\Glyph.cs" />
-    <Compile Include="UI\Drawing\Renderer.cs" />
-    <Compile Include="UI\Drawing\Vertex.cs" />
+    <Compile Include="UI\GUI\Colors.cs" />
     <Compile Include="UI\GUI\ContainerControl.cs" />
     <Compile Include="UI\GUI\Control.cs" />
     <Compile Include="UI\GUI\ControlState.cs" />

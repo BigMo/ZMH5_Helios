@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 using _ZMH5__Helios.CSGO.Entities;
 
 namespace _ZMH5__Helios.CSGO.Modules

@@ -21,7 +21,7 @@ namespace _ZMH5__Helios.UI.Controls
                 if (value != clr.BackColor)
                 {
                     clr.BackColor = value;
-                    Observable?.SetValue(PropertyName, new ZatsHackBase.UI.Drawing.Color(value));
+                    Observable?.SetValue(PropertyName, new ZatsHackBase.Drawing.Color(value));
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace _ZMH5__Helios.UI.Controls
 
         public void UpdateValue()
         {
-            var color = ZatsHackBase.UI.Drawing.Color.White;
+            var color = ZatsHackBase.Drawing.Color.White;
             if (!Observable.GetValue(PropertyName, ref color))
                 return;
             trckbarA.Value = (int)(color.A * 100);
@@ -91,7 +91,7 @@ namespace _ZMH5__Helios.UI.Controls
                     if(observable != null)
                     {
                         observable.Subscribe(this);
-                        var color = ZatsHackBase.UI.Drawing.Color.White;
+                        var color = ZatsHackBase.Drawing.Color.White;
                         if (observable.GetValue(PropertyName, ref color))
                             ColorSystem = Color.FromArgb(
                                 (byte)(color.A * 255f),

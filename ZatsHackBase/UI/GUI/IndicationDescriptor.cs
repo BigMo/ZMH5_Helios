@@ -4,51 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Mathematics.Interop;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class IndicationDescriptor
     {
 
         public IndicationDescriptor(
-            Color default_,
-            Color focused,
-            Color entered,
-            Color pressed,
-            Color disabled
+            Color active = Color.White,
+            Color inactive = Color.White,
+            Color highlight = Color.White,
+            Color pressed = Color.White
             )
         {
-            Default = default_;
-            Focused = focused;
-            Entered = entered;
+            Active = active;
+            Inactive = inactive;
+            Highlight = highlight;
             Pressed = pressed;
-            Disabled = disabled;
         }
 
         public Color Get(ControlState state)
         {
             switch (state)
             {
-                case ControlState.Default:
-                    return Default;
-                case ControlState.Focused:
-                    return Focused;
-                case ControlState.Entered:
-                    return Entered;
+                case ControlState.Active:
+                    return Active;
+                case ControlState.Inactive:
+                    return Inactive;
+                case ControlState.Highlight:
+                    return Highlight;
                 case ControlState.Pressed:
                     return Pressed;
-                case ControlState.Disabled:
-                    return Disabled;
                 default:
-                    return Default;
+                    return Active;
             }
         }
 
-        public Color Default;
-        public Color Focused;
-        public Color Entered;
+        public Color Active;
+        public Color Inactive;
+        public Color Highlight;
         public Color Pressed;
-        public Color Disabled;
     }
 }

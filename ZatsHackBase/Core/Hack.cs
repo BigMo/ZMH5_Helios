@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.UI;
 using System.Threading;
 using ZatsHackBase.Maths;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 using ZatsHackBase.Input;
 
 namespace ZatsHackBase.Core

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpDX.Mathematics.Interop;
 using ZatsHackBase.Maths;
-using ZatsHackBase.UI.Drawing;
+using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class Control
     {

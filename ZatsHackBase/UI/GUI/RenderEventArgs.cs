@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZatsHackBase.UI;
+using ZatsHackBase.Drawing;
 
-namespace ZatsHackBase.GUI
+namespace ZatsHackBase.UI.GUI
 {
     public class RenderEventArgs : EventArgs
     {
-        public Renderer Renderer;
+        public Graphics Graphics;
     }
 }

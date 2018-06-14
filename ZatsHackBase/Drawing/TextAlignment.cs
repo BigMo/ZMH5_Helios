@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZatsHackBase.UI.GUI
+namespace ZatsHackBase.Drawing
 {
-    public enum ControlState
+
+    public enum TextAlignment
     {
-        Active,
-        Inactive,
-        Highlight,
-        Pressed,
+        Near,
+        Center,
+        Far
+
     }
 }

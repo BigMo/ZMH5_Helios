@@ -71,61 +71,61 @@ namespace ZatsHackBase.UI.GUI.Controls
             base.Render(e);
         }
 
-        public override void MouseDown(MouseEventArgs e)
-        {
-            if (ButtonState == ControlState.Entered)
-                ButtonState = ControlState.Pressed;
-            base.MouseDown(e);
-        }
+        //public override void MouseDown(MouseEventArgs e)
+        //{
+        //    if (ButtonState == ControlState.Entered)
+        //        ButtonState = ControlState.Pressed;
+        //    base.MouseDown(e);
+        //}
 
         public event ButtonClickHandler OnCheckedChanged;
-        public override void MouseUp(MouseEventArgs e)
-        {
-            if (ButtonState == ControlState.Pressed)
-            {
-                Checked = !Checked;
-                OnCheckedChanged.Invoke(this);
-                ButtonState = AbsoluteBounds.Contains(e.X, e.Y) ? ControlState.Entered : ControlState.Focused;
+        //public override void MouseUp(MouseEventArgs e)
+        //{
+        //    if (ButtonState == ControlState.Pressed)
+        //    {
+        //        Checked = !Checked;
+        //        OnCheckedChanged.Invoke(this);
+        //        ButtonState = AbsoluteBounds.Contains(e.X, e.Y) ? ControlState.Entered : ControlState.Focused;
 
-            }
-            base.MouseUp(e);
-        }
+        //    }
+        //    base.MouseUp(e);
+        //}
 
-        public override void MouseMove(MouseEventArgs e)
-        {
-            if ((ButtonState == ControlState.Default || ButtonState == ControlState.Focused) &&
-                AbsoluteBounds.Contains(e.X, e.Y))
-            {
-                ButtonState = ControlState.Entered;
-            }
+        //public override void MouseMove(MouseEventArgs e)
+        //{
+        //    if ((ButtonState == ControlState.Default || ButtonState == ControlState.Focused) &&
+        //        AbsoluteBounds.Contains(e.X, e.Y))
+        //    {
+        //        ButtonState = ControlState.Entered;
+        //    }
 
-            GainFocus = ButtonState == ControlState.Entered;
-            LoseFocus = ButtonState != ControlState.Pressed && ButtonState != ControlState.Entered;
+        //    GainFocus = ButtonState == ControlState.Entered;
+        //    LoseFocus = ButtonState != ControlState.Pressed && ButtonState != ControlState.Entered;
 
-            base.MouseMove(e);
-        }
+        //    base.MouseMove(e);
+        //}
 
-        public override void KeyDown(KeyEventArgs e)
-        {
-            if (IsFocused && e.KeyCode == Keys.Enter)
-            {
-                PrevState = ButtonState;
-                ButtonState = ControlState.Pressed;
-                PressedFromKey = true;
-            }
-            base.KeyDown(e);
-        }
+        //public override void KeyDown(KeyEventArgs e)
+        //{
+        //    if (IsFocused && e.KeyCode == Keys.Enter)
+        //    {
+        //        PrevState = ButtonState;
+        //        ButtonState = ControlState.Pressed;
+        //        PressedFromKey = true;
+        //    }
+        //    base.KeyDown(e);
+        //}
 
-        public override void KeyUp(KeyEventArgs e)
-        {
-            if (ButtonState == ControlState.Pressed && PressedFromKey == true && e.KeyCode == Keys.Enter)
-            {
-                OnCheckedChanged.Invoke(this);
-                ButtonState = PrevState;
-                PressedFromKey = false;
-            }
-            base.KeyUp(e);
-        }
+        //public override void KeyUp(KeyEventArgs e)
+        //{
+        //    if (ButtonState == ControlState.Pressed && PressedFromKey == true && e.KeyCode == Keys.Enter)
+        //    {
+        //        OnCheckedChanged.Invoke(this);
+        //        ButtonState = PrevState;
+        //        PressedFromKey = false;
+        //    }
+        //    base.KeyUp(e);
+        //}
 
         public ControlState ButtonState;
         public IndicationDescriptor IndicationDescriptor;

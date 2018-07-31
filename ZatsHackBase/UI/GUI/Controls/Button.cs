@@ -25,7 +25,7 @@ namespace ZatsHackBase.UI.GUI.Controls
             graphics.FillRectangle ( m_idColors.Array [ m_iControlState ], m_rctAbsBounds );
 	        graphics.DrawString ( m_pFont, m_colForeColor, m_szCaption, m_rctAbsBounds, Drawing::Center | Drawing::VCenter );
 	        */
-            e.Graphics.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
+            //e.Graphics.FillRectangle(IndicationDescriptor.Get(ButtonState), AbsoluteBounds.Location, AbsoluteBounds.Size);
 
             var center = AbsoluteBounds.Location;
             center.X += AbsoluteBounds.Width/2;
@@ -36,60 +36,60 @@ namespace ZatsHackBase.UI.GUI.Controls
             base.Render(e);
         }
 
-        public override void MouseDown(MouseEventArgs e)
-        {
-            if ( ButtonState == ControlState.Entered)
-                ButtonState = ControlState.Pressed;
-            base.MouseDown(e);
-        }
+        //public override void MouseDown(MouseEventArgs e)
+        //{
+        //    if ( ButtonState == ControlState.Entered)
+        //        ButtonState = ControlState.Pressed;
+        //    base.MouseDown(e);
+        //}
 
         public event ButtonClickHandler OnClick;
-        public override void MouseUp(MouseEventArgs e)
-        {
-            if (ButtonState == ControlState.Pressed)
-            {
-                OnClick.Invoke(this);
-                ButtonState = AbsoluteBounds.Contains(e.X,e.Y) ? ControlState.Entered : ControlState.Focused;
+        //public override void MouseUp(MouseEventArgs e)
+        //{
+        //    if (ButtonState == ControlState.Pressed)
+        //    {
+        //        OnClick.Invoke(this);
+        //        ButtonState = AbsoluteBounds.Contains(e.X,e.Y) ? ControlState.Entered : ControlState.Focused;
 
-            }
-            base.MouseUp(e);
-        }
+        //    }
+        //    base.MouseUp(e);
+        //}
 
-        public override void MouseMove(MouseEventArgs e)
-        {
-            if ((ButtonState == ControlState.Default || ButtonState == ControlState.Focused) &&
-                AbsoluteBounds.Contains(e.X, e.Y)) 
-            {
-                ButtonState = ControlState.Entered;
-            }
+        //public override void MouseMove(MouseEventArgs e)
+        //{
+        //    if ((ButtonState == ControlState.Default || ButtonState == ControlState.Focused) &&
+        //        AbsoluteBounds.Contains(e.X, e.Y)) 
+        //    {
+        //        ButtonState = ControlState.Entered;
+        //    }
 
-            GainFocus = ButtonState == ControlState.Entered;
-            LoseFocus = ButtonState != ControlState.Pressed && ButtonState != ControlState.Entered;
+        //    GainFocus = ButtonState == ControlState.Entered;
+        //    LoseFocus = ButtonState != ControlState.Pressed && ButtonState != ControlState.Entered;
 
-            base.MouseMove(e);
-        }
+        //    base.MouseMove(e);
+        //}
 
-        public override void KeyDown(KeyEventArgs e)
-        {
-            if (IsFocused && e.KeyCode == Keys.Enter)
-            {
-                PrevState = ButtonState;
-                ButtonState = ControlState.Pressed;
-                PressedFromKey = true;
-            }
-            base.KeyDown(e);
-        }
+        //public override void KeyDown(KeyEventArgs e)
+        //{
+        //    if (IsFocused && e.KeyCode == Keys.Enter)
+        //    {
+        //        PrevState = ButtonState;
+        //        ButtonState = ControlState.Pressed;
+        //        PressedFromKey = true;
+        //    }
+        //    base.KeyDown(e);
+        //}
 
-        public override void KeyUp(KeyEventArgs e)
-        {
-            if (ButtonState == ControlState.Pressed && PressedFromKey == true && e.KeyCode == Keys.Enter)
-            {
-                OnClick.Invoke(this);
-                ButtonState = PrevState;
-                PressedFromKey = false;
-            }
-            base.KeyUp(e);
-        }
+        //public override void KeyUp(KeyEventArgs e)
+        //{
+        //    if (ButtonState == ControlState.Pressed && PressedFromKey == true && e.KeyCode == Keys.Enter)
+        //    {
+        //        OnClick.Invoke(this);
+        //        ButtonState = PrevState;
+        //        PressedFromKey = false;
+        //    }
+        //    base.KeyUp(e);
+        //}
 
         public ControlState ButtonState;
 

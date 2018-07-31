@@ -13,10 +13,10 @@ namespace ZatsHackBase.UI.GUI.Controls
 
         public Frame(ContainerControl parent = null) : base(parent)
         {
-            IdBackground = Colors.IdFrameBg;
-            IdCaption = Colors.IdFrameCaption;
-            IdBorder = Colors.IdFrameBorder;
-            IdText = Colors.IdFrameText;
+            //IdBackground = Colors.IdFrameBg;
+            //IdCaption = Colors.IdFrameCaption;
+            //IdBorder = Colors.IdFrameBorder;
+            //IdText = Colors.IdFrameText;
         }
         
         public override void Render(RenderEventArgs e)

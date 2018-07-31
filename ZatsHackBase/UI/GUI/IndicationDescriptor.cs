@@ -12,10 +12,10 @@ namespace ZatsHackBase.UI.GUI
     {
 
         public IndicationDescriptor(
-            Color active = Color.White,
-            Color inactive = Color.White,
-            Color highlight = Color.White,
-            Color pressed = Color.White
+            Color active,// = Color.White,
+            Color inactive,// = Color.White,
+            Color highlight,// = Color.White,
+            Color pressed// = Color.White
             )
         {
             Active = active;

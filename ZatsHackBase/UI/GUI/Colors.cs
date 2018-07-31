@@ -55,10 +55,10 @@ namespace ZatsHackBase.UI.GUI
 
         public static Color StaticBorder = ButtonBorderActive;
         
-        public static IndicationDescriptor IdFrameBg = new IndicationDescriptor(FrameBgActive, FrameBgInactive);
-        public static IndicationDescriptor IdFrameBorder = new IndicationDescriptor(FrameBorderActive, FrameBorderInactive);
-        public static IndicationDescriptor IdFrameCaption = new IndicationDescriptor(FrameCaptionActive, FrameCaptionInactive);
-        public static IndicationDescriptor IdFrameText = new IndicationDescriptor(FrameTextActive, FrameTextInactive);
+        //public static IndicationDescriptor IdFrameBg = new IndicationDescriptor(FrameBgActive, FrameBgInactive);
+        //public static IndicationDescriptor IdFrameBorder = new IndicationDescriptor(FrameBorderActive, FrameBorderInactive);
+        //public static IndicationDescriptor IdFrameCaption = new IndicationDescriptor(FrameCaptionActive, FrameCaptionInactive);
+        //public static IndicationDescriptor IdFrameText = new IndicationDescriptor(FrameTextActive, FrameTextInactive);
 
         public static IndicationDescriptor IdScrollShaftBg = new IndicationDescriptor(ScrollShaftBgActive, ScrollShaftBgInactive, ScrollShaftBgHighlight, ScrollShaftBgPressed);
         public static IndicationDescriptor IdScrollThumbBg = new IndicationDescriptor(ScrollThumbBgActive, ScrollThumbBgInactive, ScrollThumbBgHighlight, ScrollThumbBgPressed);

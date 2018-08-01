@@ -67,7 +67,7 @@ namespace _ZMH5__Helios.CSGO
 
             return mod;
         }
-        
+
         protected override void OnFirstTick(TickEventArgs args)
         {
             base.OnFirstTick(args);
@@ -94,7 +94,6 @@ namespace _ZMH5__Helios.CSGO
             ClientClassParser.DumpCppClasses("clientclasses.cpp");
 #endif
             Program.Logger.Info("Helios is ready.");
-            Program.Logger.Info("sizeof(RadarEntry): {0}", SizeCache<Modules.SnapshotHelpers.RadarEntry>.Size);
 
             //Window window = null;
             //using (var frm = new UI.TestForm())
@@ -119,7 +118,7 @@ namespace _ZMH5__Helios.CSGO
 
             Program.Logger.Info("Terminating.");
         }
-        
+
         public T GetEntityByAddress<T>(IntPtr address, bool addToSnapshot = true) where T : EntityPrototype, new()
         {
             /*if (address <= 0)
@@ -133,20 +132,20 @@ namespace _ZMH5__Helios.CSGO
 
 
             T entity = new T();
-                entity.Init(Memory, address);
+            entity.Init(Memory, address);
 
-                if (addToSnapshot && entity != null && entity.IsValid)
-                {
-                    var t = typeof(T);
-                    if (t == typeof(BaseEntity))
-                        StateMod.BaseEntitites[(entity as BaseEntity).m_iID] = entity as BaseEntity;
-                    else if (t == typeof(BaseCombatWeapon))
-                        StateMod.BaseEntitites[(entity as BaseCombatWeapon).m_iID] = entity as BaseCombatWeapon;
-                    else if (t == typeof(CSPlayer))
-                        StateMod.BaseEntitites[(entity as CSPlayer).m_iID] = entity as CSPlayer;
-                }
+            if (addToSnapshot && entity != null && entity.IsValid)
+            {
+                var t = typeof(T);
+                if (t == typeof(BaseEntity))
+                    StateMod.BaseEntitites[(entity as BaseEntity).m_iID] = entity as BaseEntity;
+                else if (t == typeof(BaseCombatWeapon))
+                    StateMod.BaseEntitites[(entity as BaseCombatWeapon).m_iID] = entity as BaseCombatWeapon;
+                else if (t == typeof(CSPlayer))
+                    StateMod.BaseEntitites[(entity as CSPlayer).m_iID] = entity as CSPlayer;
+            }
 
-                return entity;
+            return entity;
             //}catch { return null; }
         }
 
@@ -204,7 +203,7 @@ namespace _ZMH5__Helios.CSGO
                     "=============================\n" +
                     "RPM: {0} calls\n" +
                     "     {1} total\n" +
-                    "     {2}/s\n"+
+                    "     {2}/s\n" +
                     "WPM: {3} calls\n" +
                     "     {4} total\n" +
                     "     {5}/s\n" +
@@ -230,21 +229,18 @@ namespace _ZMH5__Helios.CSGO
                         else if (specs.Any(x => x.m_iObserverMode == ObserverMode.ThirdPerson))
                             drawColor = Color.Orange;
 
-                        if (StateMod.RadarEntries.Value != null)
-                        {
-                            string text = string.Join("\n",
-                                specs.Select(x =>
-                                    string.Format("▻ {0} ({1})",
-                                    Program.Hack.StateMod.PlayerResources.Value.m_sNames[x.m_iID],
-                                    x.m_iObserverMode.ToString())
-                                )
-                            );
-                            Overlay.Menu.DrawString(
-                                drawColor,
-                                dbg,
-                                Vector2.UnitY * (Overlay.Size.Y / 2f),
-                                "[Specs]\n" + text);
-                        }
+                        string text = string.Join("\n",
+                            specs.Select(x =>
+                                string.Format("▻ {0} ({1})",
+                                Program.Hack.StateMod.PlayerResources.Value.m_sNames[x.m_iID],
+                                x.m_iObserverMode.ToString())
+                            )
+                        );
+                        Overlay.Menu.DrawString(
+                            drawColor,
+                            dbg,
+                            Vector2.UnitY * (Overlay.Size.Y / 2f),
+                            "[Specs]\n" + text);
                     }
                     else
                         Overlay.Menu.DrawString(drawColor, dbg, Vector2.UnitY * (Overlay.Size.Y / 2f), "[Specs]\n<none>");

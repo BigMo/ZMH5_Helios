@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZatsHackBase.UI;
-using Grapevine.Server;
 using System.Windows.Forms;
 using _ZMH5__Helios.UI;
 using System.IO;
@@ -34,30 +33,6 @@ namespace _ZMH5__Helios
         [STAThread]
         static void Main(string[] args)
         {
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    GlyphAtlas t = new ZatsHackBase.Drawing.FontHelpers.GlyphAtlas(new GlyphAtlas.CharRange[] {
-            //        new GlyphAtlas.CharRange((char)32, (char)1000), //Basic
-            //        new GlyphAtlas.CharRange((char)0x0400, (char)0x04ff), //Cyrillic
-            //        new GlyphAtlas.CharRange((char)0x0500, (char)0x052f), //Cyrillic Supplementary
-            //        new GlyphAtlas.CharRange((char)0x02b0, (char)0x02ff), //Block Elements
-            //        new GlyphAtlas.CharRange((char)0x2580, (char)0x259f), //Block Elements
-            //        new GlyphAtlas.CharRange((char)0x25A0, (char)0x25ff) //Geometric Shapes
-            //    }, ZatsHackBase.Maths.Vector2.Unit * 3f);
-            //    t.InitDebug("Segoe UI", 10 + i);
-            //}
-            //return;
-
-            //new Test().Run();
-            //return;
-            //Setup
-            //var path = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\models" +
-            //    @"\props\de_dust\hr_dust\dust_awnings\dust_awning_commercial_01_256_frame.mdl";
-            //using (var str = new FileStream(path, FileMode.Open, FileAccess.Read))
-            //{
-            //    var mdl = new CSGO.BSP.MDL.MDLFile(str);
-            //    Console.WriteLine(mdl.HitBoxSets.Length);
-            //}
 
             Animation = new ConsoleAnimation();
             Animation.Text = Name = string.Format("[ZMH5] Helios v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
@@ -78,13 +53,7 @@ namespace _ZMH5__Helios
             Offsets.Save("offsets.json");
             //Wait for game
             Logger.Warning("WAITING FOR CSGO...");
-            var server = new RestServer(new ServerSettings()
-            {
-                 Host = "localhost",
-                 Port = "1337",
-                 PublicFolder = new PublicFolder("html")
-            });
-            server.Start();
+            
             while (!EUCProcess.IsProcessRunning("csgo"))
                 Thread.Sleep(500);
 
@@ -100,7 +69,6 @@ namespace _ZMH5__Helios
 
             Logger.Info("> Running hack!");
             Hack.Run();
-            server.Stop();
             Console.ReadLine();
         }
 

@@ -69,12 +69,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="geometry3Sharp, Version=1.0.144.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\geometry3Sharp.1.0.144\lib\net45\geometry3Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Grapevine, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Grapevine.4.1.1.0\lib\net40\Grapevine.dll</HintPath>
-    </Reference>
     <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <HintPath>..\packages\MetroFramework.RunTime.1.2.0.3\lib\net40-Client\MetroFramework.dll</HintPath>
     </Reference>
@@ -179,7 +173,6 @@
     <Compile Include="CSGO\Modules\NoRecoilModule.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\ClientState.cs" />
     <Compile Include="CSGO\Modules\SnapshotHelpers\EntityCache.cs" />
-    <Compile Include="CSGO\Modules\SnapshotHelpers\RadarEntry.cs" />
     <Compile Include="CSGO\Modules\TriggerModule.cs" />
     <Compile Include="CSGO\ClassIDs\RecvProp_t.cs" />
     <Compile Include="CSGO\ClassIDs\RecvTable_t.cs" />

@@ -39,7 +39,6 @@ namespace _ZMH5__Helios.CSGO.Modules
         //public LazyCache<CSGameRulesProxy> GameRules { get; private set; }
         public LazyCache<CSPlayerResource> PlayerResources { get; private set; }
         public string[] Names { get; private set; }
-        public LazyCache<RadarEntry[]> RadarEntries { get; private set; }
         public LazyCache<ClientState> ClientState { get; private set; }
         public LazyCache<string> GameDirectory { get; private set; }
         public BSPFile Map { get; private set; }
@@ -87,20 +86,7 @@ namespace _ZMH5__Helios.CSGO.Modules
 
                 return Program.Hack.GetEntityByAddress<CSPlayerResource>(address);
             });
-            RadarEntries = new LazyCache<RadarEntry[]>(() =>
-            {
-                //var address = Program.Hack.Memory.Read<int>(pRadarAddress);
-                //if (address == 0 || address == -1)
-                //    return null;
-
-                //address = Program.Hack.Memory.Read<int>(address + Program.Offsets.RadarOffset);
-                //if (address == 0 || address == -1)
-                //    return null;
-
-                //Radar r = Program.Hack.Memory.Read<Radar>(address);
-                //return r.Entries;
-                return new RadarEntry[0];
-            });
+            
             ViewMatrix = new LazyCache<Matrix>(() => Program.Hack.Memory.Read<Matrix>(pViewMatrix));
         }
         #endregion
@@ -132,7 +118,6 @@ namespace _ZMH5__Helios.CSGO.Modules
             ViewMatrix.Reset();
             //GameRules.Reset();
             PlayerResources.Reset();
-            RadarEntries.Reset();
             ClientState.Reset();
             GameDirectory.Reset();
 

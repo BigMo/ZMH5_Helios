@@ -392,60 +392,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 DrawEsp<T>(e, settings, fnGetBottom, fnGetTop, fnGetSize, fnGetLife, fnGetArmor, fnGetText);
         }
 
-        private void DrawPlayerSet(CSLocalPlayer lp, IEnumerable<CSPlayer> players, ESPEntry settings, IEnumerable<RadarEntry> vEnts)
-        {
-            foreach (var enemy in players)
-            {
-                var enemyLastTime = Program.Hack.StateMod.PlayersOld[enemy.m_iID];
-                if (enemy == null || enemyLastTime == null || enemy.m_iID != enemyLastTime.m_iID || enemy.m_iID == lp.m_iID)
-                    return;
-
-                var velocity = (enemy.m_vecOrigin - enemyLastTime.m_vecOrigin) * this.TimerInterval;
-                Vector2 origin = Vector2.Zero, vel = Vector2.Zero;
-                if (w2s(ref origin, enemy.m_vecOrigin) && w2s(ref vel, enemy.m_vecOrigin + velocity))
-                {
-                    Program.Hack.Overlay.Visuals.DrawLine(Color.White, origin, vel);
-                }
-            }
-
-            DrawEspSet<CSPlayer>(
-                players,
-                settings,
-                (p) => p.m_vecOrigin,
-                (p) => p.m_Skeleton.m_Bones[6].ToVector(),
-                (d, u) => new Vector2((d.Y - u.Y) * 0.5f, d.Y - u.Y),
-                (p) => p.m_iHealth,
-                (p) => p.m_ArmorValue,
-                (p, s) =>
-                {
-                    string text = "";
-                    if (settings.ShowName)
-                        text += Program.Hack.StateMod.PlayerResources.Value.m_sNames[p.m_iID] + "\n";
-                        /*if (vEnts.Any(x => x.Id == p.m_iID))
-                            text += vEnts.First(x => x.Id == p.m_iID).Name + "\n";*/
-
-                    if (
-                        (lp.m_iTeamNum == p.m_iTeamNum && Program.CurrentSettings.ESP.Allies.ShowWeapon)
-                        || (lp.m_iTeamNum != p.m_iTeamNum && Program.CurrentSettings.ESP.Enemies.ShowWeapon)
-                        )
-                        if (p.m_ActiveWeapon != null && p.m_ActiveWeapon.Value.IsValid)
-                        {
-                            var wep = p.m_ActiveWeapon;
-                            text += string.Format("{0} [{1}]",
-                                wep.Value.m_ClientClass.NetworkName.Value.Replace("CWeapon", ""),
-                                wep.Value.m_iClip1 >= 0 ? wep.Value.m_iClip1.ToString() : "/")
-                                + "\n";
-                        }
-                        else
-                            text += "[unarmed]\n";
-
-                    if (settings.ShowDist)
-                        text += string.Format("[{0}m]", DistToMeters(lp.DistanceTo(p)).ToString("0.00")) + "\n";
-
-                    return text;
-                }
-            );
-        }
+        
         private void DrawWeaponSet(CSLocalPlayer lp, IEnumerable<BaseCombatWeapon> weapons, ESPEntry settings)
         {
             //DrawEspSet<BaseCombatWeapon>(

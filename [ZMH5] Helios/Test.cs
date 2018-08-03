@@ -48,7 +48,7 @@ namespace _ZMH5__Helios
             if (!Overlay.Renderer.Initialized)
                 return;
             dbg = Overlay.Renderer.Fonts[dbg];
-
+            
             //if (Process.IsInForeground)
             {
                 Overlay.Visuals.DrawRectangle(Color.Green, new Vector2(100f, 10f), new Vector2(100f, 100f));

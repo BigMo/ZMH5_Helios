@@ -27,8 +27,8 @@ namespace ZatsHackBase.Drawing
         private D3D11.PixelShader pixelShader;
         private D3D11.InputLayout inputLayout;
         private D3D11.SamplerState samplerState;
-        private List<Scene> scenes;
-        private List<GeometryBuffer> gbufs;
+        private List<Scene> scenes = new List<Scene>();
+        private List<GeometryBuffer> gbufs = new List<GeometryBuffer>();
         private Camera cam;
         #endregion
 
@@ -235,6 +235,7 @@ namespace ZatsHackBase.Drawing
             DeviceContext.InputAssembler.InputLayout = Detail.Shaders.InputLayout2D;
             DeviceContext.VertexShader.SetShader(Detail.Shaders.VertexShader2D, null, 0);
             DeviceContext.VertexShader.SetConstantBuffer(0, transfBuffer);
+            DeviceContext.PixelShader.SetShader(Detail.Shaders.PixelShader, null, 0);
 
             foreach (var gbuf in gbufs)
             {

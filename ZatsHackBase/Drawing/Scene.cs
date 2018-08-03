@@ -19,46 +19,8 @@ namespace ZatsHackBase.Drawing
         private D3D11.Buffer _VertexBuffer;
         
         private bool _Synchronised = false;
-
-        struct Buf<T>
-        {
-            public T[] Elements;
-            public int Count;
-            public int MaxCount;
-
-            public Buf(int maxElements = 1000)
-            {
-                MaxCount = maxElements;
-                Count = 0;
-                Elements = new T[MaxCount];
-            }
-
-            public void Add(T val)
-            {
-                Elements[Count] = val;
-                Count++;
-                if (Count > MaxCount)
-                {
-                    MaxCount += 200;
-                    T[] newElements = new T[MaxCount];
-                    for (int i = 0; i < Count; i++)
-                        newElements[i] = Elements[i];
-                    Elements = newElements;
-                }
-            }
-
-            public void AddRange(IEnumerable<T> d)
-            {
-
-            }
-
-            public void Clear()
-            {
-                Count = 0;
-            }
-        }
-
-        private Buf<Detail.Vertex3D> _Vertices = new Buf<Detail.Vertex3D>();
+        
+        private List<Detail.Vertex3D> _Vertices = new List<Detail.Vertex3D>();
         #endregion
 
         #region PROPERTIES
@@ -67,6 +29,7 @@ namespace ZatsHackBase.Drawing
         public FunctionalCondition Condition { get; set; }
         public object ConditionObject { get; set; }
         public bool Enabled { get; set; }
+        public bool AutoReset { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -78,6 +41,9 @@ namespace ZatsHackBase.Drawing
             _VertexBuffer = new D3D11.Buffer(_Renderer.Device,
                 new D3D11.BufferDescription(size, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.VertexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
+
+            Enabled = true;
+            AutoReset = false;
         }
 
         ~Scene()
@@ -97,7 +63,7 @@ namespace ZatsHackBase.Drawing
 
             for (i = 0; i < _Vertices.Count; i++)
             {
-                vertexBuffer.Write(_Vertices.Elements[i]);
+                vertexBuffer.Write(_Vertices[i]);
             }
 
             _Renderer.DeviceContext.UnmapSubresource(_VertexBuffer, 0);
@@ -147,6 +113,9 @@ namespace ZatsHackBase.Drawing
                     _Renderer.DeviceContext.Draw(2, i);
                 }
             }
+
+            if (AutoReset)
+                Reset();
         }
 
         public void Reset()

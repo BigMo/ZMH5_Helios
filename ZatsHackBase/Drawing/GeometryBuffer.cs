@@ -27,6 +27,9 @@ namespace ZatsHackBase.Drawing
             _IndexBuffer = new D3D11.Buffer(_Renderer.Device,
                 new D3D11.BufferDescription(size / 2, D3D11.ResourceUsage.Dynamic, D3D11.BindFlags.IndexBuffer,
                     D3D11.CpuAccessFlags.Write, D3D11.ResourceOptionFlags.None, 0));
+
+            Enabled = true;
+            AutoReset = true;
         }
 
         ~GeometryBuffer()
@@ -47,48 +50,10 @@ namespace ZatsHackBase.Drawing
         //private RawMatrix _WorldMatrix = new RawMatrix();
 
         private bool _Synchronised = false;
-
-        struct Buf<T>
-        {
-            public T[] Elements;
-            public int Count;
-            public int MaxCount;
-
-            public Buf(int maxElements = 1000)
-            {
-                MaxCount = maxElements;
-                Count = 0;
-                Elements = new T[MaxCount];
-            }
-
-            public void Add(T val)
-            {
-                Elements[Count] = val;
-                Count++;
-                if (Count > MaxCount)
-                {
-                    MaxCount += 200;
-                    T[] newElements = new T[MaxCount];
-                    for (int i = 0; i < Count; i++)
-                        newElements[i] = Elements[i];
-                    Elements = newElements;
-                }
-            }
-
-            public void AddRange(IEnumerable<T> d)
-            {
-
-            }
-
-            public void Clear()
-            {
-                Count = 0;
-            }
-        }
-
-        private Buf<Detail.Vertex2D> _Vertices = new Buf<Detail.Vertex2D>();
-        private Buf<short> _Indices = new Buf<short>();
-        private Buf<Detail.Batch> _Batches = new Buf<Detail.Batch>();
+        
+        private List<Detail.Vertex2D> _Vertices = new List<Detail.Vertex2D>();
+        private List<short> _Indices = new List<short>();
+        private List<Detail.Batch> _Batches = new List<Detail.Batch>();
 
         private Detail.Batch _Dummy = new Detail.Batch();
 
@@ -103,6 +68,7 @@ namespace ZatsHackBase.Drawing
         public int CopiedMemory => VertexDataSize + IndexDataSize;
         public Renderer Renderer { get { return _Renderer; } }
         public bool Enabled { get; set; }
+        public bool AutoReset { get; set; }
 
         //public RectangleF ClipRegion
         //{
@@ -180,7 +146,7 @@ namespace ZatsHackBase.Drawing
 
                 for (i = 0; i < _Vertices.Count; i++)
                 {
-                    vertexBuffer.Write(_Vertices.Elements[i]);
+                    vertexBuffer.Write(_Vertices[i]);
                 }
 
                 _Renderer.DeviceContext.UnmapSubresource(_VertexBuffer, 0);
@@ -190,7 +156,7 @@ namespace ZatsHackBase.Drawing
 
                 for (i = 0; i < _Vertices.Count; i++)
                 {
-                    indexBuffer.Write(_Indices.Elements[i]);
+                    indexBuffer.Write(_Indices[i]);
                 }
 
                 _Renderer.DeviceContext.UnmapSubresource(_IndexBuffer, 0);
@@ -225,7 +191,7 @@ namespace ZatsHackBase.Drawing
 
             //RectangleF clip = new RectangleF(0f, 0f, _Renderer.ViewportSize.Width, _Renderer.ViewportSize.Height);
 
-            foreach (var batch in _Batches.Elements)
+            foreach (var batch in _Batches)
             {
                 if (batch.Texture != last_res)
                 {
@@ -248,6 +214,8 @@ namespace ZatsHackBase.Drawing
                 vertex_offset += batch.VertexCount;
             }
 
+            if(AutoReset)
+                Reset();
         }
 
         public void SetupTexture(D3D11.ShaderResourceView texture)

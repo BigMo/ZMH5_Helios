@@ -130,7 +130,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             //Load map
             if(ClientState.Value != null && ClientState.Value.Map.Value != null)
             {
-                if (ClientState.Value.Map.Value != lastMap)
+                if (ClientState.Value.Map.Value != lastMap || Map == null)
                 {
                     var path = Path.Combine(GameDirectory.Value, ClientState.Value.Map.Value);
                     //try

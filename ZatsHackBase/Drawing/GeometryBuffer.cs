@@ -154,7 +154,7 @@ namespace ZatsHackBase.Drawing
 
                 _Renderer.DeviceContext.MapSubresource(_IndexBuffer, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None, out indexBuffer);
 
-                for (i = 0; i < _Vertices.Count; i++)
+                for (i = 0; i < _Indices.Count; i++)
                 {
                     indexBuffer.Write(_Indices[i]);
                 }

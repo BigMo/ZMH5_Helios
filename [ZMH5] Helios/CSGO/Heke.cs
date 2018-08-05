@@ -72,7 +72,7 @@ namespace _ZMH5__Helios.CSGO
         {
             base.OnFirstTick(args);
 
-            ClientDll = WaitForModule("client.dll");
+            ClientDll = WaitForModule("client_panorama.dll");
             EngineDll = WaitForModule("engine.dll");
 #if DEBUG
             Program.Logger.Log("Performing SigScans...");

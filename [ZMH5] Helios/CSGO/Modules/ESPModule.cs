@@ -59,7 +59,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             if(Program.CurrentSettings.ESP.World.Enabled)
                 DrawWorld();
 
-            DrawModels();
+            //DrawModels();
 
             espFont = Program.Hack.Overlay.Renderer.Fonts[espFont];
             weaponFont = Program.Hack.Overlay.Renderer.Fonts[weaponFont];
@@ -279,7 +279,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             {
                 var from = Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin + Program.Hack.StateMod.LocalPlayer.Value.m_vecViewOffset;
                 var to = player.m_Skeleton.m_Bones[8].ToVector();
-                if (map.IsVisible(from, to))
+                if (!map.IsVisible(from, to))
                     drawColor = settings.ColorOccluded;
             }
             if (settings.ShowBox)
@@ -308,12 +308,15 @@ namespace _ZMH5__Helios.CSGO.Modules
                 //Program.Hack.Overlay.Visuals.DrawString(Color.White, espFont, armorText, player.m_ArmorValue.ToString());
             }
             var infoMiddle = position + Vector2.UnitY * size.Y + Vector2.UnitX * size.X * 0.5f + Vector2.UnitY * 2f;
-            if (settings.ShowName && Program.Hack.StateMod.PlayerResources != null)
+            if (settings.ShowName && Program.Hack.StateMod.PlayerResources.Value != null)
             {
                 var name = Program.Hack.StateMod.PlayerResources.Value.m_sNames[player.m_iID];
-                var nameSize = espFont.MeasureString(name);
-                Program.Hack.Overlay.Visuals.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
-                infoMiddle += Vector2.UnitY * nameSize.Y;
+                if (name != null)
+                {
+                    var nameSize = espFont.MeasureString(name);
+                    Program.Hack.Overlay.Visuals.DrawString(drawColor, espFont, infoMiddle + Vector2.UnitX * (nameSize.X * -0.5f), name);
+                    infoMiddle += Vector2.UnitY * nameSize.Y;
+                }
             }
             if (settings.ShowDist)
             {

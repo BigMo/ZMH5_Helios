@@ -180,9 +180,11 @@ namespace _ZMH5__Helios.CSGO.Modules
                     {
                         var map = Program.Hack.StateMod.Map;
                         if (map == null)
+                        {
                             if (!enemy.SeenBy(lp))
                                 continue;
-                        if (!map.IsVisible(src, dest))
+                        }
+                        else if (!map.IsVisible(src, dest))
                             continue;
                     }
                     var newAngles = CalcAngle(src, dest) - Program.Hack.StateMod.ClientState.Value.ViewAngles;

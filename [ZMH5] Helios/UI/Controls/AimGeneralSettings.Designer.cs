@@ -53,6 +53,10 @@
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.cfgOffset = new MetroFramework.Controls.MetroTrackBar();
             this.lblOffset = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
+            this.cfgBrokenAim = new MetroFramework.Controls.MetroToggle();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +68,8 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.cfgBrokenAim, 0, 8);
+            this.tableLayoutPanel2.Controls.Add(this.metroLabel12, 0, 8);
             this.tableLayoutPanel2.Controls.Add(this.lblName, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.metroLabel4, 0, 3);
             this.tableLayoutPanel2.Controls.Add(this.cfgKey, 1, 3);
@@ -88,10 +94,12 @@
             this.tableLayoutPanel2.Controls.Add(this.metroLabel1, 0, 7);
             this.tableLayoutPanel2.Controls.Add(this.cfgOffset, 1, 7);
             this.tableLayoutPanel2.Controls.Add(this.lblOffset, 3, 7);
+            this.tableLayoutPanel2.Controls.Add(this.metroLabel11, 2, 8);
+            this.tableLayoutPanel2.Controls.Add(this.metroLabel13, 3, 8);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 8;
+            this.tableLayoutPanel2.RowCount = 9;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -100,7 +108,8 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(470, 214);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(475, 231);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // lblName
@@ -109,7 +118,7 @@
             this.lblName.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.lblName, 4);
             this.lblName.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.lblName.Location = new System.Drawing.Point(204, 3);
+            this.lblName.Location = new System.Drawing.Point(207, 3);
             this.lblName.Margin = new System.Windows.Forms.Padding(3);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(61, 19);
@@ -131,25 +140,25 @@
             this.cfgKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cfgKey.Location = new System.Drawing.Point(114, 86);
             this.cfgKey.Name = "cfgKey";
-            this.cfgKey.Size = new System.Drawing.Size(132, 23);
+            this.cfgKey.Size = new System.Drawing.Size(134, 23);
             this.cfgKey.TabIndex = 3;
             // 
             // cfgLock
             // 
             this.cfgLock.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfgLock.AutoSize = true;
-            this.cfgLock.Location = new System.Drawing.Point(335, 57);
+            this.cfgLock.Location = new System.Drawing.Point(337, 57);
             this.cfgLock.Name = "cfgLock";
             this.cfgLock.Size = new System.Drawing.Size(80, 17);
             this.cfgLock.TabIndex = 1;
-            this.cfgLock.Text = "Aus";
+            this.cfgLock.Text = "Off";
             this.cfgLock.UseVisualStyleBackColor = true;
             // 
             // metroLabel5
             // 
             this.metroLabel5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel5.AutoSize = true;
-            this.metroLabel5.Location = new System.Drawing.Point(294, 56);
+            this.metroLabel5.Location = new System.Drawing.Point(296, 56);
             this.metroLabel5.Name = "metroLabel5";
             this.metroLabel5.Size = new System.Drawing.Size(35, 19);
             this.metroLabel5.TabIndex = 0;
@@ -162,7 +171,7 @@
             this.cfgMode.ItemHeight = 23;
             this.cfgMode.Location = new System.Drawing.Point(114, 51);
             this.cfgMode.Name = "cfgMode";
-            this.cfgMode.Size = new System.Drawing.Size(132, 29);
+            this.cfgMode.Size = new System.Drawing.Size(134, 29);
             this.cfgMode.TabIndex = 2;
             // 
             // metroLabel3
@@ -193,14 +202,14 @@
             this.cfgEnabled.Name = "cfgEnabled";
             this.cfgEnabled.Size = new System.Drawing.Size(80, 17);
             this.cfgEnabled.TabIndex = 1;
-            this.cfgEnabled.Text = "Aus";
+            this.cfgEnabled.Text = "Off";
             this.cfgEnabled.UseVisualStyleBackColor = true;
             // 
             // metroLabel10
             // 
             this.metroLabel10.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel10.AutoSize = true;
-            this.metroLabel10.Location = new System.Drawing.Point(279, 27);
+            this.metroLabel10.Location = new System.Drawing.Point(281, 27);
             this.metroLabel10.Name = "metroLabel10";
             this.metroLabel10.Size = new System.Drawing.Size(50, 19);
             this.metroLabel10.TabIndex = 0;
@@ -210,11 +219,11 @@
             // 
             this.cfgPredict.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfgPredict.AutoSize = true;
-            this.cfgPredict.Location = new System.Drawing.Point(335, 28);
+            this.cfgPredict.Location = new System.Drawing.Point(337, 28);
             this.cfgPredict.Name = "cfgPredict";
             this.cfgPredict.Size = new System.Drawing.Size(80, 17);
             this.cfgPredict.TabIndex = 1;
-            this.cfgPredict.Text = "Aus";
+            this.cfgPredict.Text = "Off";
             this.cfgPredict.UseVisualStyleBackColor = true;
             // 
             // metroLabel7
@@ -235,7 +244,7 @@
             this.cfgFov.Location = new System.Drawing.Point(114, 173);
             this.cfgFov.Maximum = 18000;
             this.cfgFov.Name = "cfgFov";
-            this.cfgFov.Size = new System.Drawing.Size(215, 14);
+            this.cfgFov.Size = new System.Drawing.Size(217, 14);
             this.cfgFov.TabIndex = 4;
             this.cfgFov.Text = "metroTrackBar1";
             this.cfgFov.Value = 500;
@@ -257,14 +266,14 @@
             this.cfgBone.ItemHeight = 23;
             this.cfgBone.Location = new System.Drawing.Point(114, 115);
             this.cfgBone.Name = "cfgBone";
-            this.cfgBone.Size = new System.Drawing.Size(132, 29);
+            this.cfgBone.Size = new System.Drawing.Size(134, 29);
             this.cfgBone.TabIndex = 2;
             // 
             // metroLabel9
             // 
             this.metroLabel9.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel9.AutoSize = true;
-            this.metroLabel9.Location = new System.Drawing.Point(288, 149);
+            this.metroLabel9.Location = new System.Drawing.Point(290, 149);
             this.metroLabel9.Name = "metroLabel9";
             this.metroLabel9.Size = new System.Drawing.Size(41, 19);
             this.metroLabel9.TabIndex = 0;
@@ -274,7 +283,7 @@
             // 
             this.lblFov.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblFov.AutoSize = true;
-            this.lblFov.Location = new System.Drawing.Point(335, 170);
+            this.lblFov.Location = new System.Drawing.Point(337, 170);
             this.lblFov.Name = "lblFov";
             this.lblFov.Size = new System.Drawing.Size(33, 19);
             this.lblFov.TabIndex = 0;
@@ -284,18 +293,18 @@
             // 
             this.cfgSticky.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfgSticky.AutoSize = true;
-            this.cfgSticky.Location = new System.Drawing.Point(335, 150);
+            this.cfgSticky.Location = new System.Drawing.Point(337, 150);
             this.cfgSticky.Name = "cfgSticky";
             this.cfgSticky.Size = new System.Drawing.Size(80, 17);
             this.cfgSticky.TabIndex = 1;
-            this.cfgSticky.Text = "Aus";
+            this.cfgSticky.Text = "Off";
             this.cfgSticky.UseVisualStyleBackColor = true;
             // 
             // metroLabel6
             // 
             this.metroLabel6.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel6.AutoSize = true;
-            this.metroLabel6.Location = new System.Drawing.Point(252, 120);
+            this.metroLabel6.Location = new System.Drawing.Point(254, 120);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(77, 19);
             this.metroLabel6.TabIndex = 0;
@@ -305,11 +314,11 @@
             // 
             this.cfgVisible.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfgVisible.AutoSize = true;
-            this.cfgVisible.Location = new System.Drawing.Point(335, 121);
+            this.cfgVisible.Location = new System.Drawing.Point(337, 121);
             this.cfgVisible.Name = "cfgVisible";
             this.cfgVisible.Size = new System.Drawing.Size(80, 17);
             this.cfgVisible.TabIndex = 1;
-            this.cfgVisible.Text = "Aus";
+            this.cfgVisible.Text = "Off";
             this.cfgVisible.UseVisualStyleBackColor = true;
             // 
             // cfgKeySelection
@@ -318,17 +327,17 @@
             this.tableLayoutPanel2.SetColumnSpan(this.cfgKeySelection, 2);
             this.cfgKeySelection.FormattingEnabled = true;
             this.cfgKeySelection.ItemHeight = 23;
-            this.cfgKeySelection.Location = new System.Drawing.Point(249, 83);
+            this.cfgKeySelection.Location = new System.Drawing.Point(251, 83);
             this.cfgKeySelection.Margin = new System.Windows.Forms.Padding(0);
             this.cfgKeySelection.Name = "cfgKeySelection";
-            this.cfgKeySelection.Size = new System.Drawing.Size(221, 29);
+            this.cfgKeySelection.Size = new System.Drawing.Size(224, 29);
             this.cfgKeySelection.TabIndex = 7;
             // 
             // metroLabel1
             // 
             this.metroLabel1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(22, 192);
+            this.metroLabel1.Location = new System.Drawing.Point(22, 190);
             this.metroLabel1.Name = "metroLabel1";
             this.metroLabel1.Size = new System.Drawing.Size(86, 19);
             this.metroLabel1.TabIndex = 0;
@@ -339,11 +348,11 @@
             this.cfgOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cfgOffset.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel2.SetColumnSpan(this.cfgOffset, 2);
-            this.cfgOffset.Location = new System.Drawing.Point(114, 195);
+            this.cfgOffset.Location = new System.Drawing.Point(114, 193);
             this.cfgOffset.Maximum = 5000;
             this.cfgOffset.Minimum = -5000;
             this.cfgOffset.Name = "cfgOffset";
-            this.cfgOffset.Size = new System.Drawing.Size(215, 14);
+            this.cfgOffset.Size = new System.Drawing.Size(217, 14);
             this.cfgOffset.TabIndex = 4;
             this.cfgOffset.Text = "metroTrackBar1";
             this.cfgOffset.Value = 0;
@@ -352,11 +361,52 @@
             // 
             this.lblOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblOffset.AutoSize = true;
-            this.lblOffset.Location = new System.Drawing.Point(335, 192);
+            this.lblOffset.Location = new System.Drawing.Point(337, 190);
             this.lblOffset.Name = "lblOffset";
             this.lblOffset.Size = new System.Drawing.Size(33, 19);
             this.lblOffset.TabIndex = 0;
             this.lblOffset.Text = "5.00";
+            // 
+            // metroLabel11
+            // 
+            this.metroLabel11.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.metroLabel11.AutoSize = true;
+            this.metroLabel11.Location = new System.Drawing.Point(268, 211);
+            this.metroLabel11.Name = "metroLabel11";
+            this.metroLabel11.Size = new System.Drawing.Size(63, 19);
+            this.metroLabel11.TabIndex = 8;
+            this.metroLabel11.Text = "Turn on if";
+            // 
+            // metroLabel12
+            // 
+            this.metroLabel12.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.metroLabel12.AutoSize = true;
+            this.metroLabel12.Location = new System.Drawing.Point(26, 211);
+            this.metroLabel12.Name = "metroLabel12";
+            this.metroLabel12.Size = new System.Drawing.Size(82, 19);
+            this.metroLabel12.TabIndex = 9;
+            this.metroLabel12.Text = "Reverse Turn";
+            // 
+            // metroLabel13
+            // 
+            this.metroLabel13.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.metroLabel13.AutoSize = true;
+            this.metroLabel13.Location = new System.Drawing.Point(338, 211);
+            this.metroLabel13.Name = "metroLabel13";
+            this.metroLabel13.Size = new System.Drawing.Size(134, 19);
+            this.metroLabel13.TabIndex = 10;
+            this.metroLabel13.Text = "aiming seems broken";
+            // 
+            // cfgBrokenAim
+            // 
+            this.cfgBrokenAim.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cfgBrokenAim.AutoSize = true;
+            this.cfgBrokenAim.Location = new System.Drawing.Point(114, 213);
+            this.cfgBrokenAim.Name = "cfgBrokenAim";
+            this.cfgBrokenAim.Size = new System.Drawing.Size(80, 15);
+            this.cfgBrokenAim.TabIndex = 11;
+            this.cfgBrokenAim.Text = "Off";
+            this.cfgBrokenAim.UseVisualStyleBackColor = true;
             // 
             // AimGeneralSettings
             // 
@@ -399,5 +449,9 @@
         private MetroFramework.Controls.MetroLabel metroLabel1;
         private MetroFramework.Controls.MetroTrackBar cfgOffset;
         private MetroFramework.Controls.MetroLabel lblOffset;
+        private MetroFramework.Controls.MetroToggle cfgBrokenAim;
+        private MetroFramework.Controls.MetroLabel metroLabel12;
+        private MetroFramework.Controls.MetroLabel metroLabel11;
+        private MetroFramework.Controls.MetroLabel metroLabel13;
     }
 }

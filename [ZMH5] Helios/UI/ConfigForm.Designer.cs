@@ -337,7 +337,7 @@
             this.rcsSettings1.Location = new System.Drawing.Point(3, 3);
             this.rcsSettings1.Name = "rcsSettings1";
             this.rcsSettings1.Settings = null;
-            this.rcsSettings1.Size = new System.Drawing.Size(477, 85);
+            this.rcsSettings1.Size = new System.Drawing.Size(477, 133);
             this.rcsSettings1.TabIndex = 0;
             // 
             // espAllies

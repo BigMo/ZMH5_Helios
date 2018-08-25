@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using _ZMH5__Helios.CSGO.Entities;
+using ZatsHackBase.Drawing;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -15,6 +16,8 @@ namespace _ZMH5__Helios.CSGO.Modules
         #region VARIABLES
         private int lastClip = 0;
         private Vector3 lastPunch = Vector3.Zero;
+        private Vector2 crSize = new Vector2(10, 1);
+        private Vector2 crSize2 = new Vector2(1, 10);
         #endregion
 
         public NoRecoilModule() : base(Program.Hack, ModulePriority.Normal)
@@ -34,8 +37,19 @@ namespace _ZMH5__Helios.CSGO.Modules
                 return;
 
             var wep = lp.m_ActiveWeapon.Value;
-            if (wep == null || !wep.IsValid)
-                return;
+            if (Program.CurrentSettings.NoRecoil.NoRecoilSemiAuto)
+                if (wep == null || !wep.IsValid)
+                    return;
+                else
+                if (wep == null || !wep.IsValid || wep.IsPistol || wep.IsPumpgun || wep.IsSniper)
+                {
+                    DrawCrosshair();
+                    return;
+                }
+
+
+            if (Program.CurrentSettings.NoRecoil.ShowCrosshair)
+                DrawCrosshair();
 
             if (Program.Hack.AimBot.CurrentTarget == 0)
             {
@@ -57,6 +71,28 @@ namespace _ZMH5__Helios.CSGO.Modules
                 Program.Hack.View.ApplyChange(lp.m_aimPunchAngle * -2f * Program.CurrentSettings.NoRecoil.Force);
             }
         }
+
+        private void DrawCrosshair()
+        {
+            var lp = Program.Hack.StateMod.LocalPlayer.Value;
+
+            float Height = Program.Hack.Overlay.Form.Size.Height, Width = Program.Hack.Overlay.Form.Size.Width;
+
+            float x = Width / 2f;
+            float y = Height / 2f;
+            float dy = Height / 90f;
+            float dx = Width / 90f;
+
+            x -= (dx * (lp.m_aimPunchAngle.Y));
+            y += (dy * (lp.m_aimPunchAngle.X));
+
+            Vector2 crLoc = new Vector2(x - 5, y);
+            Vector2 crLoc2 = new Vector2(x, y - 5);
+
+            Program.Hack.Overlay.Visuals.FillRectangle(Color.Green, crLoc, crSize);
+            Program.Hack.Overlay.Visuals.FillRectangle(Color.Green, crLoc2, crSize2);
+        }
+
         #endregion
     }
 }

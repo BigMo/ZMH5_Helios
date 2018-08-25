@@ -148,7 +148,12 @@ namespace _ZMH5__Helios.CSGO.Modules
             ret.Y = ZatsHackBase.Maths.Math.RadiansToDegrees((float)System.Math.Atan(vDelta.Y / vDelta.X));
 
             if (vDelta.X >= 0.0f)
-                ret.Y += 180.0f;
+            {
+                if (Program.CurrentSettings.Aim.BrokenAim)
+                    ret.Y -= 180.0f;
+                else
+                    ret.Y += 180.0f;
+            }
             return ret;
         }
         private int GetTarget(Vector3 src)

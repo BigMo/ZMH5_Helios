@@ -47,6 +47,7 @@ namespace _ZMH5__Helios.UI.Controls
                         cfgBone.SelectedItem = (Bones)settings.Bone;
                         cfgKey.Text = settings.Key.ToString();
                         cfgKeySelection.SelectedItem = settings.Key;
+                        cfgBrokenAim.Checked = settings.BrokenAim;
                     }
                 }
             }
@@ -75,6 +76,7 @@ namespace _ZMH5__Helios.UI.Controls
             cfgSticky.CheckedChanged += (s, e) => { if (settings != null) settings.Sticky= cfgSticky.Checked; };
             cfgLock.CheckedChanged += (s, e) => { if (settings != null) settings.Lock = cfgLock.Checked; };
             cfgVisible.CheckedChanged += (s, e) => { if (settings != null) settings.VisibleOnly = cfgVisible.Checked; };
+            cfgBrokenAim.CheckedChanged += (s, e) => { if (settings != null) settings.BrokenAim = cfgBrokenAim.Checked; };
 
             cfgFov.ValueChanged += (s, e) => {
                 if (settings != null) settings.FOV = cfgFov.Value / 100f;

@@ -57,6 +57,7 @@ namespace _ZMH5__Helios.CSGO
             Aim.Predict = true;
             Aim.Sticky = true;
             Aim.VisibleOnly = true;
+            Aim.BrokenAim = false;
             Aim.Enabled = true;
             
             Aim.Smoothing = new AimSmooth();

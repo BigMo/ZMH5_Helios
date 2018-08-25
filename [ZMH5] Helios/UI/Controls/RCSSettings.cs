@@ -27,8 +27,8 @@ namespace _ZMH5__Helios.UI.Controls
                     {
                         cfgEnabled.Checked = settings.Enabled;
                         cfgForce.Value = (int)(settings.Force * 100f);
-                        cfgSchEnable.Checked = settings.SCrosshair;
-                        cfgNRSA.Checked = settings.NoRecoilSA;
+                        cfgSchEnable.Checked = settings.ShowCrosshair;
+                        cfgNRSA.Checked = settings.NoRecoilSemiAuto;
                     }
                 }
             }
@@ -45,9 +45,9 @@ namespace _ZMH5__Helios.UI.Controls
                 lblForce.Text = (cfgForce.Value / 100f).ToString("0.00");
             };
 
-            cfgSchEnable.CheckedChanged += (s, e) => { if (settings != null) settings.SCrosshair = cfgSchEnable.Checked; };
+            cfgSchEnable.CheckedChanged += (s, e) => { if (settings != null) settings.ShowCrosshair = cfgSchEnable.Checked; };
 
-            cfgNRSA.CheckedChanged += (s, e) => { if (settings != null) settings.NoRecoilSA = cfgNRSA.Checked; };
+            cfgNRSA.CheckedChanged += (s, e) => { if (settings != null) settings.NoRecoilSemiAuto = cfgNRSA.Checked; };
         }
     }
 }

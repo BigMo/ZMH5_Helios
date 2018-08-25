@@ -37,7 +37,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 return;
 
             var wep = lp.m_ActiveWeapon.Value;
-            if (Program.CurrentSettings.NoRecoil.NoRecoilSA)
+            if (Program.CurrentSettings.NoRecoil.NoRecoilSemiAuto)
                 if (wep == null || !wep.IsValid)
                     return;
                 else
@@ -48,7 +48,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
 
 
-            if (Program.CurrentSettings.NoRecoil.SCrosshair)
+            if (Program.CurrentSettings.NoRecoil.ShowCrosshair)
                 DrawCrosshair();
 
             if (Program.Hack.AimBot.CurrentTarget == 0)

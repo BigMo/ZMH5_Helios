@@ -84,12 +84,12 @@ namespace _ZMH5__Helios.CSGO
             SigGlowIndex();
             SigGameRulesProxy();
             SigPlayerResources();
-            this.PlayerResources = 0x3077A6C;
-            this.m_mViewMatrix = 0x4C29A04;
-            this.GlowManager = 0x5177CC0;
-            this.ForceAttack = 0x2ED4748;
-            this.ForceJump = 0x4F2C8E4;
-            this.RadarBase = 0x5073134;
+            this.PlayerResources = 0x3078BDC;
+            this.m_mViewMatrix = 0x4C2AB74;
+            this.GlowManager = 0x5178E58;
+            this.ForceAttack = 0x307A81C;
+            this.ForceJump = 0x50DBDFC;
+            this.RadarBase = 0x506DE44;
             PlayerResourcesNames = 0x9E0;
             m_iItemDefinitionIndex = 0x2F9A;
             ClientStateMapDirectory = 0x188;

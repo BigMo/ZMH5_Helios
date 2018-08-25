@@ -10,5 +10,7 @@ namespace _ZMH5__Helios.CSGO.Misc
     {
         public bool Enabled;
         public float Force;
+        public bool SCrosshair;
+        public bool NoRecoilSA;
     }
 }

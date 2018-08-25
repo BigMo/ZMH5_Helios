@@ -151,6 +151,8 @@ namespace _ZMH5__Helios.CSGO
             NoRecoil = new NoRecoilSettings();
             NoRecoil.Enabled = true;
             NoRecoil.Force = 1f;
+            NoRecoil.SCrosshair = false;
+            NoRecoil.NoRecoilSA = false;
 
             MiscAutoPistol = true;
             MiscBunnyHop = true;

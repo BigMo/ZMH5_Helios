@@ -36,9 +36,9 @@
             this.lblForce = new MetroFramework.Controls.MetroLabel();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
-            this.cfgSchEnable = new MetroFramework.Controls.MetroToggle();
+            this.cfgCrosshairEnable = new MetroFramework.Controls.MetroToggle();
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
-            this.cfgNRSA = new MetroFramework.Controls.MetroToggle();
+            this.cfgNoRecoilSemiAuto = new MetroFramework.Controls.MetroToggle();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,8 +57,8 @@
             this.tableLayoutPanel2.Controls.Add(this.lblForce, 2, 2);
             this.tableLayoutPanel2.Controls.Add(this.metroLabel1, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.metroLabel2, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.cfgSchEnable, 1, 3);
-            this.tableLayoutPanel2.Controls.Add(this.cfgNRSA, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.cfgCrosshairEnable, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.cfgNoRecoilSemiAuto, 1, 4);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -147,16 +147,16 @@
             this.metroLabel2.TabIndex = 0;
             this.metroLabel2.Text = "Recoil Crosshair";
             // 
-            // cfgSchEnable
+            // cfgCrosshairEnable
             // 
-            this.cfgSchEnable.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cfgSchEnable.AutoSize = true;
-            this.cfgSchEnable.Location = new System.Drawing.Point(148, 81);
-            this.cfgSchEnable.Name = "cfgSchEnable";
-            this.cfgSchEnable.Size = new System.Drawing.Size(80, 17);
-            this.cfgSchEnable.TabIndex = 7;
-            this.cfgSchEnable.Text = "Off";
-            this.cfgSchEnable.UseVisualStyleBackColor = true;
+            this.cfgCrosshairEnable.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cfgCrosshairEnable.AutoSize = true;
+            this.cfgCrosshairEnable.Location = new System.Drawing.Point(148, 81);
+            this.cfgCrosshairEnable.Name = "cfgCrosshairEnable";
+            this.cfgCrosshairEnable.Size = new System.Drawing.Size(80, 17);
+            this.cfgCrosshairEnable.TabIndex = 7;
+            this.cfgCrosshairEnable.Text = "Off";
+            this.cfgCrosshairEnable.UseVisualStyleBackColor = true;
             // 
             // metroLabel3
             // 
@@ -168,16 +168,16 @@
             this.metroLabel3.TabIndex = 8;
             this.metroLabel3.Text = "Disable for Semi-Auto";
             // 
-            // cfgNRSA
+            // cfgNoRecoilSemiAuto
             // 
-            this.cfgNRSA.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cfgNRSA.AutoSize = true;
-            this.cfgNRSA.Location = new System.Drawing.Point(148, 108);
-            this.cfgNRSA.Name = "cfgNRSA";
-            this.cfgNRSA.Size = new System.Drawing.Size(80, 17);
-            this.cfgNRSA.TabIndex = 9;
-            this.cfgNRSA.Text = "Off";
-            this.cfgNRSA.UseVisualStyleBackColor = true;
+            this.cfgNoRecoilSemiAuto.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cfgNoRecoilSemiAuto.AutoSize = true;
+            this.cfgNoRecoilSemiAuto.Location = new System.Drawing.Point(148, 108);
+            this.cfgNoRecoilSemiAuto.Name = "cfgNoRecoilSemiAuto";
+            this.cfgNoRecoilSemiAuto.Size = new System.Drawing.Size(80, 17);
+            this.cfgNoRecoilSemiAuto.TabIndex = 9;
+            this.cfgNoRecoilSemiAuto.Text = "Off";
+            this.cfgNoRecoilSemiAuto.UseVisualStyleBackColor = true;
             // 
             // RCSSettings
             // 
@@ -202,8 +202,8 @@
         private MetroFramework.Controls.MetroTrackBar cfgForce;
         private MetroFramework.Controls.MetroLabel lblForce;
         private MetroFramework.Controls.MetroLabel metroLabel1;
-        private MetroFramework.Controls.MetroToggle cfgSchEnable;
+        private MetroFramework.Controls.MetroToggle cfgCrosshairEnable;
         private MetroFramework.Controls.MetroLabel metroLabel3;
-        private MetroFramework.Controls.MetroToggle cfgNRSA;
+        private MetroFramework.Controls.MetroToggle cfgNoRecoilSemiAuto;
     }
 }

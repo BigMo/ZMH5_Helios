@@ -37,15 +37,20 @@ namespace _ZMH5__Helios.CSGO.Modules
                 return;
 
             var wep = lp.m_ActiveWeapon.Value;
-            if (Program.CurrentSettings.NoRecoil.NoRecoilSemiAuto)
+            if (!Program.CurrentSettings.NoRecoil.NoRecoilSemiAuto)
+            {
                 if (wep == null || !wep.IsValid)
                     return;
-                else
+            }
+            else
+            {
                 if (wep == null || !wep.IsValid || wep.IsPistol || wep.IsPumpgun || wep.IsSniper)
                 {
-                    DrawCrosshair();
+                    if (Program.CurrentSettings.NoRecoil.ShowCrosshair)
+                        DrawCrosshair();
                     return;
                 }
+            }
 
 
             if (Program.CurrentSettings.NoRecoil.ShowCrosshair)

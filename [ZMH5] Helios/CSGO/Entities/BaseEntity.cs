@@ -50,7 +50,7 @@ namespace _ZMH5__Helios.CSGO.Entities
         {
             base.ReadFields(d);
 
-            m_bDormant = *(byte*)(d + 0xE9);
+            m_bDormant = *(byte*)(d + 0xED);
             m_iGlowIndex = *(int*)(d + Program.Offsets.m_iGlowIndex);
             m_iID = *(int*)(d + Program.Offsets.m_iID);
             m_pBoneMatrix = *(IntPtr*)(d + Program.Offsets.m_pBoneMatrix);

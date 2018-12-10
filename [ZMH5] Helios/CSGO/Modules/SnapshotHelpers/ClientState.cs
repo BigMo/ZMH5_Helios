@@ -44,6 +44,8 @@ namespace _ZMH5__Helios.CSGO.Modules.SnapshotHelpers
             ViewAngles = new LazyCache<Vector3>(() => ReadAt<Vector3>(Program.Offsets.ClientStateSetViewAngles));
             Map = new LazyCache<string>(() => {
                 var str = Encoding.UTF8.GetString(data, Program.Offsets.ClientStateMapDirectory, 256);
+                if (str.IndexOf('\0') == 0)
+                    return null;
                 if (str.Contains("\0"))
                     str = str.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries)[0];
                 return str;

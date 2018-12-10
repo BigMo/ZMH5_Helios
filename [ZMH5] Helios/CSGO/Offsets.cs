@@ -39,6 +39,7 @@ namespace _ZMH5__Helios.CSGO
         public int PlayerResourcesNames { get; set; }
         public int m_iItemDefinitionIndex { get; set; }
         public int GameDirectory { get; set; }
+        public int GetAllClasses { get; set; }
         #endregion
 
         #region CONSTRUCTORS
@@ -84,17 +85,20 @@ namespace _ZMH5__Helios.CSGO
             SigGlowIndex();
             SigGameRulesProxy();
             SigPlayerResources();
-            this.PlayerResources = 0x3077A6C;
-            this.m_mViewMatrix = 0x4C29A04;
-            this.GlowManager = 0x5177CC0;
-            this.ForceAttack = 0x2ED4748;
-            this.ForceJump = 0x4F2C8E4;
-            this.RadarBase = 0x5073134;
+            this.PlayerResources = 0x30F2F7C;
+            this.m_mViewMatrix = 0x4CB4F44;
+            this.GlowManager = 0x5203298;
+            this.ForceAttack = 0x30F4BD8;
+            this.ForceJump = 0x5166670;
+            this.RadarBase = 0x50F8254;
             PlayerResourcesNames = 0x9E0;
-            m_iItemDefinitionIndex = 0x2F9A;
+            m_iItemDefinitionIndex = 0x2FAA;
             ClientStateMapDirectory = 0x188;
             ClientStateState = 0x108;
-            GameDirectory = 0x624BF0;
+            GameDirectory = 0x628E70;
+            ClientStateSetViewAngles = 0x4D10;
+            GetAllClasses = 0xCD75A4;
+            m_iCrosshairID = 0xB390;
         }
         private void SigRadarBase()
         {

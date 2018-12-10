@@ -30,6 +30,8 @@ namespace ZatsHackBase.Misc
         /// <returns></returns>
         public static string GetUnit(double value, long divider, string[] units, string format = FORMAT, int decimals = 2)
         {
+            if (double.IsInfinity(value))
+                return "";
             int idx = 0;
             while (idx < units.Length && value > divider)
             {

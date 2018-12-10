@@ -15,29 +15,17 @@ namespace _ZMH5__Helios.CSGO.ClassIDs
         public static Dictionary<string, ManagedRecvTable> DataTables { get; private set; }
         public static void Parse()
         {
-            DataTables = new Dictionary<string, ManagedRecvTable>();
-            int dwClassIDBase = Program.Hack.Memory.Read<int>(Program.Hack.EngineDll.BaseAddress.ToInt32() + Program.Offsets.ClassIDBase);
-            dwClassIDBase += Program.Offsets.ClassIDBaseOffset;
-            int dwClassIDManager = dwClassIDBase + Program.Offsets.ClassIDManager;
-
-            ClientClassManager pManager = Program.Hack.Memory.Read<ClientClassManager>(dwClassIDManager);
-
-            byte[] pData = new byte[pManager.m_iCount * 0x10];
-            if (pManager.m_pCIDArray == 0)
-                return;
-            Program.Hack.Memory.Position = pManager.m_pCIDArray;
-            Program.Hack.Memory.Read(pData, 0, pData.Length);
-
             List<ManagedClientClass> classes = new List<ManagedClientClass>();
-            for (int i = 0; i < pManager.m_iCount; i++)
-            {
-                int dwAddress = BitConverter.ToInt32(pData, i * 0x10);
-                classes.Add(new ManagedClientClass((IntPtr)dwAddress));
-            }
+            DataTables = new Dictionary<string, ManagedRecvTable>();
+
+            var pFirst = Program.Hack.ClientDll.BaseAddress.ToInt32() + Program.Offsets.GetAllClasses;
+            ClientClass cls = Program.Hack.Memory.Read<ClientClass>(pFirst);
+            for(;cls.m_pNext != 0; pFirst = cls.m_pNext, cls = Program.Hack.Memory.Read<ClientClass>(pFirst))
+                classes.Add(new ManagedClientClass((IntPtr)pFirst));
 
             ClientClasses = classes.OrderBy(x => x.ClassID).ToArray();
-            foreach (var cls in ClientClasses)
-                CrawlDataTables(cls.RecvTable);
+            foreach (var _cls in ClientClasses)
+                CrawlDataTables(_cls.RecvTable);
         }
         private static void CrawlDataTables(ManagedRecvTable table)
         {

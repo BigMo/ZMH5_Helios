@@ -12,6 +12,7 @@ using ZatsHackBase.Core.Timing;
 using ZatsHackBase.Maths;
 using ZatsHackBase.UI;
 using ZatsHackBase.Drawing;
+using ZatsHackBase;
 
 namespace _ZMH5__Helios.CSGO.Modules
 {
@@ -78,12 +79,13 @@ namespace _ZMH5__Helios.CSGO.Modules
                 OrderBy(x => x.DistanceTo(lp));
 
             var grenades = Program.Hack.StateMod.BaseEntitites.Entites.Where(
-                x => IsGrenade(x) && Program.Hack.StateMod.Weapons[x.m_iID].m_hOwner <= 0
+                x => IsGrenade(x) && Program.Hack.StateMod.Weapons[x.m_iID] != null && Program.Hack.StateMod.Weapons[x.m_iID].m_hOwner <= 0
             );
+
             var weapons = Program.Hack.StateMod.Weapons.Entites.Where(x => x.m_hOwner <= 0).OrderByDescending(x => x.DistanceTo(lp));
             DrawBaseEntitySet(lp, grenades, new ESPEntry() { Enabled = true, ShowBox = true, ShowName = true, Color = new Color(1, 0, 0) });
             //TODO: Granaten und C4 (inkl. CPlantedC4) gesondert rendern
-            if (Program.CurrentSettings.ESP.Weapons.Enabled)
+            if (Program.CurrentSettings.ESP.Weapons.Enabled)// && WinAPI.GetAsyncKeyState(System.Windows.Forms.Keys.LShiftKey) != 0)// && Program.Hack.Input.KeysDown.Contains(System.Windows.Forms.Keys.LControlKey))
                 DrawWeaponSet(lp, weapons, Program.CurrentSettings.ESP.Weapons);
 
             var ents = Program.Hack.StateMod.BaseEntitites.Entites.Where(x => x != null && x.IsValid);
@@ -334,6 +336,19 @@ namespace _ZMH5__Helios.CSGO.Modules
                         DistToMeters((player.m_vecOrigin - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin).Length) * 0.5f,
                         settings.Color);
             }
+
+            //Loot stuff
+            
+            //var lootstuff = Enumerable.Range(0, 1024).Select(x => Program.Hack.StateMod.BaseEntitites[x]).Where(x => 
+            // x!=null && x.m_ClientClass!=null &&(
+            //    x.m_ClientClass.ClassID == 47 ||
+            //    x.m_ClientClass.ClassID == 48 ||
+            //    x.m_ClientClass.ClassID == 123 ||
+            //    x.m_ClientClass.ClassID == 124 ||
+            //    x.m_ClientClass.ClassID == 125
+            //    )).ToArray();
+            //DrawEspSet(lootstuff, new ESPEntry() { Enabled = true, Color = Color.Orange, ColorOccluded = Color.Orange, ShowName = true, ShowBox=true },
+            //    x => x.m_vecOrigin, x => x.m_vecOrigin, (d, u) => Vector2.Unit*32f, x => 100f, x => 100f, (x, e) => x.m_ClientClass.NetworkName.Value);
         }
 
         private void DrawEsp<T>(
@@ -425,6 +440,7 @@ namespace _ZMH5__Helios.CSGO.Modules
             //    }
             //);
             foreach (var wep in weapons)
+                //if((wep.m_vecOrigin - Program.Hack.StateMod.LocalPlayer.Value.m_vecOrigin).Length < 50)
                 DrawWeapon(lp, wep, settings);
         }
 
@@ -444,7 +460,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                 if (settings.ShowName)
                 {
                     text += string.Format("{0} [{1}/{2}]",
-                            weapon.m_ClientClass.NetworkName.Value.Replace("CWeapon", ""),
+                        weapon.WeaponIDName.ToString().Substring(6),
+                        //weapon.m_ClientClass.NetworkName.Value.Replace("CWeapon", ""),
                             weapon.m_iClip1 >= 0 ? weapon.m_iClip1.ToString() : "-",
                             weapon.m_iClip2 >= 0 ? weapon.m_iClip2.ToString() : "-")+"\n";
                 }

@@ -154,7 +154,7 @@ namespace _ZMH5__Helios.CSGO.Modules
         private int GetTarget(Vector3 src)
         {
             var lp = Program.Hack.StateMod.LocalPlayer.Value;
-            var enemies = Program.Hack.StateMod.GetPlayersSet(true,true, true,lp.m_iTeamNum == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
+            var enemies = Program.Hack.StateMod.GetPlayersSet(true, true, true, lp.m_iTeamNum).// lp.m_iTeamNum == Enums.Team.CounterTerrorists ? Enums.Team.Terrorists : Enums.Team.CounterTerrorists).
                 OrderBy(x => (x.m_vecOrigin - lp.m_vecOrigin).Length).ToArray();
 
             var newEnemyId = 0;
@@ -165,7 +165,7 @@ namespace _ZMH5__Helios.CSGO.Modules
                 if (inc == 0)
                     return 0;
                 var enemy = Program.Hack.StateMod.Players[inc];
-                if (enemy == null || !enemy.IsValid || inc == lp.m_iID || enemy.m_iTeamNum == lp.m_iTeamNum)
+                if (enemy == null || !enemy.IsValid || inc == lp.m_iID)// || enemy.m_iTeamNum == lp.m_iTeamNum)
                     return 0;
                 newEnemyId = enemy.m_iID;
             }

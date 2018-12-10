@@ -27,6 +27,7 @@ namespace _ZMH5__Helios.CSGO.Misc
         public bool VisibleOnly;
         public bool Sticky;
         public float HeightOffset;
+        public bool BrokenAim;
     }
 
     public class AimSmooth

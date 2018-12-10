@@ -57,6 +57,7 @@ namespace _ZMH5__Helios.CSGO
             Aim.Predict = true;
             Aim.Sticky = true;
             Aim.VisibleOnly = true;
+            Aim.BrokenAim = false;
             Aim.Enabled = true;
             
             Aim.Smoothing = new AimSmooth();
@@ -151,6 +152,8 @@ namespace _ZMH5__Helios.CSGO
             NoRecoil = new NoRecoilSettings();
             NoRecoil.Enabled = true;
             NoRecoil.Force = 1f;
+            NoRecoil.ShowCrosshair = false;
+            NoRecoil.NoRecoilSemiAuto = false;
 
             MiscAutoPistol = true;
             MiscBunnyHop = true;

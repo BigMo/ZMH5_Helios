@@ -87,8 +87,8 @@ namespace _ZMH5__Helios.CSGO.Modules
                 }
                 else
                 {
-                    if (proto.m_ClientClass.NetworkName.Value == "CChicken")
-                        EncolorObject(obj, Color.Orange, i);
+                    //if (proto.m_ClientClass.NetworkName.Value == "CChicken")
+                    //    EncolorObject(obj, Color.Orange, i);
 
                     var baseEnt = Program.Hack.GetEntityByAddress<BaseEntity>(proto.Address);
 

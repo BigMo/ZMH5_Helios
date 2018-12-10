@@ -168,7 +168,7 @@ namespace _ZMH5__Helios.CSGO
             View = new ViewModule();
             RCS = new NoRecoilModule();
             AimBot = new AimModule();
-            Pistol = new AutoPistolModule();
+            //Pistol = new AutoPistolModule();
             Glow = new GlowModule();
             ESP = new ESPModule();
             ReloadSettings = new ReloadSettingsModule();
@@ -180,7 +180,7 @@ namespace _ZMH5__Helios.CSGO
             AddModule(View);
             AddModule(RCS);
             AddModule(AimBot);
-            AddModule(Pistol);
+            //AddModule(Pistol);
             AddModule(Glow);
             AddModule(ESP);
             AddModule(ReloadSettings);
